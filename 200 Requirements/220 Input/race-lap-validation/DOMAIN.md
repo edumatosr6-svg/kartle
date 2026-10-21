@@ -28,3 +28,12 @@ Decisões fechadas pelo dono do produto. Prevalecem sobre os pontos em aberto co
   nela.
 - 2026-10-20 — **OPEN-11 fechado (Eduardo Matos):** legibilidade = **WCAG AA**: contraste mínimo 4,5:1;
   texto de estado e motivo com no mínimo 16 px no celular; contagem regressiva com no mínimo 48 px.
+- 2026-10-21 — **D23 fechado (Eduardo Matos):** hospedagem em **GitHub Pages**. Produção = Pages deste
+  repositório, ambiente `github-pages` com revisor obrigatório (o dono do produto; a aprovação é a
+  promoção). Staging = Pages de um repositório irmão `kartle-staging`, alimentado pelo mesmo workflow a
+  partir do ramo `staging`.
+- 2026-10-21 — **D-DP-04 ratificado (Eduardo Matos):** o crédito OpenStreetMap e o aviso ODbL só são
+  exigidos quando uma pista derivada de OSM for publicada. Esta release (pista sintética, 0 dados OSM)
+  não exibe crédito.
+- 2026-10-21 — **Monitoramento (Eduardo Matos):** vigilância manual conforme o runbook (abrir a URL
+  publicada após cada deploy); nenhum monitor externo nesta release (RNF12).
