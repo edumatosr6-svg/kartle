@@ -4,7 +4,7 @@ title: Rollout — ordem de operações, janela de compatibilidade e o pipeline 
 feature: race-lap-validation
 stage: deploy
 status: draft
-version: 1.1.2
+version: 1.1.3
 sources: [DM-0001, DES-0007, DES-0011, NFR-0003, NFR-0004, TEST-0009]
 ---
 
@@ -19,9 +19,9 @@ bundle (`REL-0002`).
 | Ordem | Passo | Quem | Desfaz-se por |
 |---|---|---|---|
 | 1 | anotar a última execução verde do workflow `pages` em `edumatosr6-svg/kartle` (alvo do caminho B); **nesta primeira release não existe** — o alvo de reversão é o site não publicado (`runbook.md`, caminho A) | executor do runbook | não se desfaz: é a rede de segurança |
-| 2 | `git push staging master:staging` → o workflow constrói e publica em **staging** (`https://edumatosr6-svg.github.io/kartle-staging/`); rodar `smoke.md`. **Estado em 2026-10-21**: o push foi feito pelo dono do produto; as execuções 39627817908 (`162b1b3`) e 39629837192 (`c1e488b`) construíram com sucesso e o `deploy` **falhou com zero passos executados** (política de ramos do ambiente, abaixo); corrigida a política, a reexecução de 39629837192 ficou **verde** e `https://edumatosr6-svg.github.io/kartle-staging/` responde 200 em HTTPS. `smoke.md` ainda não correu nela | executor do runbook | reexecutar a execução verde anterior de `kartle-staging` (B); nesta release, *Unpublish site* de `kartle-staging` (A) |
+| 2 | `git push staging master:staging` → o workflow constrói e publica em **staging** (`https://edumatosr6-svg.github.io/kartle-staging/`); rodar `smoke.md`. **Estado em 2026-10-21**: o push foi feito pelo dono do produto; as execuções 39627817908 (`162b1b3`) e 39629837192 (`c1e488b`) construíram com sucesso e o `deploy` **falhou com zero passos executados** (política de ramos do ambiente, abaixo); corrigida a política, a reexecução de 39629837192 ficou **verde** e `https://edumatosr6-svg.github.io/kartle-staging/` responde 200 em HTTPS. **R1/R2 ensaiados nela** em 2026-10-21 (despublicar → 404; republicar → execução 39631099098 verde, 200 com o mesmo `<hash>`; ciclo ≈ 7,5 min). De `smoke.md` correram em staging D1, D3, D4 e D14 (execução 2 do log); as linhas de ritmo e as linhas M esperam o testador humano | executor do runbook | reexecutar a execução verde anterior de `kartle-staging` (B); nesta release, *Unpublish site* de `kartle-staging` (A) — ensaiado |
 | 3 | **pergunta ao dono do produto** — promover? (D-DP-06) | dono do produto | não promover |
-| 4 | `git push origin master` → o workflow constrói em `edumatosr6-svg/kartle` e **para à espera do revisor** no ambiente `github-pages`; o dono do produto clica *Approve and deploy*; o cache do Pages renova em até 10 min (`max-age=600`, sem purga). **Estado em 2026-10-21**: o push foi feito; a execução 39627810079 (`162b1b3`) tem `build` concluído e está parada em `deploy` (*Waiting*), e a 39629830827 (`c1e488b`) espera atrás dela no grupo de concorrência `pages` — **nada aprovado**; o passo 3 ainda não foi respondido | dono do produto | R1 do `runbook.md`: *Unpublish site* (A, esta release) ou *Re-run all jobs* da execução anterior + aprovação (B) |
+| 4 | `git push origin master` → o workflow constrói em `edumatosr6-svg/kartle` e **para à espera do revisor** no ambiente `github-pages`; o dono do produto clica *Approve and deploy*; o cache do Pages renova em até 10 min (`max-age=600`, sem purga). **Estado em 2026-10-21**: o push foi feito; a execução 39627810079 (`162b1b3`) tem `build` concluído e está parada em `deploy` (*Waiting*) — a mais antiga ainda à espera; a 39629830827 (`c1e488b`) foi **cancelada** pelo grupo de concorrência `pages` quando um push posterior entrou; os pushes só de registro (`2bee672`) criaram execuções mais novas, cujos números se leem na aba Actions — **nada aprovado**; o passo 3 ainda não foi respondido | dono do produto | R1 do `runbook.md`: *Unpublish site* (A, esta release) ou *Re-run all jobs* da execução anterior + aprovação (B) |
 | 5 | `smoke.md`, seção *Verificação em produção*, e vigilância por 24 h (`REL-0005`) | dono do produto | idem 4 |
 
 Não há parte destrutiva adiada para uma release seguinte: nada é removido de nenhum armazenamento.
@@ -39,17 +39,20 @@ O GitHub Pages serve **um site por repositório**. Staging e produção são, po
 | URL | `https://edumatosr6-svg.github.io/kartle/` | `https://edumatosr6-svg.github.io/kartle-staging/` |
 | Settings → Pages → *Build and deployment* → *Source* | **GitHub Actions** (`build_type: workflow`) — configurado | **GitHub Actions** — configurado |
 | Settings → Environments → `github-pages` → *Required reviewers* | **`edumatosr6-svg`** — configurado; o trabalho `deploy` espera o clique *Approve and deploy*; esse clique é a promoção (D-DP-06) | nenhum: publica ao fim do `build` |
-| Settings → Environments → `github-pages` → *Deployment branches and tags* | restrição que o GitHub cria por padrão ao ativar o Pages: **só o ramo padrão (`master`) pode implantar** — mantida, como segunda tranca ao lado do revisor | **No restriction** (ou acrescentar o ramo `staging`) — configurado em 2026-10-21 depois da primeira falha. Sem este passo o ambiente criado automaticamente recusa a implantação a partir do ramo `staging` na preparação do trabalho, e o `deploy` **falha com zero passos executados** (`REL-0005`). Resultado observável: um push em `staging` produz um trabalho `deploy` que executa os seus passos e publica |
+| Settings → Environments → `github-pages` → *Deployment branches and tags* | restrição que o GitHub cria por padrão ao ativar o Pages: **só o ramo padrão (`master`) pode implantar** — mantida, como segunda tranca ao lado do revisor | **No restriction** (ou acrescentar o ramo `staging`) — configurado em 2026-10-21 depois da primeira falha. Sem este passo o ambiente criado automaticamente recusa a implantação a partir do ramo `staging` na preparação do trabalho, e o `deploy` **falha com zero passos executados** (`REL-0005`). Resultado observável: um push em `staging` produz um trabalho `deploy` que executa os seus passos e publica. **Refazer depois de cada despublicação**: reativar o Pages (`POST /pages`) recria o ambiente com a política padrão — observado no ensaio de R1/R2 de 2026-10-21 |
 | Push de `staging` para este repositório | construído e testado, **não publicado** (`if` do trabalho `deploy`) | — |
 
 **Tudo isto existe desde 2026-10-21** (dono do produto, interface do GitHub; DIV-DP-10, DIV-DP-11 e DIV-DP-13
 `resolved`): os dois repositórios foram criados e configurados, `master` foi enviado a `origin` e a `staging` (como
 ramo `staging`). **As primeiras execuções estão registradas**: em `kartle`, 39627810079 (`162b1b3`, `build` concluído,
-`deploy` em *Waiting*) e 39629830827 (`c1e488b`, pendente atrás dela); em `kartle-staging`, 39627817908 (`162b1b3`) e
-39629837192 (`c1e488b`), as duas com `build` concluído e `deploy` falhado com zero passos até à correção da política de
-ramos, e a reexecução de 39629837192 verde, com a URL de staging a responder 200 em HTTPS. O log de `npm test` e a
-medida de `Measure dist` de cada execução são lidos na aba Actions e entram no próximo relatório de validação. Custo:
-US$ 0 em repositórios públicos (RNF12).
+`deploy` em *Waiting* — a mais antiga ainda à espera) e 39629830827 (`c1e488b`, **cancelada** pelo grupo de concorrência
+`pages` quando um push posterior a substituiu); em `kartle-staging`, 39627817908 (`162b1b3`) e 39629837192 (`c1e488b`),
+as duas com `build` concluído e `deploy` falhado com zero passos até à correção da política de ramos, a reexecução de
+39629837192 verde, com a URL de staging a responder 200 em HTTPS, e 39631099098 verde na republicação após o ensaio de
+R1/R2. Os pushes só de registro que se seguiram (`2bee672`) criaram execuções mais novas nos dois repositórios: **os
+números em vigor são os da aba Actions**, não os copiados aqui. O log de `npm test` e a medida de `Measure dist` de
+cada execução são lidos na aba Actions e entram no próximo relatório de validação. Custo: US$ 0 em repositórios
+públicos (RNF12).
 
 ## Feature flag e quem "liga" a feature
 
@@ -70,7 +73,7 @@ Não há flag (DES-0007, DES-0011; `01-release.md`). A feature fica ativa para 1
 
 | Recurso | Política do Pages | Consequência |
 |---|---|---|
-| `index.html` | `Cache-Control: max-age=600`; **não há comando de purga** | o ponteiro para a versão em vigor renova em até 10 min; a promoção e a reversão ficam visíveis nesse prazo (`runbook.md` passos 11 e R2) |
+| `index.html` | `Cache-Control: max-age=600`; **não há comando de purga** | o ponteiro para a versão em vigor renova em até 10 min; a promoção e a reversão ficam visíveis nesse prazo (`runbook.md` passos 11 e R2). Medido no ensaio de reversão em staging (2026-10-21): depois de despublicar, um navegador viu o 404 em ≈ 1 min, mas um cliente com a resposta em cache de borda continuou a receber 200 por mais de 6 min, mesmo pedindo com `Cache-Control: no-cache` — a janela de 10 min vale também para o caminho A |
 | `assets/*.js`, `assets/*.css` | os mesmos 10 min (o Pages não marca `immutable`) | o nome carrega hash de conteúdo, então uma versão nunca muda sob o mesmo nome (I3 aplicado ao artefato); o cache curto só custa revalidações |
 | *assets* da versão anterior | **não são mantidos**: o Pages serve apenas a implantação corrente | uma página antiga que recarregue um módulo depois de uma nova implantação recebe 404 — mitigado pelo `max-age` de 10 min e por o bundle ser um único módulo carregado na abertura; a reversão não depende de *assets* antigos, porque reconstrói do commit (`runbook.md`, caminhos B e C) |
 
@@ -97,8 +100,9 @@ OIDC da execução). Etapas e a saída que aprova cada uma, na própria execuç�
 O workflow **foi disparado pela primeira vez em 2026-10-21** pelos pushes de `master` a `origin` e a `staging`
 (DIV-DP-10, DIV-DP-11). A prova de que o build é reproduzido pelo pipeline a partir do commit existe: o trabalho
 `build` concluiu com sucesso em todas as execuções (39627810079 e 39629830827 em `kartle`; 39627817908 e 39629837192
-em `kartle-staging`), e a reexecução de 39629837192 publicou em staging — a primeira **execução verde**. Em produção,
-nenhuma execução é verde ainda, por desenho: o `deploy` espera o revisor. Os números constam do `runbook.md`
+em `kartle-staging`), a reexecução de 39629837192 publicou em staging — a primeira **execução verde** — e a 39631099098
+republicou após o ensaio de reversão. Em produção, nenhuma execução é verde ainda, por desenho: o `deploy` espera o
+revisor (39629830827 foi depois cancelada pela fila do grupo `pages`; 39627810079 continua à espera). Os números constam do `runbook.md`
 (precondições) e de `01-release.md`; o validador confirma-os na aba Actions. O `runbook.md` continua a reproduzir as
 etapas 2 a 5 à mão como conferência. Um push de `staging` para o repositório de produção constrói e testa, mas o `if` do trabalho `deploy`
 impede a publicação.

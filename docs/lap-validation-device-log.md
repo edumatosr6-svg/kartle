@@ -73,6 +73,30 @@ o que não foi executado fica marcado como tal — ausência de registro nunca v
 1. A página carrega `https://fonts.googleapis.com/css2?family=DM+Sans…&family=Space+Grotesk…` — uma dependência externa pré-existente no `index.html`. Impacto: uma requisição a terceiro no carregamento (privacidade, RNF10) e fonte alternativa do sistema quando offline (RNF08 não é afetado durante a volta: 0 requisições entre largada e resultado, Execução 1). Decisão: manter, ou embutir as fontes no build.
 2. O link da marca (`a.brand`, `href="/"`) aponta para a raiz de `edumatosr6-svg.github.io`, fora de `/kartle-staging/` (DIV-DP-12 — item de código).
 
+## Ensaio de reversão R4 — 2026-10-21, staging (`edumatosr6-svg/kartle-staging`)
+
+| Passo | Ação | Observado |
+|---|---|---|
+| R0 | estado inicial | `https://edumatosr6-svg.github.io/kartle-staging/` → HTTP 200 (16:23:52Z) |
+| R1 | despublicar (`DELETE /repos/…/pages`, equivalente a Settings → Pages → Unpublish site) | Chrome do operador: página "There isn't a GitHub Pages site here" (404) ≈ 1 min depois; `curl` com `Cache-Control: no-cache` continuou recebendo **200 por mais de 6 min** (cache de borda, `max-age=600`) — a despublicação **não é imediata para todos os clientes** |
+| R2 | republicar: `POST /pages` (`build_type: workflow`), política de ramos do ambiente liberada de novo, "Re-run all jobs" (run 39631099098) | build e deploy verdes; HTTP 200 em 16:31:13Z com `assets/index-Cqfgl3da.js` (mesmo hash) |
+| R3 | — | o 404 durante a janela de despublicação é o observável de R1 |
+
+Conclusão: R1/R2 são executáveis e reversíveis; tempo total do ciclo ≈ 7,5 min, dominado pelo cache de
+10 min. **Nota para o runbook:** ao despublicar a `POST /pages` recria o ambiente `github-pages` com a
+política padrão (só ramo padrão) — liberar a política de novo antes do rerun em staging.
+
+## Tentativa de medições de ritmo — 2026-10-21 (sem resultado)
+
+Três ambientes foram tentados para medir contagem de 3 s, fps e a volta de referência (script de
+entradas de TEST-0008 sincronizado ao `#timer`): o painel embutido do Claude Desktop, o Chrome do dono
+do produto em primeiro plano e a janela própria da extensão Claude in Chrome. Em todos, `setInterval`
+e `MessageChannel` rodaram a toda, mas `requestAnimationFrame` ficou em 1–2 quadros/s (intervalos de
+≈1000 ms) com GPU AMD acelerada, 16 núcleos e sem tarefas longas — o Chrome limita a renderização da
+aba sob automação. O dono do produto, olhando a sua própria aba, relatou o jogo **fluido** (relato, não
+medida). As linhas D2, D5 (duração), D6, D12 e D13 permanecem para execução humana com o contador de
+fps do Chrome (F12 → Rendering → Frame Rendering Stats).
+
 ### Pendências para uma execução humana
 
 1. Janela em primeiro plano, notebook de referência nomeado: E2E-01 (3 s), E2E-02 (volta completa, marcador pulado), E2E-10 (fps).

@@ -3,7 +3,7 @@ title: Verificações de fumaça — por canal, cada uma observando um limiar
 feature: race-lap-validation
 stage: deploy
 status: draft
-version: 1.1.1
+version: 1.1.2
 sources: [DES-0005, DES-0009, NFR-0003, NFR-0004, NFR-0006, NFR-0007, TEST-0009, TEST-0013]
 ---
 
@@ -36,7 +36,7 @@ Preparação comum: cache vazio (janela anônima), painel de rede aberto, idioma
 | D6 | completar a volta de treino com o teclado | "válida em andamento" durante a volta; tempo de cada setor ao completá-lo; resultado com total `m:ss.mmm`, sufixo "não oficial" (AC-US-0008-01) e 4 setores cuja soma é o total | NFR-0006: estado em texto, 4,5:1; soma dos setores igual ao total com 0 ms de diferença | E2E-02 (parte de conclusão) | sim |
 | D7 | nova volta; Esc no meio; trocar de aba e voltar | cronômetro para e retoma do mesmo valor nas duas situações | NFR-0002: 0 ms de avanço durante a pausa | E2E-03, E2E-04 | não |
 | D8 | nova volta de treino; pular um marcador; em outra volta, cortar; em outra, reposicionar (tecla `R`) | marcador pulado e corte: "inválida" com o motivo em texto ("marcador pulado", "corte") e resultado sem tempo; **reposicionamento em treino não invalida**: sem motivo, a volta segue e o cronômetro continua (DES-0005: reposicionar é livre em treino e reconhecimento; só invalida a oficial — ponto em aberto 02 do `DOMAIN.md`) | NFR-0006: motivo em texto; NFR-0009 regras já provadas em `npm test` (`tests/lap-kinds.test.ts`) | E2E-02 (motivos; a parte "reposicionando em volta oficial de fixture" é só de `npm test` nesta release) | não |
-| D9 | depois de carregar, bloquear a rede (painel "offline") e completar uma volta | resultado exibido; 0 requisições no painel durante a volta | NFR-0004: 0 requisições entre a contagem e o resultado | E2E-08 | não |
+| D9 | depois de carregar, bloquear a rede (painel "offline") e completar uma volta | resultado exibido; 0 requisições no painel durante a volta. Nota: a requisição a `fonts.googleapis.com` acontece **no carregamento** (antes de bloquear a rede) e não durante a volta — divergência aceita nesta release (`98-divergences.md`, DIV-DP-14); não conta para esta linha | NFR-0004: 0 requisições entre a contagem e o resultado | E2E-08 | não |
 | D10 | trocar o idioma do navegador para `pt`, `en` e um terceiro (`fr`) e recarregar | textos de estado e motivo em pt, em en e em en respectivamente | NFR-0007 / RNF11: 100 % das mensagens no idioma do navegador; inglês para os demais | E2E-07 | não |
 | D11 | tela em escala de cinza (filtro do sistema) durante D5 e D6 | todo estado e motivo legível só pelo texto | NFR-0006: 100 % dos estados com rótulo em texto | E2E-09 | não |
 | D12 | uma volta completa com o contador de fps do navegador aberto, no notebook de referência | fps médio e mínimo | NFR-0003 / RNF03: 60 fps | E2E-10 | não |

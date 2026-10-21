@@ -3,7 +3,7 @@ title: Release — validação de volta de corrida
 feature: race-lap-validation
 stage: deploy
 status: draft
-version: 1.1.3
+version: 1.1.5
 sources: [DM-0001, DM-0002, DES-0007, DES-0009, DES-0011, NFR-0003, NFR-0004, NFR-0006, NFR-0007, NFR-0012]
 ---
 
@@ -41,24 +41,30 @@ os testes verificaram**.
 | Tag de release | não existe; a release é identificada pelo hash acima e pela execução do workflow que o publicar |
 | Remoto GitHub | **existe** (2026-10-21, dono do produto `edumatosr6-svg`): repositório de produção `https://github.com/edumatosr6-svg/kartle` (público), remoto local `origin`; `master` enviado. Settings → Pages → *Source* = **GitHub Actions** (`build_type: workflow`); Settings → Environments → `github-pages` com **Required reviewers = `edumatosr6-svg`** e *Deployment branches and tags* na restrição padrão (só `master`). As execuções do workflow `pages` constroem e **param em `deploy` à espera da aprovação**: nada foi promovido (linha *Evidência do pipeline*; DIV-DP-10 `resolved`) |
 | Sistema de CI | **GitHub Actions**: `.github/workflows/pages.yml` na raiz do repositório (ativo em `push` para `master` e `staging` e por `workflow_dispatch`); etapas em `REL-0003` |
-| Staging | o site Pages de um **segundo repositório**, `https://github.com/edumatosr6-svg/kartle-staging` (público), remoto local `staging`, ramo `staging` (enviado com `git push staging master:staging`), *Source* = GitHub Actions, **sem revisor**, ambiente `github-pages` com *Deployment branches and tags* = **No restriction** (necessário para o ramo `staging` implantar — `REL-0003`; DIV-DP-13); site `https://edumatosr6-svg.github.io/kartle-staging/` (`REL-0003`; DIV-DP-11 `resolved`). **Instalado e observado** em 2026-10-21 (linha abaixo); a confirmação pelo validador, `smoke.md` e o ensaio de R1/R2 são devidos à próxima execução do validador |
-| **Evidência do pipeline** (execuções do workflow `pages`, 2026-10-21) | **Produção** (`kartle`): execução **39627810079**, commit `162b1b3` — trabalho `build` concluído com sucesso, trabalho `deploy` em *Waiting* à espera do revisor obrigatório (por desenho; **não aprovado**); execução **39629830827**, commit `c1e488b` — pendente atrás dela no grupo de concorrência `pages`. **Staging** (`kartle-staging`): execução **39627817908**, commit `162b1b3` — `build` concluído, `deploy` **falhado com zero passos executados**; execução **39629837192**, commit `c1e488b` — a mesma falha. Causa: o ambiente `github-pages`, criado automaticamente ao ativar o Pages, restringe as implantações ao ramo padrão (`custom_branch_policies: true, protected_branches: false`), e uma implantação a partir do ramo `staging` é recusada na preparação do trabalho. Correção aplicada pelo condutor do loop pela API do GitHub (`PUT repos/edumatosr6-svg/kartle-staging/environments/github-pages` com `deployment_branch_policy: null` — qualquer ramo); **reexecução de 39629837192**: `build` concluído, `deploy` concluído; `https://edumatosr6-svg.github.io/kartle-staging/` responde **HTTP 200 em HTTPS** com certificado válido (verificado por `curl`). Conclusão: **existe artefato construído pelo pipeline para o commit `c1e488b` nos dois repositórios**; o de produção espera aprovação, o de staging está publicado |
+| Staging | o site Pages de um **segundo repositório**, `https://github.com/edumatosr6-svg/kartle-staging` (público), remoto local `staging`, ramo `staging` (enviado com `git push staging master:staging`), *Source* = GitHub Actions, **sem revisor**, ambiente `github-pages` com *Deployment branches and tags* = **No restriction** (necessário para o ramo `staging` implantar — `REL-0003`; DIV-DP-13); site `https://edumatosr6-svg.github.io/kartle-staging/` (`REL-0003`; DIV-DP-11 `resolved`). **Instalado e observado** em 2026-10-21 (linha abaixo) e **confirmado pelo validador** (`deploy-validation-20261021-1602.md`: 200 em HTTPS, *assets* servidos idênticos byte a byte ao build local da árvore de `c41c6c3`). **R1/R2 ensaiados** sobre este site em 2026-10-21 (linha abaixo). De `smoke.md`, D1, D3, D4 e D14 passaram em staging (execução 2 do log); as linhas de ritmo e as linhas M esperam o testador humano |
+| **Evidência do pipeline** (execuções do workflow `pages`, 2026-10-21) | **Produção** (`kartle`): execução **39627810079**, commit `162b1b3` — trabalho `build` concluído com sucesso, trabalho `deploy` em *Waiting* à espera do revisor obrigatório (por desenho; **não aprovado**) — a execução de produção **mais antiga ainda à espera**; execução **39629830827**, commit `c1e488b` — **cancelada** pelo grupo de concorrência `pages` quando um push posterior a substituiu (API: `completed cancelled`, 16:02:10Z). Os pushes só de registro (`2bee672`) criaram execuções mais novas nos dois repositórios; **os números em vigor são lidos na aba Actions**, não copiados deste registro. **Staging** (`kartle-staging`): execução **39627817908**, commit `162b1b3` — `build` concluído, `deploy` **falhado com zero passos executados**; execução **39629837192**, commit `c1e488b` — a mesma falha. Causa: o ambiente `github-pages`, criado automaticamente ao ativar o Pages, restringe as implantações ao ramo padrão (`custom_branch_policies: true, protected_branches: false`), e uma implantação a partir do ramo `staging` é recusada na preparação do trabalho. Correção aplicada pelo condutor do loop pela API do GitHub (`PUT repos/edumatosr6-svg/kartle-staging/environments/github-pages` com `deployment_branch_policy: null` — qualquer ramo); **reexecução de 39629837192**: `build` concluído, `deploy` concluído; `https://edumatosr6-svg.github.io/kartle-staging/` responde **HTTP 200 em HTTPS** com certificado válido (verificado por `curl`). **Ensaio de reversão em staging** (*Ensaio de reversão R4*, `docs/lap-validation-device-log.md`): R1 `DELETE /repos/edumatosr6-svg/kartle-staging/pages` às 16:23:52Z → 404 do GitHub no navegador em ≈ 1 min, `curl` ainda com 200 em cache por mais de 6 min (`max-age=600`); R2 `POST /pages` (`build_type: workflow`) + política do ambiente liberada de novo (a reativação recria o ambiente restrito ao ramo padrão) + *Re-run all jobs* → execução **39631099098** verde → 200 às 16:31:13Z com o mesmo `index-Cqfgl3da.js`; ciclo ≈ 7,5 min. Conclusão: **existe artefato construído pelo pipeline para o commit `c1e488b` nos dois repositórios**; o de produção espera aprovação, o de staging está publicado e a sua reversão foi demonstrada |
 | Produção | o site Pages deste repositório, `https://edumatosr6-svg.github.io/kartle/`, com o ambiente `github-pages` protegido por **revisor obrigatório** (`edumatosr6-svg`): o clique de aprovação é a promoção (D-DP-06). Custo: US$ 0 em repositório público (RNF12). Domínio próprio: fora desta release |
 
 ### Precondições humanas que restam, em ordem
 
-1. **Registrar a execução 2 do roteiro de aparelho** em `docs/lap-validation-device-log.md` (E2E-01 a E2E-11 de
-   `300 Specs/330 D-Specs/Output/race-lap-validation/test-strategy.md`), sobre a URL de staging. O log existe com a
+1. **Registrar a execução humana do roteiro de aparelho** em `docs/lap-validation-device-log.md` (E2E-01 a E2E-11 de
+   `300 Specs/330 D-Specs/Output/race-lap-validation/test-strategy.md`), sobre a URL de staging. O log tem a
    **execução 1** (condutor do loop, desktop, build local do commit `c41c6c3`, parcial: estado e texto de D4, D5, D7,
-   D8, D9, D10, D11; página em segundo plano, ritmo inválido; nenhum aparelho nomeado). Falta a execução em staging,
-   janela em primeiro plano, no notebook e no celular de referência nomeados: 27 critérios do veredito de testes têm a
-   metade de tela, sensor, taxa de quadros ou navegador `unverified` até esse registro; `smoke.md` reutiliza os mesmos
-   roteiros (DIV-DP-06). A URL de staging está publicada: o roteiro pode correr.
-2. **Ensaiar R1/R2 em staging** (`runbook.md`, *Roll back*, sobre `kartle-staging`) e republicar.
+   D8, D9, D10, D11; página em segundo plano, ritmo inválido) e a **execução 2** (staging, operador de sessão: D1, D3,
+   D4, D14 passam; D2 não medido; D5–D13 não executados). **Três tentativas automatizadas de medir ritmo** (painel
+   embutido, Chrome do dono do produto em primeiro plano, janela da extensão) **não produziram medida**: o Chrome
+   limita o `requestAnimationFrame` a 1–2 quadros/s sob automação, com os temporizadores normais; o dono do produto
+   **relata** o jogo fluido na sua própria aba — relato, não medida. Ficam para execução humana, com o contador de fps
+   do navegador, no notebook e no celular de referência nomeados: D2, D5 (duração), D6, D12, D13 e as linhas M; 27
+   critérios do veredito de testes têm a metade de tela, sensor, taxa de quadros ou navegador `unverified` até esse
+   registro; `smoke.md` reutiliza os mesmos roteiros (DIV-DP-06). A pendência 4 do log ("URL publicada com HTTPS: D1,
+   D2, D3") está reduzida a D2.
 
 Cumpridas: o commit da árvore verificada (acima); **a primeira execução do pipeline observada** nos dois repositórios
 (linha *Evidência do pipeline*: `build` verde em todas as execuções; produção em *Waiting* sem aprovação; staging
-publicado e a responder 200 em HTTPS depois de corrigida a política de ramos do ambiente); a versão do Node fixada —
+publicado e a responder 200 em HTTPS depois de corrigida a política de ramos do ambiente); **o ensaio de R1/R2 em
+staging** (2026-10-21, linha *Evidência do pipeline*: despublicar → 404; republicar → execução 39631099098 verde com o
+mesmo `<hash>`; ciclo ≈ 7,5 min); a versão do Node fixada —
 `.nvmrc` com `24` na raiz do repositório, lida pelo workflow (`node-version-file`), build medido abaixo com Node
 v24.20.0 e npm 11.19.0; os dois repositórios no
 GitHub com *Source* = GitHub Actions e a proteção do ambiente `github-pages` em produção (DIV-DP-10, DIV-DP-11); a
@@ -112,3 +118,7 @@ restrição; sem isso o `deploy` falha com zero passos, como nas execuções 396
 ficam em `https://github.com/edumatosr6-svg/kartle/actions` e `https://github.com/edumatosr6-svg/kartle-staging/actions`.
 Um ponto não automatizável permanece: o `href="/"` da marca no `index.html` aponta para `https://edumatosr6-svg.github.io/`
 e não para `/kartle/` — item do estágio de código, registrado em `98-divergences.md` (DIV-DP-12), não editado aqui.
+
+## Limitações conhecidas — divergências aceitas nesta release
+
+- **Duas divergências aceitas** pelo dono do produto em 2026-10-21 (`DOMAIN.md`): o `href="/"` da marca sai de `/kartle/` no GitHub Pages (DIV-DP-12, ISSUE-15) e a página faz uma requisição a `fonts.googleapis.com` no carregamento — não durante a volta (DIV-DP-14, ISSUE-17); ambas `waived` em `98-divergences.md`, com a correção (href relativo; fontes embutidas no build) como itens de `200 Requirements/220 Input/race-lap-validation/SCOPE-BACKLOG.md` para a próxima release.

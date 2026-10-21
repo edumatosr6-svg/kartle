@@ -3,7 +3,7 @@ title: Registro de mudanças — validação de volta de corrida (estágio de de
 feature: race-lap-validation
 stage: deploy
 status: draft
-version: 1.1.3
+version: 1.1.5
 sources: []
 ---
 
@@ -370,3 +370,114 @@ congelada, §16 — nenhuma linha de fumaça, precondição nova, comando novo o
 - Nenhum comando `git`, `npm`, `gh` ou chamada a host remoto executado por esta rodada (a correção pela API foi do
   condutor do loop, antes dela, e é registrada aqui como fato); nenhum valor de segredo escrito; nenhum número ou
   resultado de execução além dos apurados pelo condutor do loop.
+
+## 2026-10-21 — rodada 7, Modo B (relatório `deploy-validation-20261021-1602.md`, FAIL; ensaio de reversão e tentativas de medição apurados pelo condutor do loop)
+
+Entradas novas (fatos, nenhuma decisão; superfície congelada, §16 — nenhuma linha de fumaça, comando novo ou decisão):
+
+1. **Reversão ensaiada em staging** (*Ensaio de reversão R4*, `docs/lap-validation-device-log.md`): R1
+   `DELETE /repos/edumatosr6-svg/kartle-staging/pages` às 16:23:52Z → 404 do GitHub no navegador em ≈ 1 min, enquanto
+   `curl` continuou a receber 200 em cache por mais de 6 min (`max-age=600`) — a despublicação não é imediata para todo
+   cliente. R2: `POST /pages` (`build_type: workflow`) + política de ramos do ambiente liberada **de novo** (a
+   republicação recria o ambiente com a política padrão) + *Re-run all jobs* → execução **39631099098** verde → 200 às
+   16:31:13Z com o mesmo `index-Cqfgl3da.js`. Ciclo ≈ 7,5 min.
+2. **Execuções em vigor**: a execução de produção 39629830827 (`c1e488b`) foi **cancelada** pelo grupo de concorrência
+   `pages` quando um push posterior a substituiu; os pushes só de registro (`2bee672`) criaram execuções mais novas nos
+   dois repositórios; 39627810079 (`build` verde, `deploy` à espera) é a execução de produção mais antiga ainda à espera.
+   Nenhum outro número foi afirmado: os em vigor são lidos na aba Actions.
+3. **Medições de ritmo**: três tentativas automatizadas (painel embutido, Chrome do dono do produto em primeiro plano,
+   janela da extensão) não mediram fps nem a contagem de 3 s — o Chrome limita o `requestAnimationFrame` a 1–2
+   quadros/s sob automação, com os temporizadores normais; o dono do produto relata o jogo fluido na sua própria aba
+   (relato, não medida). D2, D5 (duração), D6, D12 e D13 continuam linhas humanas.
+
+**O que mudou**
+
+- `runbook.md`: cabeçalho com a regra de que cada push cria execuções novas e cancela a de produção que esperava
+  (números em vigor = aba Actions); precondição "validação de staging" aponta ao relatório 1602 e ao que ele deixou
+  aberto; precondição do repositório de staging com o aviso de **refazer a liberação da política após cada
+  despublicação**; precondição "primeira execução verde" com 39629830827 cancelada, 39627810079 como a mais antiga à
+  espera e 39631099098 verde na republicação; **precondição "reversão ensaiada em staging" marcada `[x]`** com horários,
+  janela de cache e ciclo (é a forma escrita da exigência "ensaio antes da pergunta de promoção" que a nota de *Roll
+  back* já carregava); precondição do log com a execução 2 e as tentativas de medição; passo 7 com o ensaio; passo 10
+  com a execução cancelada e "aprovar a mais recente com `build` verde"; passo 11 com a observação de cache; R1 com as
+  durações observadas (404 em ≈ 1 min no navegador; 200 em cache por > 6 min); R2 com a republicação pelo caminho A
+  (reativar o Pages, conferir/liberar a política, *Re-run all jobs*; ≈ 7,5 min); nota de *Roll back* com o ensaio feito.
+- `REL-0003-rollout.md`: ordem 2 (R1/R2 ensaiados; D1, D3, D4, D14 corridos) e 4 (39629830827 cancelada; números na
+  aba Actions); tabela *Staging e produção* com a re-liberação após despublicação; parágrafo *Tudo isto existe* com
+  39631099098 e a regra dos números em vigor; regra de cache com a medida do ensaio; parágrafo final do pipeline.
+- `01-release.md`: linha *Staging* confirmada pelo validador e com R1/R2 ensaiados; *Evidência do pipeline* com
+  39629830827 cancelada, 39627810079 como a mais antiga à espera, a regra dos números em vigor e o ensaio de reversão;
+  precondições humanas reduzidas a uma (execução humana do log, com as tentativas de medição e a pendência 4 do log
+  reduzida a D2); o ensaio de R1/R2 passa a cumprido.
+- `REL-0005-observability.md`: tabela do registro de implantações com 39629830827 cancelada, linha nova 39631099098 e
+  a nota dos números em vigor; modo de falha "deploy com zero passos" com a recorrência após despublicação.
+- `98-divergences.md`: DIV-DP-03, DIV-DP-04 e DIV-DP-11 com o ensaio de R1/R2 (execução 39631099098); DIV-DP-06 com a
+  execução 2, as três tentativas de medição, o relato do dono do produto e as linhas que ficam humanas; DIV-DP-07 com
+  D2 não medido; DIV-DP-10 com a execução cancelada e a confirmação do validador; DIV-DP-13 com a recorrência após
+  despublicação; rodapé com o que fica `open` após a rodada 7 e as duas decisões em recolha.
+- `version:` movido (patch): `01-release.md`, `runbook.md`, `98-divergences.md`, `97-changelog.md` → `1.1.4`;
+  `REL-0003`, `REL-0005` → `1.1.3`. `smoke.md`, `REL-0001`, `REL-0002`, `REL-0004` não editados.
+- `docs/lap-validation-device-log.md` **não foi editado** por esta rodada (é a evidência, fora da cerca de escrita do
+  estágio, §14): a redução da sua pendência 4 a D2 está dita no registro (`01-release.md`, DIV-DP-06).
+
+**Itens fechados**
+
+- **ISSUE-04** (R1/R2 ensaiados em staging): ensaiado em 2026-10-21 — execução 39631099098 verde na republicação com o
+  mesmo `<hash>`; durações, janela de cache e re-liberação da política no `runbook.md`.
+- **ISSUE-16** (números de execução desatualizados): 39629830827 dita cancelada pela fila do grupo `pages` nas quatro
+  localizações (`01-release.md`, `runbook.md`, `REL-0003`, `REL-0005`); os números em vigor remetidos à aba Actions;
+  39627810079 nomeada como a execução de produção mais antiga ainda à espera; pendência 4 do log reduzida a D2 no
+  registro.
+
+**Itens que continuam abertos, com o que os fecha**
+
+- **ISSUE-03** (linhas humanas do `smoke.md`; DIV-DP-06, DIV-DP-07): ambiental — testador com os aparelhos nomeados;
+  a medição automatizada é inviável no navegador sob automação (fato 3).
+- **ISSUE-15** (`href="/"` da marca; DIV-DP-12) e **ISSUE-17** (`fonts.googleapis.com` no carregamento): decisões do
+  dono do produto **em recolha** — as linhas ficam abertas; nada foi decidido nem alterado por esta rodada.
+
+**Itens recusados**: nenhum.
+
+- Nenhum comando `git`, `npm`, `gh` ou chamada a host remoto executado por esta rodada (o ensaio de reversão foi do
+  condutor do loop, antes dela, e é registrado aqui como fato); nenhum valor de segredo escrito; nenhum número ou
+  resultado de execução além dos apurados.
+
+## 2026-10-21 — rodada 8, Modo B (duas decisões do dono do produto registradas em `DOMAIN.md`; ISSUE-15 e ISSUE-17, `info`)
+
+**Fatos apurados** (sem executar nada): `DOMAIN.md` recebeu em 2026-10-21 as decisões *Google Fonts* (a página pode
+continuar carregando DM Sans e Space Grotesk de `fonts.googleapis.com` nesta release; embutir as fontes é backlog) e
+*Link da marca* (`href="/"` aceito nesta release; href relativo vai para o backlog), e `SCOPE-BACKLOG.md` tem os dois
+itens correspondentes (ISSUE-17; ISSUE-15 / DIV-DP-12).
+
+**O que mudou**
+
+- `98-divergences.md`: DIV-DP-12 passa de `open` a `waived` (decisão *Link da marca*, 2026-10-21), apontando ao item
+  do `SCOPE-BACKLOG.md`; linha nova **DIV-DP-14** `waived` (requisição a `fonts.googleapis.com` no carregamento;
+  decisão *Google Fonts*, 2026-10-21), com a nota de que a requisição é do carregamento e não da volta (NFR-0004 não
+  afetado) e apontando ao item do backlog; rodapé com o que fica `open` (DIV-DP-06, DIV-DP-07) e `waived` (DIV-DP-08,
+  DIV-DP-12, DIV-DP-14) após a rodada 8 — as "duas decisões em recolha" deixam de existir.
+- `smoke.md`: D9 com a nota de que a requisição às fontes acontece no carregamento, antes de bloquear a rede, e não
+  conta para "0 requisições durante a volta" (DIV-DP-14). Nenhuma outra linha alterada.
+- `01-release.md`: seção *Limitações conhecidas — divergências aceitas nesta release*, uma linha nomeando as duas
+  divergências aceitas (DIV-DP-12 / ISSUE-15; DIV-DP-14 / ISSUE-17) e os itens de backlog.
+- `version:` movido (patch): `98-divergences.md`, `01-release.md`, `97-changelog.md` → `1.1.5`; `smoke.md` → `1.1.2`.
+  `runbook.md`, `REL-0001` a `REL-0005` não editados. Nenhuma superfície nova (§16): a linha DIV-DP-14 registra uma
+  decisão sobre comportamento já observado (ISSUE-17), não uma exigência nova.
+
+**Itens fechados**
+
+- **ISSUE-15** (`href="/"` da marca; DIV-DP-12): decidido pelo dono do produto — aceito nesta release; DIV-DP-12
+  `waived` com a decisão e a data; correção no `SCOPE-BACKLOG.md`.
+- **ISSUE-17** (`fonts.googleapis.com` no carregamento): decidido pelo dono do produto — mantido nesta release;
+  DIV-DP-14 `waived` com a decisão e a data; embutir as fontes no `SCOPE-BACKLOG.md`; nota em D9 do `smoke.md`.
+
+**Itens que continuam abertos, com o que os fecha**
+
+- **ISSUE-03** (linhas humanas do `smoke.md`; DIV-DP-06, DIV-DP-07): ambiental — testador com os aparelhos nomeados;
+  inalterado por esta rodada.
+
+**Itens recusados**: nenhum.
+
+- Nenhum comando `git`, `npm`, `gh` ou chamada a host remoto executado por esta rodada; nenhum valor de segredo
+  escrito; `DOMAIN.md`, `SCOPE-BACKLOG.md` e `docs/lap-validation-device-log.md` não editados (fora da cerca de
+  escrita, §14).

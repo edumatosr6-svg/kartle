@@ -4,7 +4,7 @@ title: Observabilidade — o que a release registra, o que se mede e o que faria
 feature: race-lap-validation
 stage: deploy
 status: draft
-version: 1.1.2
+version: 1.1.3
 sources: [DES-0009, DES-0011, NFR-0003, NFR-0004, NFR-0005, CHK-TEST-0013-03]
 ---
 
@@ -45,10 +45,14 @@ contém o que o repositório e o workflow produzem (I6).
 
 | Repositório | Execução | Commit | `build` | `deploy` | Leitura |
 |---|---|---|---|---|---|
-| `kartle` (produção) | 39627810079 | `162b1b3` | concluído | *Waiting* (revisor obrigatório; **não aprovado**) | pipeline construiu; promoção não decidida (D-DP-06) |
-| `kartle` (produção) | 39629830827 | `c1e488b` | concluído | pendente atrás da anterior (grupo de concorrência `pages`) | idem |
+| `kartle` (produção) | 39627810079 | `162b1b3` | concluído | *Waiting* (revisor obrigatório; **não aprovado**) | pipeline construiu; promoção não decidida (D-DP-06); a execução de produção **mais antiga ainda à espera** |
+| `kartle` (produção) | 39629830827 | `c1e488b` | concluído | **cancelada** pelo grupo de concorrência `pages` (um push posterior a substituiu; API: `completed cancelled`, 16:02:10Z) | o grupo `pages` mantém uma só execução pendente por repositório; a mais nova substitui a que esperava |
 | `kartle-staging` | 39627817908 | `162b1b3` | concluído | **falhado, zero passos executados** | política de ramos do ambiente (modo de falha abaixo) |
 | `kartle-staging` | 39629837192 | `c1e488b` | concluído | falhado, zero passos; **reexecutada após a correção: concluído** | primeira execução verde; `https://edumatosr6-svg.github.io/kartle-staging/` responde 200 em HTTPS |
+| `kartle-staging` | 39631099098 | (republicação após o ensaio de R1/R2, *Re-run all jobs*) | concluído | concluído | 200 em 16:31:13Z com o mesmo `index-Cqfgl3da.js`; prova de que R1/R2 são reversíveis (`runbook.md`) |
+
+Os pushes só de registro que se seguiram (`2bee672`) criaram execuções mais novas nos dois repositórios, não copiadas
+aqui: **a execução em vigor é lida na aba Actions** de cada repositório, e é a que o relatório de validação cita.
 
 ## Qual alerta soaria
 
@@ -69,6 +73,6 @@ dado pessoal (RNF10, I6).
 |---|---|---|
 | arquivo de pista empacotado lido como `INCOMPLETE`, `UNREADABLE` ou `UNSUPPORTED_SCHEMA` | `#track-status` mostra o texto de erro em vez de `synthetic`, ou `#lap-offer` fica sem o botão "volta de treino" (a oferta oficial não existe nesta release em nenhum caso, DES-0009) | defeito de build ou de dado (`FAIL CODE`); `CHK-TEST-0009-*` deveria ter falhado em `npm test` |
 | *assets* em 404 em `https://edumatosr6-svg.github.io/kartle/` | console com erro de módulo; tela em branco | bundle construído sem `--base=/kartle/` ou janela de cache de 10 min após uma implantação (`REL-0003`, riscos) — empacotamento (`FAIL` deste estágio) |
-| trabalho `deploy` **falhado com zero passos executados** (o `build` concluiu; nenhum passo do `deploy` aparece no log) | na execução do Actions, `deploy` em vermelho sem nenhum passo listado; nenhuma URL publicada; o site não muda | o ambiente `github-pages` recusou o ramo na preparação do trabalho: *Deployment branches and tags* do ambiente restrito ao ramo padrão (o GitHub cria o ambiente assim ao ativar o Pages: `custom_branch_policies: true, protected_branches: false`). **Observado em 2026-10-21** em `kartle-staging`, execuções 39627817908 e 39629837192 (ramo `staging`). Remédio: Settings → Environments → `github-pages` → *Deployment branches and tags* = **No restriction** (ou acrescentar o ramo que implanta) e *Re-run all jobs* — a reexecução de 39629837192 publicou. Classificação: configuração do repositório (`FAIL` deste estágio), nunca defeito da aplicação. Em produção, onde a restrição a `master` é desejada, o mesmo sintoma num push de `master` indicaria a política alterada por engano |
+| trabalho `deploy` **falhado com zero passos executados** (o `build` concluiu; nenhum passo do `deploy` aparece no log) | na execução do Actions, `deploy` em vermelho sem nenhum passo listado; nenhuma URL publicada; o site não muda | o ambiente `github-pages` recusou o ramo na preparação do trabalho: *Deployment branches and tags* do ambiente restrito ao ramo padrão (o GitHub cria o ambiente assim ao ativar o Pages: `custom_branch_policies: true, protected_branches: false`). **Observado em 2026-10-21** em `kartle-staging`, execuções 39627817908 e 39629837192 (ramo `staging`). Remédio: Settings → Environments → `github-pages` → *Deployment branches and tags* = **No restriction** (ou acrescentar o ramo que implanta) e *Re-run all jobs* — a reexecução de 39629837192 publicou. Classificação: configuração do repositório (`FAIL` deste estágio), nunca defeito da aplicação. Em produção, onde a restrição a `master` é desejada, o mesmo sintoma num push de `master` indicaria a política alterada por engano. **Reaparece depois de uma despublicação**: reativar o Pages (`POST /pages`) recria o ambiente com a política padrão — observado no ensaio de R1/R2 de 2026-10-21; em staging a liberação tem de ser refeita antes do *Re-run all jobs* |
 | cronômetro parado com a volta em `RUNNING` | `#lap-state` sem avanço de tempo por quadro | defeito de aplicação (`src/frameClock.ts`, DES-0007) |
 | pausa não acontece ao perder o foco ou o sensor | E2E-04 / E2E-05 falham | defeito de aplicação (ADR-0005) |

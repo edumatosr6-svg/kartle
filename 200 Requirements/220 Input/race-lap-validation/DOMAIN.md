@@ -37,3 +37,8 @@ Decisões fechadas pelo dono do produto. Prevalecem sobre os pontos em aberto co
   não exibe crédito.
 - 2026-10-21 — **Monitoramento (Eduardo Matos):** vigilância manual conforme o runbook (abrir a URL
   publicada após cada deploy); nenhum monitor externo nesta release (RNF12).
+- 2026-10-21 — **Google Fonts (Eduardo Matos):** a página pode continuar carregando DM Sans e Space
+  Grotesk de `fonts.googleapis.com` nesta release (divergência aceita; nenhum dado do jogador é enviado,
+  só a requisição de carregamento). Embutir as fontes no build é item de backlog.
+- 2026-10-21 — **Link da marca (Eduardo Matos):** o `href="/"` da marca, que sai de `/<repo>/` no GitHub
+  Pages, é aceito nesta release; a correção (href relativo) vai para o backlog da próxima release.
