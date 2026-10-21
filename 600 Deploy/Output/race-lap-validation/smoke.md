@@ -3,7 +3,7 @@ title: Verificações de fumaça — por canal, cada uma observando um limiar
 feature: race-lap-validation
 stage: deploy
 status: draft
-version: 1.1.0
+version: 1.1.1
 sources: [DES-0005, DES-0009, NFR-0003, NFR-0004, NFR-0006, NFR-0007, TEST-0009, TEST-0013]
 ---
 
@@ -14,8 +14,11 @@ na URL de **produção** depois dela. Cada linha nomeia o limiar que observa; um
 não prova nada. Os roteiros `E2E-nn` são os de `300 Specs/330 D-Specs/Output/race-lap-validation/test-strategy.md`
 e o resultado é registrado em `docs/lap-validation-device-log.md` com aparelho, navegador, versão e medida.
 
-URLs (GitHub Pages, D23): staging `https://<owner>.github.io/kartle-staging/`, produção `https://<owner>.github.io/kartle/`
-— sempre com a barra final, porque o site é servido em `/<repo>/`. Nesta release a página oferece **só a volta de
+URLs (GitHub Pages, D23; repositórios de `edumatosr6-svg`): staging `https://edumatosr6-svg.github.io/kartle-staging/`,
+produção `https://edumatosr6-svg.github.io/kartle/` — sempre com a barra final, porque o site é servido em
+`/kartle-staging/` e `/kartle/`. Abaixo, "a URL" é a de staging antes da promoção e a de produção depois dela. O
+resultado de cada execução é registrado em `docs/lap-validation-device-log.md` por número de execução (a execução 1,
+local e parcial, já existe; a execução 2 é a de staging). Nesta release a página oferece **só a volta de
 treino**: a oferta de volta oficial e de reconhecimento depende do desafio diário, outra feature (DES-0009), e todas as
 linhas abaixo correm sobre a volta de treino.
 
@@ -25,9 +28,9 @@ Preparação comum: cache vazio (janela anônima), painel de rede aberto, idioma
 
 | # | O que se faz | O que se observa | Limiar | Roteiro | prod |
 |---|---|---|---|---|---|
-| D1 | abrir `https://<owner>.github.io/<repo>/` (`kartle-staging` em staging, `kartle` em produção) | cadeado válido (certificado `*.github.io`); painel de rede sem nenhum recurso em `http://`; nenhum aviso de conteúdo misto; os *assets* carregados de `/<repo>/assets/` com 200 | RNF06: 0 recursos inseguros, certificado válido (I6) | — | sim |
-| D2 | com o painel de rede limitando a 4G (perfil "4G" ou "Fast 4G") e cache vazio, recarregar `https://<owner>.github.io/<repo>/` e cronometrar da navegação até o kart responder à primeira tecla | tempo medido | RNF01: abaixo de 10 s | — | sim |
-| D3 | na mesma carga, ler o total transferido no painel de rede | bytes transferidos e bytes de recurso | RNF02: abaixo de 3 145 728 bytes; esperado da ordem de 153 KB comprimidos ou 593 KB brutos (`01-release.md`) | — | sim |
+| D1 | abrir a URL: `https://edumatosr6-svg.github.io/kartle-staging/` em staging, `https://edumatosr6-svg.github.io/kartle/` em produção | cadeado válido (certificado `*.github.io`); painel de rede sem nenhum recurso em `http://`; nenhum aviso de conteúdo misto; os *assets* carregados de `/kartle-staging/assets/` (ou `/kartle/assets/`) com 200 | RNF06: 0 recursos inseguros, certificado válido (I6) | — | sim |
+| D2 | com o painel de rede limitando a 4G (perfil "4G" ou "Fast 4G") e cache vazio, recarregar a mesma URL de D1 e cronometrar da navegação até o kart responder à primeira tecla | tempo medido | RNF01: abaixo de 10 s | — | sim |
+| D3 | na mesma carga de D2 (mesma URL), ler o total transferido no painel de rede | bytes transferidos e bytes de recurso | RNF02: abaixo de 3 145 728 bytes; esperado da ordem de 153 KB comprimidos ou 593 KB brutos (`01-release.md`) | — | sim |
 | D4 | `#track-status` ao terminar de carregar | mostra `synthetic`; `#lap-offer` contém **exatamente um** botão, "volta de treino", e **nenhuma** opção de volta oficial nem de reconhecimento (as duas chegam com o desafio diário, DES-0009; `offeredLapKinds(reading, [])` em `src/main.ts`) | leitura `COMPLETE` do arquivo versão 2 (NFR-0012; `CHK-TEST-0009-*`): 1 oferta, a de treino; 0 oferta oficial (AC-US-0008-03) | E2E-06 (parte positiva, lida para esta release: treino pilotável, sem opção oficial) | sim |
 | D5 | iniciar a volta de treino; observar a contagem | 3, 2, 1 e VERDE em texto; cronômetro `0:00.000` até o VERDE; acelerar antes do VERDE não move o kart | NFR-0006: numerais com 48 px no mínimo e contraste 4,5:1 | E2E-01 (em volta de treino) | sim |
 | D6 | completar a volta de treino com o teclado | "válida em andamento" durante a volta; tempo de cada setor ao completá-lo; resultado com total `m:ss.mmm`, sufixo "não oficial" (AC-US-0008-01) e 4 setores cuja soma é o total | NFR-0006: estado em texto, 4,5:1; soma dos setores igual ao total com 0 ms de diferença | E2E-02 (parte de conclusão) | sim |
@@ -44,7 +47,7 @@ Preparação comum: cache vazio (janela anônima), painel de rede aberto, idioma
 
 | # | O que se faz | O que se observa | Limiar | Roteiro | prod |
 |---|---|---|---|---|---|
-| M1 | abrir `https://<owner>.github.io/<repo>/` no celular | cadeado válido; "Ativar inclinação" pede permissão e, concedida, o kart responde à inclinação | RNF06: HTTPS válido; `window.isSecureContext` verdadeiro, observável porque a inclinação ativa em vez de avisar "Inclinação indisponível" | — | sim |
+| M1 | abrir a URL de D1 (`https://edumatosr6-svg.github.io/kartle-staging/` em staging, `https://edumatosr6-svg.github.io/kartle/` em produção) no celular | cadeado válido; "Ativar inclinação" pede permissão e, concedida, o kart responde à inclinação | RNF06: HTTPS válido; `window.isSecureContext` verdadeiro, observável porque a inclinação ativa em vez de avisar "Inclinação indisponível" | — | sim |
 | M2 | em rede 4G real (dados móveis, Wi-Fi desligado), cache vazio, cronometrar da navegação até o kart responder ao primeiro toque ou inclinação | tempo medido | RNF01: abaixo de 10 s | — | sim |
 | M3 | na mesma carga, total transferido (ferramenta remota do navegador ou contador de dados do aparelho) | bytes | RNF02: abaixo de 3 145 728 bytes | — | sim |
 | M4 | `#track-status` e `#lap-offer` | `synthetic`; exatamente um botão, "volta de treino"; nenhuma opção oficial nem de reconhecimento (DES-0009) | NFR-0012: leitura `COMPLETE`, 1 oferta (treino), 0 oficial (AC-US-0008-03) | E2E-06 (como em D4) | sim |
@@ -69,5 +72,9 @@ limiar cruzado é gatilho de reversão (`runbook.md`, *Roll back*).
 - O "desafio do dia" citado na verificação de saúde das diretivas ainda não existe nesta release (é a etapa 5 do
   produto): o observável equivalente hoje é D4/M4, a pista `synthetic` lida como `COMPLETE` com a volta de treino
   ofertada. A volta oficial só passa a ser ofertada — e só então entra numa linha desta lista — com essa etapa (DES-0009).
-- O `href="/"` da marca no cabeçalho aponta, no Pages de projeto, para `https://<owner>.github.io/` e não para
-  `/<repo>/`; é item do estágio de código (`98-divergences.md`, DIV-DP-12) e nenhuma linha acima depende desse link.
+- O `href="/"` da marca no cabeçalho aponta, no Pages de projeto, para `https://edumatosr6-svg.github.io/` e não para
+  `/kartle/` (ou `/kartle-staging/`); é item do estágio de código (`98-divergences.md`, DIV-DP-12) e nenhuma linha
+  acima depende desse link.
+- D14/M12 estão fechadas quanto à regra: D-DP-04 foi ratificado pelo dono do produto em 2026-10-21 (`DOMAIN.md`) — o
+  crédito OSM e o aviso ODbL só são exigidos quando uma pista derivada de OSM for publicada; o resultado esperado das
+  duas linhas não mudou.

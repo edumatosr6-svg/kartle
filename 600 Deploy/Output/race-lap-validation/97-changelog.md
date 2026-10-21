@@ -3,7 +3,7 @@ title: Registro de mudanças — validação de volta de corrida (estágio de de
 feature: race-lap-validation
 stage: deploy
 status: draft
-version: 1.1.1
+version: 1.1.2
 sources: []
 ---
 
@@ -108,7 +108,7 @@ Cada superfície acrescentada nesta rodada tem uma dessas decisões como autoriz
 
 - **Criados na raiz do repositório** (ativos do estágio de deploy): `.github/workflows/pages.yml` — `push` em `master`
   e `staging` e `workflow_dispatch`; `checkout@v4`, `setup-node@v4` (`node-version-file: .nvmrc`, cache npm), `npm ci`,
-  `npm test`, `npm run build -- --base=/<repo>/`, `measure_dist.py` (RNF02 como portão), `configure-pages@v5`,
+  `npm test`, `npm run build -- --base=/<nome do repositório>/`, `measure_dist.py` (RNF02 como portão), `configure-pages@v5`,
   `upload-pages-artifact@v3` de `dist/`, trabalho `deploy` no ambiente `github-pages` com `deploy-pages@v4`; permissões
   `contents: read`, `pages: write`, `id-token: write`; nenhum segredo; `if` no `deploy` para que `staging` só publique
   em repositório `*-staging`. E `.nvmrc` com `24`. `package.json` e `index.html` não foram editados.
@@ -122,7 +122,7 @@ Cada superfície acrescentada nesta rodada tem uma dessas decisões como autoriz
   site*; B: *Re-run all jobs* da execução verde anterior + aprovação; C: `git revert <sha> && git push origin master`),
   R2 (espera do cache); cada um com resultado observável e duração. *Verify* 4 e 5 e os gatilhos com a volta de treino.
   Ponto sem retorno reescrito (o repositório é o artefato de reversão).
-- `smoke.md`: forma da URL `https://<owner>.github.io/<repo>/` em D1, D2 e M1; **ISSUE-12** (abaixo) em D4, D5, D6, D8,
+- `smoke.md`: forma da URL do Pages de projeto (conta e repositório ainda por nomear) em D1, D2 e M1; **ISSUE-12** (abaixo) em D4, D5, D6, D8,
   M4, M5, M6; nota sobre o `href="/"` da marca.
 - `REL-0001-config.md`: nenhuma variável de ambiente; as duas únicas entradas (nome do repositório e ambiente
   `github-pages`), OIDC em vez de credencial.
@@ -162,7 +162,7 @@ Cada superfície acrescentada nesta rodada tem uma dessas decisões como autoriz
 
 - **ISSUE-01, metade "construído pelo pipeline e observado"**: não há remoto GitHub — o workflow nunca correu. Só o
   dono do produto cria o repositório e faz o push (DIV-DP-10).
-- **ISSUE-02/ISSUE-04, metade "executado em staging"**: o repositório `<owner>/kartle-staging` não existe (DIV-DP-11);
+- **ISSUE-02/ISSUE-04, metade "executado em staging"**: o repositório `kartle-staging` não existia (DIV-DP-11);
   nenhum ensaio de R1/R2 foi feito.
 - **ISSUE-03** (26 linhas de fumaça executadas, log de aparelho): sem URL de staging nem aparelhos; `docs/lap-validation-device-log.md`
   continua inexistente (DIV-DP-06, DIV-DP-07). A execução parcial do condutor do loop em desktop, sobre o build local,
@@ -211,3 +211,80 @@ de fumaça, precondição, arquivo, comando ou decisão acrescentados.
 estão fora do escopo desta rodada e permanecem como DIV-DP-05 a DIV-DP-08 e DIV-DP-10 a DIV-DP-12.
 
 - Nenhum comando `git`, `npm` ou chamada a host remoto executado nesta rodada; nenhum valor de segredo escrito.
+
+## 2026-10-21 — rodada 5, Modo B/C (relatório `deploy-validation-20261021-1501.md`, FAIL; fatos e decisões do dono do produto de 2026-10-21)
+
+Entradas novas do dono do produto (Eduardo Matos, conta GitHub `edumatosr6-svg`), que autorizam cada mudança desta
+rodada (§16: nenhuma superfície além do que estas entradas nomeiam):
+
+1. **Remoto criado.** Produção `https://github.com/edumatosr6-svg/kartle` (público), remoto `origin`, Pages com
+   *Source* = GitHub Actions (`build_type: workflow`), site `https://edumatosr6-svg.github.io/kartle/`, ambiente
+   `github-pages` com *Required reviewers* = `edumatosr6-svg`. Staging `https://github.com/edumatosr6-svg/kartle-staging`
+   (público), remoto `staging`, *Source* = GitHub Actions, sem revisor, site
+   `https://edumatosr6-svg.github.io/kartle-staging/`. `master` (`c41c6c3` → `c1f7f28` → `162b1b3`) enviado a `origin`
+   e a `staging` como ramo `staging`. A primeira execução de produção constrói e **espera aprovação**; nada promovido.
+2. **D-DP-04 ratificado** (`DOMAIN.md`): nenhum dado OSM nesta release → nenhum crédito; a obrigação volta com a
+   primeira pista OSM.
+3. **Monitoramento** (`DOMAIN.md`): vigilância manual conforme o runbook; nenhum monitor externo nesta release (RNF12).
+
+**O que mudou**
+
+- Todos os marcadores de conta e de repositório do registro substituídos pelos nomes e URLs reais acima
+  (`01-release.md`, `runbook.md`, `smoke.md`, `REL-0001`, `REL-0003`, `REL-0005`, `98-divergences.md`); onde o workflow
+  deriva o nome do repositório do evento, o texto diz `/kartle/` ou `/kartle-staging/` explicitamente. Nenhum marcador
+  de provedor resta em nenhum passo; as menções ao marcador nas rodadas 2 e 3 acima são histórico.
+- `01-release.md`: *Proveniência* com os remotos, a visibilidade, a configuração do Pages e a proteção do ambiente; linha
+  nova com os três commits de `master` e a afirmação de que `c1f7f28` e `162b1b3` não tocam `src/`, `tests/`,
+  `index.html` nem o lockfile (a árvore construída é a verificada); precondições humanas restantes reduzidas a três (ler
+  a primeira execução na aba Actions; execução 2 do log de aparelho; ensaio de R1/R2 em staging); as cumpridas listadas
+  com o fato e a data.
+- `runbook.md`: tabela de nomes com a conta, os dois repositórios, os remotos, as URLs dos sites e das execuções, a ponta
+  de `master` e o `<hash>` do *asset*; aviso de que números e resultados de execução são lidos na aba Actions, nunca
+  escritos aqui. Precondições: marcadas `[x]` com o fato — commit, veredito de testes, migração n/a, flag, repositório de
+  produção, repositório de staging, D14/M12 com D-DP-04 ratificado, monitoramento decidido, Node; ficam `[ ]` as que
+  esperam a execução do Actions ou o testador — validação de staging `SUCCESS`, primeira execução verde observada (linha
+  nova, derivada do fato 1), execução 2 do log. Passo 1 com os três commits; passos 6, 7, 10 e R1 com as URLs reais e o
+  estado "push feito, execução por ler"; passo 10 com *Reject* como desfazer antes do clique; *Verify* 1 e 7 nomeados
+  como a vigilância manual decidida; nota de que o ensaio de R1/R2 em staging ainda não foi feito.
+- `smoke.md`: D1, D2, D3 e M1 com as duas URLs reais; cabeçalho com a regra "a URL" e o registro por número de execução;
+  nota de que D-DP-04 está ratificado e D14/M12 não mudam.
+- `REL-0001`: as duas entradas com os nomes reais; proteção do ambiente marcada como feita; remotos nomeados como
+  endereços públicos, não segredos.
+- `REL-0003`: ordem de operações com o estado de 2026-10-21 nos passos 2 e 4 (push feito; execução por ler; nada
+  aprovado); tabela *Staging e produção* com repositórios, visibilidade, remotos e configuração **existentes**; parágrafo
+  "nada disto existe" substituído por "tudo isto existe desde 2026-10-21; o que falta é o resultado das execuções, lido na
+  aba Actions"; riscos com as URLs reais.
+- `REL-0005`: disponibilidade e alerta reescritos como **decisão** — vigilância manual, nenhum monitor externo
+  (`DOMAIN.md`), DIV-DP-08 `waived`; URLs das execuções dos dois repositórios.
+- `98-divergences.md`: estado `waived` definido no cabeçalho; DIV-DP-05 `resolved` (ratificação em `DOMAIN.md`);
+  DIV-DP-08 `waived` (decisão e data); DIV-DP-10 e DIV-DP-11 `resolved` (repositórios criados, configurados e com push),
+  cada uma dizendo que a evidência da execução — "construído pelo pipeline", "executado em staging" — é devida à
+  próxima execução do validador; DIV-DP-07 com a URL existente; DIV-DP-12 com as URLs reais; rodapé com o que fica `open`.
+- `version:` movido (patch): `01-release.md`, `runbook.md`, `98-divergences.md`, `97-changelog.md` → `1.1.2`;
+  `smoke.md`, `REL-0001`, `REL-0003`, `REL-0005` → `1.1.1`. `REL-0002` e `REL-0004` não editados (`1.0.1`).
+
+**Itens fechados**
+
+- **ISSUE-08** (alerta): decidido pelo dono do produto — vigilância manual, sem monitor externo (RNF12); DIV-DP-08
+  `waived` com a decisão e a data; a verificação HTTPS manual permanece em *Verify* 1 e 7.
+- **ISSUE-11** (ratificação de D-DP-04): ratificado em `DOMAIN.md`; DIV-DP-05 `resolved`; D14/M12 inalteradas.
+- **DIV-DP-05, DIV-DP-08, DIV-DP-10, DIV-DP-11**: como acima.
+
+**Itens que continuam abertos, com o que os fecha**
+
+- **ISSUE-01** (construído pelo pipeline e observado), **ISSUE-02** (instalado em staging), **ISSUE-04** (R1/R2
+  ensaiados): o remoto existe e os pushes foram feitos, mas **nenhum número nem resultado de execução do Actions é
+  conhecido por esta rodada** — não foram inventados. Fecham-se quando o validador ler as execuções em
+  `https://github.com/edumatosr6-svg/kartle/actions` e `https://github.com/edumatosr6-svg/kartle-staging/actions`,
+  observar `https://edumatosr6-svg.github.io/kartle-staging/` em HTTPS e ensaiar R1/R2 em staging.
+- **ISSUE-03** (26 linhas de fumaça em staging; execução 2 do log): depende de staging observado e do testador com os
+  aparelhos nomeados (DIV-DP-06, DIV-DP-07).
+- **ISSUE-09** (info, sem flag): a ordem de `REL-0003` será confrontada com a primeira execução em staging.
+- **ISSUE-15** (`href="/"` da marca; DIV-DP-12): decisão do dono do produto sobre entrar na próxima rodada do estágio de
+  código antes ou depois desta release — ainda sem resposta; nenhum relatório de retorno escrito, porque a decisão de
+  abri-lo é humana.
+
+**Itens recusados**: nenhum.
+
+- Nenhum comando `git`, `npm`, `gh` ou chamada a host remoto executado nesta rodada; nenhum valor de segredo escrito;
+  nenhum número ou resultado de execução do Actions afirmado.

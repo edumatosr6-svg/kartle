@@ -4,7 +4,7 @@ title: Configuração de ambiente — nomes e significados, nunca valores
 feature: race-lap-validation
 stage: deploy
 status: draft
-version: 1.1.0
+version: 1.1.1
 sources: [DES-0011, NFR-0004, NFR-0005]
 ---
 
@@ -31,11 +31,13 @@ dados de configuração são dois, nenhum deles segredo e nenhum deles escrito n
 
 | Entrada | Para que serve | Quem define | Obrigatória | Onde vive |
 |---|---|---|---|---|
-| Nome do repositório (`github.event.repository.name`) | base dos caminhos do bundle (`--base=/<repo>/`) e, por consequência, a URL `https://<owner>.github.io/<repo>/`; `kartle` é produção, `kartle-staging` é staging | o GitHub, a partir do repositório em que o workflow corre | sim (fornecida pelo evento, nada a configurar) | contexto da execução |
-| Ambiente `github-pages` | onde o trabalho `deploy` publica; em produção leva o **revisor obrigatório** (o dono do produto), em staging nenhum | dono do produto, em Settings → Environments → `github-pages` | sim | configuração do repositório no GitHub; não é segredo |
+| Nome do repositório (`github.event.repository.name`) | base dos caminhos do bundle (`--base=/kartle/` ou `/kartle-staging/`) e, por consequência, a URL: `https://edumatosr6-svg.github.io/kartle/` é produção (repositório `edumatosr6-svg/kartle`), `https://edumatosr6-svg.github.io/kartle-staging/` é staging (repositório `edumatosr6-svg/kartle-staging`) | o GitHub, a partir do repositório em que o workflow corre | sim (fornecida pelo evento, nada a configurar) | contexto da execução |
+| Ambiente `github-pages` | onde o trabalho `deploy` publica; em produção leva o **revisor obrigatório** `edumatosr6-svg` (configurado em 2026-10-21), em staging nenhum | dono do produto, em Settings → Environments → `github-pages` — **feito** nos dois repositórios (`REL-0003`) | sim | configuração do repositório no GitHub; não é segredo |
 
 A autenticação da publicação é o token OIDC da própria execução (`permissions: id-token: write`, `pages: write`):
-nenhuma credencial é criada, guardada ou copiada (I6, D-DP-05). A versão do Node vem de `.nvmrc` (`24`) na raiz do
+nenhuma credencial é criada, guardada ou copiada (I6, D-DP-05). Os remotos locais são `origin`
+(`https://github.com/edumatosr6-svg/kartle`) e `staging` (`https://github.com/edumatosr6-svg/kartle-staging`), ambos
+públicos (Pages a US$ 0, RNF12); um remoto é um endereço, não um segredo. A versão do Node vem de `.nvmrc` (`24`) na raiz do
 repositório, lida por `node-version-file`; o build medido usou Node v24.20.0. Domínio próprio: fora desta release; a URL
 é a do `github.io`.
 

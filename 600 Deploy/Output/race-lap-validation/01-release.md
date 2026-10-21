@@ -3,7 +3,7 @@ title: Release — validação de volta de corrida
 feature: race-lap-validation
 stage: deploy
 status: draft
-version: 1.1.1
+version: 1.1.2
 sources: [DM-0001, DM-0002, DES-0007, DES-0009, DES-0011, NFR-0003, NFR-0004, NFR-0006, NFR-0007, NFR-0012]
 ---
 
@@ -37,30 +37,35 @@ os testes verificaram**.
 |---|---|
 | Veredito de testes | `SUCCESS` — `500 Tests/Output/race-lap-validation/reports/test-validation/test-validation-20261021-1411.md` (170 casos, 170 aprovados, execução de 2026-10-21 14:10Z posterior à última edição de `src/` e `tests/`) |
 | Commit verificado | **`c41c6c3ddf8ada690a2f2b1581ee87700c837268`** (curto `c41c6c3`), ramo `master`, mensagem "Kartle: pipeline de desenvolvimento e validação de volta (race-lap-validation)", feito pelo dono do produto em 2026-10-21 com a árvore que o veredito acima verificou. Reexecutados nesse commit pelo condutor do loop: `npm ci` saída 0, `npm test` 170 aprovados / 0 reprovados / 0 pulados, `npm run build` saída 0 (`dist/` com 593 256 bytes, tabela abaixo). O relatório de validação de deploy registra o resultado |
+| Commits que o `master` enviado contém | `c41c6c3` (árvore verificada: `npm ci`, 170 testes, build), `c1f7f28` (preparação da release: `.github/workflows/pages.yml`, `.nvmrc`, `docs/lap-validation-device-log.md`, este registro) e `162b1b3` (decisões D23, D-DP-04 e monitoramento em `DOMAIN.md`). `c1f7f28` e `162b1b3` **não alteram** `src/`, `tests/`, `index.html`, `package.json` nem `package-lock.json`: a árvore que o workflow constrói é a verificada em `c41c6c3`, e o veredito de testes continua a valer. A ponta de `master` publicada é `162b1b3` |
 | Tag de release | não existe; a release é identificada pelo hash acima e pela execução do workflow que o publicar |
-| Remoto GitHub | **não existe ainda**: o dono do produto cria o repositório `<owner>/kartle` no GitHub e faz `git push -u origin master`; só então o workflow abaixo tem a primeira execução (`98-divergences.md`, DIV-DP-10) |
+| Remoto GitHub | **existe** (2026-10-21, dono do produto `edumatosr6-svg`): repositório de produção `https://github.com/edumatosr6-svg/kartle` (público), remoto local `origin`; `master` enviado. Settings → Pages → *Source* = **GitHub Actions** (`build_type: workflow`); Settings → Environments → `github-pages` com **Required reviewers = `edumatosr6-svg`**. A primeira execução do workflow `pages` constrói e **para em `deploy` à espera da aprovação**: nada foi promovido. O número e o resultado dessa execução são lidos pelo humano em `https://github.com/edumatosr6-svg/kartle/actions` e registrados pela próxima validação de deploy — este registro não os afirma (DIV-DP-10 `resolved`) |
 | Sistema de CI | **GitHub Actions**: `.github/workflows/pages.yml` na raiz do repositório (ativo em `push` para `master` e `staging` e por `workflow_dispatch`); etapas em `REL-0003` |
-| Staging | o site Pages de um **segundo repositório**, `<owner>/kartle-staging`, alimentado pelo mesmo workflow a partir do ramo `staging` — a ser criado pelo dono do produto (`REL-0003`; DIV-DP-11) |
-| Produção | o site Pages deste repositório, `https://<owner>.github.io/kartle/`, com o ambiente `github-pages` protegido por **revisor obrigatório** (o dono do produto): o clique de aprovação é a promoção (D-DP-06). Custo: US$ 0 em repositório público (RNF12). Domínio próprio: fora desta release |
+| Staging | o site Pages de um **segundo repositório**, `https://github.com/edumatosr6-svg/kartle-staging` (público), remoto local `staging`, ramo `staging` (enviado com `git push staging master:staging`), *Source* = GitHub Actions, **sem revisor**; site `https://edumatosr6-svg.github.io/kartle-staging/` (`REL-0003`; DIV-DP-11 `resolved`). A evidência "instalado em staging e observado" (execução verde, URL em HTTPS com o `<hash>` do build) é devida à próxima execução do validador |
+| Produção | o site Pages deste repositório, `https://edumatosr6-svg.github.io/kartle/`, com o ambiente `github-pages` protegido por **revisor obrigatório** (`edumatosr6-svg`): o clique de aprovação é a promoção (D-DP-06). Custo: US$ 0 em repositório público (RNF12). Domínio próprio: fora desta release |
 
 ### Precondições humanas que restam, em ordem
 
-1. **Criar o repositório `<owner>/kartle` no GitHub e fazer o push de `master`** (dono do produto); em Settings → Pages,
-   *Source* = "GitHub Actions"; em Settings → Environments → `github-pages`, *Required reviewers* = o dono do produto.
-   Até lá o workflow nunca correu e a proveniência "construído pelo pipeline" não foi observada.
-2. **Criar o repositório `<owner>/kartle-staging`** com *Source* = "GitHub Actions" e sem revisor; fazer o push do ramo
-   `staging` (`REL-0003`, *Staging e produção no GitHub Pages*).
-3. **Registrar a execução 2 do roteiro de aparelho** em `docs/lap-validation-device-log.md` (E2E-01 a E2E-11 de
-   `300 Specs/330 D-Specs/Output/race-lap-validation/test-strategy.md`). O log existe com a **execução 1** (condutor do
-   loop, desktop, build local do commit `c41c6c3`, parcial: estado e texto de D4, D5, D7, D8, D9, D10, D11; página em
-   segundo plano, ritmo inválido; nenhum aparelho nomeado). Falta a execução em staging, janela em primeiro plano, no
-   notebook e no celular de referência nomeados: 27 critérios do veredito de testes têm a metade de tela, sensor, taxa
-   de quadros ou navegador `unverified` até esse registro; `smoke.md` reutiliza os mesmos roteiros (DIV-DP-06).
-4. **Ratificar a leitura de D-DP-04 nesta release** (`98-divergences.md`, DIV-DP-05): nenhum dado OSM é publicado, logo
-   nenhum crédito é exigido até a primeira release com pista OSM; ou o crédito entra por mudança de código.
+1. **Ler o resultado da primeira execução do workflow `pages`** em `https://github.com/edumatosr6-svg/kartle/actions`
+   (commit da ponta de `master`): `build` verde com `npm test` 170 aprovados e `Measure dist` `within_limit=True`;
+   `deploy` em *Waiting* — **não aprovar ainda**. E em `https://github.com/edumatosr6-svg/kartle-staging/actions`:
+   execução verde com `deploy` concluído e `https://edumatosr6-svg.github.io/kartle-staging/` respondendo 200 em HTTPS.
+   É a observação "construído pelo pipeline" que a próxima validação de deploy registra.
+2. **Registrar a execução 2 do roteiro de aparelho** em `docs/lap-validation-device-log.md` (E2E-01 a E2E-11 de
+   `300 Specs/330 D-Specs/Output/race-lap-validation/test-strategy.md`), sobre a URL de staging. O log existe com a
+   **execução 1** (condutor do loop, desktop, build local do commit `c41c6c3`, parcial: estado e texto de D4, D5, D7,
+   D8, D9, D10, D11; página em segundo plano, ritmo inválido; nenhum aparelho nomeado). Falta a execução em staging,
+   janela em primeiro plano, no notebook e no celular de referência nomeados: 27 critérios do veredito de testes têm a
+   metade de tela, sensor, taxa de quadros ou navegador `unverified` até esse registro; `smoke.md` reutiliza os mesmos
+   roteiros (DIV-DP-06).
+3. **Ensaiar R1/R2 em staging** (`runbook.md`, *Roll back*, sobre `kartle-staging`) e republicar.
 
-Cumpridas: o commit da árvore verificada (acima) e a versão do Node fixada — `.nvmrc` com `24` na raiz do repositório,
-lida pelo workflow (`node-version-file`); o build medido abaixo usou Node v24.20.0 e npm 11.19.0.
+Cumpridas: o commit da árvore verificada (acima); a versão do Node fixada — `.nvmrc` com `24` na raiz do repositório,
+lida pelo workflow (`node-version-file`), build medido abaixo com Node v24.20.0 e npm 11.19.0; os dois repositórios no
+GitHub com *Source* = GitHub Actions e a proteção do ambiente `github-pages` em produção (DIV-DP-10, DIV-DP-11); a
+**ratificação de D-DP-04** (`DOMAIN.md`, 2026-10-21: "esta release, pista sintética, 0 dados OSM, não exibe crédito";
+DIV-DP-05); e a **decisão de monitoramento** — vigilância manual conforme o runbook, nenhum monitor externo nesta
+release (RNF12; `DOMAIN.md`, 2026-10-21; DIV-DP-08).
 
 ## Reprodução do build
 
@@ -70,7 +75,7 @@ O workflow executa estes passos a cada push; à mão, da raiz do repositório, c
 |---|---|---|
 | 1 | `npm ci` | saída 0; `package-lock.json` inalterado; `node_modules/` recriado |
 | 2 | `npm test` | saída 0; 170 testes aprovados, 0 reprovados, 0 pulados (138 da feature + 32 pré-existentes) |
-| 3 | `npm run build` (no workflow: `npm run build -- --base=/<repo>/`, porque o Pages de projeto serve em `/<repo>/`) | saída 0 (`tsc --noEmit` e depois `vite build`); `dist/index.html`, `dist/assets/index-<hash>.js`, `dist/assets/index-<hash>.css` |
+| 3 | `npm run build` (no workflow: `npm run build -- --base=/kartle/` em produção e `--base=/kartle-staging/` em staging — o nome vem de `github.event.repository.name`, porque o Pages de projeto serve em `/<nome do repositório>/`) | saída 0 (`tsc --noEmit` e depois `vite build`); `dist/index.html`, `dist/assets/index-<hash>.js`, `dist/assets/index-<hash>.css` |
 | 4 | `python -I "600 Deploy/Output/race-lap-validation/tools/measure_dist.py" dist` | tabela de tamanhos; `within_limit=True`; saída 0 |
 | 5 | `npm run preview` | `http://127.0.0.1:4173` serve o bundle; `#track-status` mostra `synthetic` e `#lap-offer` tem exatamente um botão, "volta de treino" (DES-0009) |
 
@@ -92,16 +97,18 @@ O workflow executa estes passos a cada push; à mão, da raiz do repositório, c
   de limiar deste projeto.
 - Os nomes dos *assets* carregam hash de conteúdo: o `index.html` publicado é o que aponta para a versão em vigor
   (`REL-0003`, regra de cache).
-- O build do workflow usa `--base=/<repo>/`: o `index.html` publicado referencia `/<repo>/assets/...`; o tamanho total
-  difere do local em poucos bytes (o nome do repositório nos caminhos) e a medida que vale é a impressa no passo
-  *Measure dist* da execução.
+- O build do workflow usa `--base=/kartle/` (produção) ou `/kartle-staging/` (staging): o `index.html` publicado
+  referencia `/kartle/assets/...` ou `/kartle-staging/assets/...`; o tamanho total difere do local em poucos bytes (o
+  nome do repositório nos caminhos) e a medida que vale é a impressa no passo *Measure dist* da execução.
 
 ## O que o pipeline faz (`.github/workflows/pages.yml`)
 
 Em ordem, cada passo com saída observável na execução do Actions: checkout do commit → Node da `.nvmrc` com cache do
-npm → `npm ci` → `npm test` (170 aprovados) → `npm run build -- --base=/<repo>/` → `measure_dist.py dist` (saída 0) →
-`configure-pages` → `upload-pages-artifact` de `dist/` → trabalho `deploy` no ambiente `github-pages`
-(`deploy-pages`). Em produção o trabalho `deploy` **espera a aprovação do revisor obrigatório** (D-DP-06); em staging
-publica de imediato. Permissões mínimas (`contents: read`, `pages: write`, `id-token: write`); nenhum segredo (I6).
-Um ponto não automatizável permanece: o `href="/"` da marca no `index.html` aponta para a raiz de `<owner>.github.io`
-e não para `/<repo>/` — item do estágio de código, registrado em `98-divergences.md` (DIV-DP-12), não editado aqui.
+npm → `npm ci` → `npm test` (170 aprovados) → `npm run build -- --base=/kartle/` (ou `/kartle-staging/`) →
+`measure_dist.py dist` (saída 0) → `configure-pages` → `upload-pages-artifact` de `dist/` → trabalho `deploy` no
+ambiente `github-pages` (`deploy-pages`). Em produção (`edumatosr6-svg/kartle`) o trabalho `deploy` **espera a
+aprovação do revisor obrigatório** `edumatosr6-svg` (D-DP-06); em staging (`edumatosr6-svg/kartle-staging`) publica de
+imediato. Permissões mínimas (`contents: read`, `pages: write`, `id-token: write`); nenhum segredo (I6). As execuções
+ficam em `https://github.com/edumatosr6-svg/kartle/actions` e `https://github.com/edumatosr6-svg/kartle-staging/actions`.
+Um ponto não automatizável permanece: o `href="/"` da marca no `index.html` aponta para `https://edumatosr6-svg.github.io/`
+e não para `/kartle/` — item do estágio de código, registrado em `98-divergences.md` (DIV-DP-12), não editado aqui.
