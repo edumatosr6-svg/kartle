@@ -4,7 +4,7 @@ title: Migração — arquivo de pista versão 2, estado da volta em memória, d
 feature: race-lap-validation
 stage: deploy
 status: draft
-version: 1.0.0
+version: 1.0.1
 sources: [DM-0001, DM-0002, NFR-0012, TEST-0009, CHK-TEST-0009-01, CHK-TEST-0009-03]
 ---
 
@@ -24,7 +24,7 @@ O produto não tem banco no MVP (I5; DM-0001, seção *Não há banco*). Os "esq
 
 | # | Revisão | O que faz | Ordem | Duração | Reversão (downgrade) | Como a reversão foi ensaiada |
 |---|---|---|---|---|---|---|
-| 1 | arquivo de pista `schemaVersion` 1 → 2 | o leitor `readTrackData` (`src/trackData.ts`, `TRACK_SCHEMA_VERSION = 2`) passa a entender as versões 1 e 2; a versão 1 é lida sem erro como `INCOMPLETE`, mantendo `trackId` e `trackVersion`; uma versão maior que 2 é `UNSUPPORTED_SCHEMA` e fica intacta | única; aplicada no mesmo passo em que o bundle é publicado | 0 s de indisponibilidade: não há dado armazenado a converter | `runbook.md`, *Roll back* R1: nesta primeira release não há `dist/` anterior — despublicar o site (caminho A); nas seguintes, republicar o `dist/` guardado (caminho B) ou, só com commit anterior à feature, reverter e reconstruir (caminho C, DM-0001); nada fica gravado em navegador, logo não há dado a desfazer | `npm test`: `CHK-TEST-0009-01` lê `tests/fixtures/track-v1.json` sem erro; `CHK-TEST-0009-03` prova a versão desconhecida intacta (NFR-0012); o `dist/` anterior é um artefato estático que volta a funcionar ao ser servido |
+| 1 | arquivo de pista `schemaVersion` 1 → 2 | o leitor `readTrackData` (`src/trackData.ts`, `TRACK_SCHEMA_VERSION = 2`) passa a entender as versões 1 e 2; a versão 1 é lida sem erro como `INCOMPLETE`, mantendo `trackId` e `trackVersion`; uma versão maior que 2 é `UNSUPPORTED_SCHEMA` e fica intacta | única; aplicada no mesmo passo em que o bundle é publicado | 0 s de indisponibilidade: não há dado armazenado a converter | `runbook.md`, *Roll back* R1: nesta primeira release não há `dist/` anterior — despublicar o site (caminho A); nas seguintes, **Re-run all jobs** da última execução verde anterior do workflow `pages`, que reconstrói o commit anterior do lockfile e pede aprovação (caminho B) ou, sem execução anterior reexecutável e só com commit anterior à feature, reverter e reconstruir (caminho C, DM-0001); nada fica gravado em navegador, logo não há dado a desfazer | `npm test`: `CHK-TEST-0009-01` lê `tests/fixtures/track-v1.json` sem erro; `CHK-TEST-0009-03` prova a versão desconhecida intacta (NFR-0012); o `dist/` anterior é um artefato estático que o workflow reconstrói do commit anterior e volta a funcionar ao ser servido |
 
 Não há revisão 2. A forma anterior do produto não lia arquivo de pista (a pista era constante no código), por isso
 nenhuma versão em execução recebe um arquivo que não entenda nesta entrega (DM-0001, *Janela de compatibilidade*).

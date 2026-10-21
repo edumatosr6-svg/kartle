@@ -1,0 +1,72 @@
+# Build, test and publish the static bundle to GitHub Pages (decision D23).
+#
+# One workflow, two repositories:
+#   - <owner>/kartle          -> production  (https://<owner>.github.io/kartle/)
+#   - <owner>/kartle-staging  -> staging     (https://<owner>.github.io/kartle-staging/)
+# The production repository protects the `github-pages` environment with a required
+# reviewer (the product owner); the approval click is the promotion step (D-DP-06).
+# The staging repository has no reviewer. Nothing here is a secret: Pages authenticates
+# the deploy with the run's OIDC token (D-DP-05, I6).
+#
+# Release record: "600 Deploy/Output/race-lap-validation/" (REL-0003, runbook.md).
+
+name: pages
+
+on:
+  push:
+    branches: [master, staging]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install (lockfile)
+        run: npm ci
+
+      - name: Test
+        run: npm test
+
+      # Project Pages serve the site under /<repo>/; the base flag rewrites the
+      # absolute /assets/... paths of index.html accordingly.
+      - name: Build
+        run: npm run build -- --base=/${{ github.event.repository.name }}/
+
+      # RNF02 gate: exit 1 when dist/ exceeds 3 145 728 bytes.
+      - name: Measure dist (RNF02)
+        run: python3 -I "600 Deploy/Output/race-lap-validation/tools/measure_dist.py" dist
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    # A `staging` branch deploys only in a *-staging repository; in the production
+    # repository it is built and tested but never published.
+    if: github.ref_name == 'master' || endsWith(github.event.repository.name, '-staging')
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

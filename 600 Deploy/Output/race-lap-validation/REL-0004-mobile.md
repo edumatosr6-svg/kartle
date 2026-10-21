@@ -4,7 +4,7 @@ title: Canal web-mobile — a mesma página, sem loja, sem assinatura, sem vers�
 feature: race-lap-validation
 stage: deploy
 status: draft
-version: 1.0.0
+version: 1.0.1
 sources: [DES-0007, DES-0011, NFR-0003, NFR-0006, TEST-0003]
 ---
 
@@ -36,5 +36,7 @@ canal `web-desktop`, aberta no navegador do celular, com inclinação ou toque n
 ## Dispositivos de referência
 
 Os aparelhos e navegadores nomeados para NFR-0003 (notebook e celular intermediário) são os de RNF03 e devem constar do
-registro humano `docs/lap-validation-device-log.md`, que ainda não existe (`98-divergences.md`). Esta release não
-escolhe aparelhos: é decisão do dono do produto, registrada no log.
+registro humano `docs/lap-validation-device-log.md`. O log **existe com a execução 1** (`98-divergences.md`, DIV-DP-06):
+local, só `web-desktop`, parcial, de estado e texto (D4, D5 texto, D7, D8 parcial, D9, D10, D11), com página em segundo
+plano — nenhuma medida de ritmo válida e nenhuma linha `M*` executada. **Falta a execução 2**, em staging, no notebook e
+no celular de referência nomeados. Esta release não escolhe aparelhos: é decisão do dono do produto, registrada no log.

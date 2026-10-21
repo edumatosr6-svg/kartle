@@ -4,8 +4,8 @@ title: Observabilidade — o que a release registra, o que se mede e o que faria
 feature: race-lap-validation
 stage: deploy
 status: draft
-version: 1.0.0
-sources: [DES-0011, NFR-0003, NFR-0004, NFR-0005, CHK-TEST-0013-03]
+version: 1.1.0
+sources: [DES-0009, DES-0011, NFR-0003, NFR-0004, NFR-0005, CHK-TEST-0013-03]
 ---
 
 # REL-0005 — Observabilidade
@@ -27,23 +27,35 @@ jogador (I6, DES-0011 *Comportamento em falha*).
 | NFR-0003 / RNF03 quadros | fps médio e mínimo numa volta completa | `docs/lap-validation-device-log.md` (E2E-10) | abaixo de 60 em notebook ou de 30 em celular |
 | NFR-0004 sem servidor | requisições de rede entre o início da contagem e o resultado | painel de rede no smoke (E2E-08) | 1 ou mais |
 | RNF06 HTTPS | certificado válido; 0 recursos em HTTP | navegador (cadeado) e painel de rede | qualquer recurso inseguro ou aviso de certificado |
-| Disponibilidade da página | código de resposta e bytes servidos do `index.html` e dos *assets* | **registros de acesso do provedor** (quando houver): contagens por status e por recurso, sem identificadores de jogador | taxa de 5xx ou 404 diferente de zero sobre `index.html` ou sobre os *assets* em vigor |
-| Integridade do deploy | o `index.html` servido aponta para o `assets/index-<hash>.js` do build promovido | comparação do HTML servido com o local (`runbook.md`) | hash divergente |
+| Disponibilidade da página | código de resposta do `index.html` e dos *assets* em `https://<owner>.github.io/kartle/` | **verificação manual em HTTPS** (`runbook.md`, *Verify* 1 e 7): o GitHub Pages **não fornece registros de acesso nem monitor de disponibilidade** | qualquer resposta diferente de 200 sobre `index.html` ou sobre um *asset* em vigor |
+| Integridade do deploy | o `index.html` servido aponta para o `/kartle/assets/index-<hash>.js` do build aprovado | comparação do HTML servido com o `<hash>` impresso no passo *Build* da execução aprovada (`runbook.md` passo 10) | hash divergente |
+| RNF02 no pipeline | bytes de `dist/` a cada execução | passo *Measure dist* do workflow (`measure_dist.py`, saída 1 acima do limite — a execução falha antes de publicar) | 3 145 728 bytes ou mais |
+
+## O registro de implantações — o histórico do Actions
+
+O **histórico de execuções do workflow `pages`** (`<owner>/kartle` → Actions) é o registro de deploy desta release:
+cada execução guarda o commit, o resultado de `npm test` (170 aprovados), o log do build com os nomes dos *assets*, a
+medida de RNF02, e — no trabalho `deploy` — **quem aprovou e quando** (revisor obrigatório, D-DP-06) e a URL publicada.
+Settings → Pages mostra a implantação em vigor. Retenção: 90 dias por padrão; a execução verde anterior é o alvo do
+caminho B de reversão enquanto estiver retida (`runbook.md`). Nenhum dado de jogador entra nesse registro: ele só
+contém o que o repositório e o workflow produzem (I6).
 
 ## Qual alerta soaria
 
-Hoje **nenhum alerta automático existe**: não há CI, provedor nem monitor (`98-divergences.md`). O "alerta" desta
-release é a **vigilância humana** definida no `runbook.md` (D-DP-03): o dono do produto repete a verificação em
-produção ao promover e 24 h depois, e reverte se um limiar da tabela acima for cruzado.
-
-Quando o provedor existir, o mínimo a configurar, em nomes: um monitor de disponibilidade HTTPS sobre a URL de produção
-(falha = resposta diferente de 200 ou certificado inválido) e a retenção dos registros de acesso do provedor pelo
-período que ele oferecer, sem enriquecimento com dado pessoal (RNF10, I6).
+**Nenhum alerta automático sobre a página servida**: o GitHub Pages não oferece monitor de disponibilidade nem
+registros de acesso, e esta release não acrescenta um serviço externo (`98-divergences.md`, DIV-DP-08). O único alerta
+automático é o do pipeline — uma execução falhada (teste, build ou RNF02) notifica o dono do produto por e-mail do GitHub
+e nada é publicado. Sobre a página, o "alerta" é a **vigilância humana** do `runbook.md` (D-DP-03): o dono do produto
+repete a verificação em produção ao promover e 24 h depois, e reverte se um limiar da tabela acima for cruzado. Um
+monitor HTTPS externo (serviço de terceiros, dentro de RNF12) fica como decisão do dono do produto; se vier, observa
+`https://<owner>.github.io/kartle/` com falha = resposta diferente de 200 ou certificado inválido, sem dado pessoal
+(RNF10, I6).
 
 ## Novo modo de falha que esta release introduz, e como se vê
 
 | Modo de falha | Sintoma observável | Diagnóstico |
 |---|---|---|
-| arquivo de pista empacotado lido como `INCOMPLETE`, `UNREADABLE` ou `UNSUPPORTED_SCHEMA` | `#track-status` mostra o texto de erro ou a oferta não inclui volta oficial (DES-0009) | defeito de build ou de dado (`FAIL CODE`); `CHK-TEST-0009-*` deveria ter falhado em `npm test` |
+| arquivo de pista empacotado lido como `INCOMPLETE`, `UNREADABLE` ou `UNSUPPORTED_SCHEMA` | `#track-status` mostra o texto de erro em vez de `synthetic`, ou `#lap-offer` fica sem o botão "volta de treino" (a oferta oficial não existe nesta release em nenhum caso, DES-0009) | defeito de build ou de dado (`FAIL CODE`); `CHK-TEST-0009-*` deveria ter falhado em `npm test` |
+| *assets* em 404 em `https://<owner>.github.io/kartle/` | console com erro de módulo; tela em branco | bundle construído sem `--base=/kartle/` ou janela de cache de 10 min após uma implantação (`REL-0003`, riscos) — empacotamento (`FAIL` deste estágio) |
 | cronômetro parado com a volta em `RUNNING` | `#lap-state` sem avanço de tempo por quadro | defeito de aplicação (`src/frameClock.ts`, DES-0007) |
 | pausa não acontece ao perder o foco ou o sensor | E2E-04 / E2E-05 falham | defeito de aplicação (ADR-0005) |
