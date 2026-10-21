@@ -102,4 +102,4 @@ fps do Chrome (F12 → Rendering → Frame Rendering Stats).
 1. Janela em primeiro plano, notebook de referência nomeado: E2E-01 (3 s), E2E-02 (volta completa, marcador pulado), E2E-10 (fps).
 2. Chrome, Edge, Firefox e Safari atuais: E2E-11 com `reference.inputs`.
 3. Celular intermediário de referência: E2E-01, 02, 04, 05, 07 (16 px), 08, 09, 10 (30 fps) — linhas `M*`.
-4. URL publicada com HTTPS (depois de D23/GitHub Pages): D1, D2, D3.
+4. URL publicada com HTTPS: D2 (carga em 4G até o kart responder) — D1 e D3 passaram na Execução 2.

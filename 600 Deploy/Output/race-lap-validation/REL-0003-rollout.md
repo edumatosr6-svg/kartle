@@ -4,7 +4,7 @@ title: Rollout — ordem de operações, janela de compatibilidade e o pipeline 
 feature: race-lap-validation
 stage: deploy
 status: draft
-version: 1.1.3
+version: 1.1.4
 sources: [DM-0001, DES-0007, DES-0011, NFR-0003, NFR-0004, TEST-0009]
 ---
 
@@ -48,9 +48,10 @@ ramo `staging`). **As primeiras execuções estão registradas**: em `kartle`, 3
 `deploy` em *Waiting* — a mais antiga ainda à espera) e 39629830827 (`c1e488b`, **cancelada** pelo grupo de concorrência
 `pages` quando um push posterior a substituiu); em `kartle-staging`, 39627817908 (`162b1b3`) e 39629837192 (`c1e488b`),
 as duas com `build` concluído e `deploy` falhado com zero passos até à correção da política de ramos, a reexecução de
-39629837192 verde, com a URL de staging a responder 200 em HTTPS, e 39631099098 verde na republicação após o ensaio de
-R1/R2. Os pushes só de registro que se seguiram (`2bee672`) criaram execuções mais novas nos dois repositórios: **os
-números em vigor são os da aba Actions**, não os copiados aqui. O log de `npm test` e a medida de `Measure dist` de
+39629837192 verde, com a URL de staging a responder 200 em HTTPS, e 39631099098 (commit `2bee672`, push só de registro
+ao ramo `staging`; tentativa 2 por *Re-run all jobs*) verde na republicação após o ensaio de R1/R2. Os pushes só de
+registro (`2bee672`, e `f16d65a` quando for enviado) criam execuções mais novas nos dois repositórios: **os números em
+vigor são os da aba Actions**, não os copiados aqui. O log de `npm test` e a medida de `Measure dist` de
 cada execução são lidos na aba Actions e entram no próximo relatório de validação. Custo: US$ 0 em repositórios
 públicos (RNF12).
 
@@ -101,7 +102,7 @@ O workflow **foi disparado pela primeira vez em 2026-10-21** pelos pushes de `ma
 (DIV-DP-10, DIV-DP-11). A prova de que o build é reproduzido pelo pipeline a partir do commit existe: o trabalho
 `build` concluiu com sucesso em todas as execuções (39627810079 e 39629830827 em `kartle`; 39627817908 e 39629837192
 em `kartle-staging`), a reexecução de 39629837192 publicou em staging — a primeira **execução verde** — e a 39631099098
-republicou após o ensaio de reversão. Em produção, nenhuma execução é verde ainda, por desenho: o `deploy` espera o
+(`2bee672`, tentativa 2) republicou após o ensaio de reversão com o mesmo *asset*. Em produção, nenhuma execução é verde ainda, por desenho: o `deploy` espera o
 revisor (39629830827 foi depois cancelada pela fila do grupo `pages`; 39627810079 continua à espera). Os números constam do `runbook.md`
 (precondições) e de `01-release.md`; o validador confirma-os na aba Actions. O `runbook.md` continua a reproduzir as
 etapas 2 a 5 à mão como conferência. Um push de `staging` para o repositório de produção constrói e testa, mas o `if` do trabalho `deploy`

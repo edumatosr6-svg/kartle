@@ -4,7 +4,7 @@ title: Observabilidade — o que a release registra, o que se mede e o que faria
 feature: race-lap-validation
 stage: deploy
 status: draft
-version: 1.1.3
+version: 1.1.4
 sources: [DES-0009, DES-0011, NFR-0003, NFR-0004, NFR-0005, CHK-TEST-0013-03]
 ---
 
@@ -49,7 +49,7 @@ contém o que o repositório e o workflow produzem (I6).
 | `kartle` (produção) | 39629830827 | `c1e488b` | concluído | **cancelada** pelo grupo de concorrência `pages` (um push posterior a substituiu; API: `completed cancelled`, 16:02:10Z) | o grupo `pages` mantém uma só execução pendente por repositório; a mais nova substitui a que esperava |
 | `kartle-staging` | 39627817908 | `162b1b3` | concluído | **falhado, zero passos executados** | política de ramos do ambiente (modo de falha abaixo) |
 | `kartle-staging` | 39629837192 | `c1e488b` | concluído | falhado, zero passos; **reexecutada após a correção: concluído** | primeira execução verde; `https://edumatosr6-svg.github.io/kartle-staging/` responde 200 em HTTPS |
-| `kartle-staging` | 39631099098 | (republicação após o ensaio de R1/R2, *Re-run all jobs*) | concluído | concluído | 200 em 16:31:13Z com o mesmo `index-Cqfgl3da.js`; prova de que R1/R2 são reversíveis (`runbook.md`) |
+| `kartle-staging` | 39631099098 | `2bee672` (push só de registro, ramo `staging`, 16:02:11Z; **tentativa 2** por *Re-run all jobs* na republicação após o ensaio de R1/R2) | concluído | concluído | 200 em 16:31:13Z com o mesmo `index-Cqfgl3da.js` (a árvore de `2bee672` é a de `c41c6c3`); prova de que R1/R2 são reversíveis (`runbook.md`) |
 
 Os pushes só de registro que se seguiram (`2bee672`) criaram execuções mais novas nos dois repositórios, não copiadas
 aqui: **a execução em vigor é lida na aba Actions** de cada repositório, e é a que o relatório de validação cita.

@@ -3,7 +3,7 @@ title: Registro de mudanças — validação de volta de corrida (estágio de de
 feature: race-lap-validation
 stage: deploy
 status: draft
-version: 1.1.5
+version: 1.1.6
 sources: []
 ---
 
@@ -481,3 +481,46 @@ itens correspondentes (ISSUE-17; ISSUE-15 / DIV-DP-12).
 - Nenhum comando `git`, `npm`, `gh` ou chamada a host remoto executado por esta rodada; nenhum valor de segredo
   escrito; `DOMAIN.md`, `SCOPE-BACKLOG.md` e `docs/lap-validation-device-log.md` não editados (fora da cerca de
   escrita, §14).
+
+## 2026-10-21 — rodada 9, Modo B (relatório `deploy-validation-20261021-1643.md`, FAIL; escopo: ISSUE-18 e ISSUE-19, `info`)
+
+Rodada restrita aos dois itens `info` de registro desatualizado por um evento; superfície congelada (§16): nenhuma linha
+de fumaça, precondição, arquivo, comando novo ou decisão acrescentados.
+
+**Fatos apurados pelo condutor do loop** (nenhum comando executado por esta rodada): os commits de `master`, do mais
+antigo ao mais novo, são `c41c6c3` (árvore verificada), `c1f7f28`, `162b1b3`, `c1e488b`, `2bee672` (staging publicado,
+política do ambiente, execução 2 do log) e `f16d65a` (ensaio de reversão R4, decisões, seed e requisitos de
+`dirigibilidade`); código e testes inalterados desde `c41c6c3`. A execução 39631099098 de `kartle-staging` é a
+**tentativa 2** da execução criada pelo push de `2bee672` ao ramo `staging` (16:02:11Z), não uma reexecução de
+39629837192; o *asset* servido continua sha-idêntico ao build de `c41c6c3`.
+
+**O que mudou**
+
+- **ISSUE-18** — `01-release.md` (*Proveniência*: linha *Commits que o `master` enviado contém* com os seis commits em
+  ordem e a afirmação de que os cinco posteriores são só de registro; *Evidência do pipeline* e precondições cumpridas
+  nomeando `2bee672` como o commit de 39631099098, tentativa 2); `runbook.md` (tabela de nomes `<sha>` com a lista
+  completa; precondição 1 e passo 1 pedem "o último commit de `master` e, entre os anteriores, `c41c6c3`" com
+  `git log --oneline -8` e `git diff --stat c41c6c3 -- …` sem saída, em vez de quatro hashes fixos; precondição
+  "primeira execução verde", precondição "reversão ensaiada", passo 7 e nota de *Roll back* com o commit e a tentativa
+  da execução 39631099098); `REL-0005` (coluna *Commit* da linha 39631099098 preenchida com `2bee672`, tentativa 2);
+  `REL-0003` (parágrafo *Tudo isto existe* e parágrafo final do pipeline com o commit da execução). Os dois `REL-*`
+  foram tocados porque o relatório os nomeia como localizações do mesmo item; nenhuma outra linha deles mudou.
+- **ISSUE-19** — `REL-0004-mobile.md` (*Dispositivos de referência*): a execução 2 em staging (desktop, URL de staging:
+  D1, D3, D4, D14 passam; D2 não medido; D5–D13 não executados) passa a constar como feita; o que falta é a **execução
+  3**, humana, nos aparelhos nomeados (D2, D5 duração, D6, D12, D13, repetição de D7–D11 em staging; M1–M12 no celular).
+- `version:` movido (patch): `01-release.md`, `97-changelog.md` → `1.1.6`; `runbook.md` → `1.1.5`; `REL-0003`,
+  `REL-0005` → `1.1.4`; `REL-0004` → `1.0.2`. `smoke.md`, `REL-0001`, `REL-0002`, `98-divergences.md` não editados.
+
+**Itens fechados**: ISSUE-18, ISSUE-19.
+
+**Itens que continuam abertos, com o que os fecha**
+
+- **ISSUE-03** (linhas humanas do `smoke.md`; DIV-DP-06, DIV-DP-07): ambiental — execução 3 do log pelo testador com
+  os aparelhos nomeados; inalterado por esta rodada.
+- Item 4 das pendências de `docs/lap-validation-device-log.md` (reduzir a D2): devido ao condutor do loop, fora da
+  cerca de escrita do gerador (§14), como o relatório declara.
+
+**Itens recusados**: nenhum.
+
+- Nenhum comando `git`, `npm`, `gh` ou chamada a host remoto executado por esta rodada; nenhum valor de segredo
+  escrito; `docs/lap-validation-device-log.md`, `DOMAIN.md` e `SCOPE-BACKLOG.md` não editados (§14).
