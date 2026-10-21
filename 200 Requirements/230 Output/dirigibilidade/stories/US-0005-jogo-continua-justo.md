@@ -4,8 +4,8 @@ title: Jogo continua justo com o novo acerto
 feature: dirigibilidade
 stage: req
 status: validated
-version: 1.0.0
-sources: [SEED/US-5, SEED/RD-03, SEED/RD-04, SEED/NF-01, SEED/IM-I3I5, SEED/IM-I8, SEED/IM-I9, DOMAIN/DEC-07]
+version: 2.0.0
+sources: [SEED/US-5, SEED/RD-03, SEED/RD-04, SEED/NF-01, SEED/IM-I3I5, SEED/IM-I8, SEED/IM-I9, DOMAIN/REF-02, DOMAIN/DEC-07]
 ---
 
 # US-0005 — Jogo continua justo com o novo acerto
@@ -26,7 +26,8 @@ que o de qualquer outro jogador com as mesmas entradas.
 
 ## Pré-condições
 
-- Acerto Arcade assistido na sua nova versão, declarada no dado publicado.
+- Acerto Arcade assistido na sua nova versão (acerto agressivo, `DOMAIN/REF-02`), declarada no dado
+  publicado.
 - Uma sequência de `Input` por passo registrada (replay) para a pista sintética.
 
 ## Critérios de aceite
@@ -38,7 +39,7 @@ que o de qualquer outro jogador com as mesmas entradas.
 - AC-US-0005-02: A saída de `npm run bench:handling` reporta que o piloto de teste completou a volta
   sintética com zero passos fora do asfalto (`DOMAIN/DEC-07`).
 - AC-US-0005-03: A saída de `npm run bench:handling` reporta tempo de volta do piloto de teste de no
-  máximo 27 s de tempo simulado, menor que a linha de base registrada de ~31,4 s (`DOMAIN/DEC-07`).
+  máximo 25 s de tempo simulado, menor que a linha de base registrada de ~31,4 s (`DOMAIN/DEC-07`).
 - AC-US-0005-04: O dado publicado (`trackVersion` ou versão própria de acerto) declara uma versão de
   acerto diferente da anterior à feature; dois replays gravados com versões diferentes carregam versões
   diferentes e são distinguíveis pela leitura desse campo (`SEED/IM-I3I5`, I3).
@@ -54,7 +55,7 @@ que o de qualquer outro jogador com as mesmas entradas.
   replay não é comparável (critério 05) e nenhum resultado é apresentado como equivalente ao original.
 - **Piloto de teste sai do asfalto com o novo acerto**: critério 02 falha; o bench reporta o passo e a
   posição da saída; a feature não é entregue com esse resultado.
-- **Tempo do piloto de teste acima de 27 s**: critério 03 falha; o bench reporta o tempo; nenhum
+- **Tempo do piloto de teste acima de 25 s**: critério 03 falha; o bench reporta o tempo; nenhum
   afrouxamento do limite é admitido nesta etapa.
 - **Duas execuções com tempos diferentes**: critério 01 falha; é defeito de determinismo (NFR-0001),
   nunca tolerância.
@@ -62,6 +63,9 @@ que o de qualquer outro jogador com as mesmas entradas.
   com ou sem suspensão; o tempo é de tempo simulado (I8).
 - **Sensor ausente ou permissão negada antes da volta (`web-mobile`)**: controle por toque com estado
   visível (I4); regra de determinismo inalterada.
+- **Rodada de acerto reprovada pelo dono do produto em staging** (`DOMAIN/DEC-10`): os critérios 01 a 06
+  continuam valendo sem mudança para a rodada seguinte; cada nova rodada de presets é nova versão de
+  acerto (critério 04) e passa de novo por este conjunto de ensaios.
 
 ## Fontes
 
@@ -70,10 +74,11 @@ que o de qualquer outro jogador com as mesmas entradas.
 - `SEED/RD-04`, `SEED/IM-I3I5` — mudança versionada; tempos antigos não comparáveis.
 - `SEED/NF-01` — determinismo (RNF07).
 - `SEED/IM-I9` — ensaio determinístico.
-- `DOMAIN/DEC-07` — 27 s, sem sair do asfalto.
+- `DOMAIN/REF-02` — acerto agressivo da revisão 2.
+- `DOMAIN/DEC-07` — 25 s, sem sair do asfalto (em vigor; substitui 27 s).
 
 ## Pontos em aberto
 
 Nenhum — `DOMAIN/DEC-07` fecha o ponto aberto 07 do seed. O ponto aberto 08 (rodada de teste do dono do
-produto) é critério final humano registrado em `01-context.md` e não bloqueia esta etapa
-(`DOMAIN/DEC-08`).
+produto, ciclo em staging) é critério final humano registrado em `01-context.md` e não bloqueia esta etapa
+(`DOMAIN/DEC-08`, `DOMAIN/DEC-10`).

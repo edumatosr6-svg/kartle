@@ -4,8 +4,8 @@ title: Traseira viva mas controlável
 feature: dirigibilidade
 stage: req
 status: validated
-version: 1.0.0
-sources: [SEED/US-3, SEED/RD-01, SEED/RD-05, SEED/NF-03, SEED/IM-I9, DOMAIN/REF-01, DOMAIN/DEC-02, DOMAIN/DEC-04]
+version: 2.0.0
+sources: [SEED/US-3, SEED/RD-01, SEED/RD-05, SEED/NF-03, SEED/IM-I9, DOMAIN/REF-01, DOMAIN/REF-02, DOMAIN/DEC-02, DOMAIN/DEC-04]
 ---
 
 # US-0003 — Traseira viva mas controlável
@@ -17,10 +17,10 @@ Como Jogador, quero uma traseira viva mas controlável, para escorregar e segura
 ## Canais
 
 - `web-desktop` e `web-mobile`: mesma condição de forçar (acelerador cheio + esterço cheio acima de
-  45 km/h), mesmo limite de recuperação (400 ms) e mesmo teto de derrapagem lateral (0,65 rad), medidos no
+  50 km/h), mesmo limite de recuperação (400 ms) e mesmo teto de derrapagem lateral (0,65 rad), medidos no
   estado da simulação. Nenhuma diferença de limite entre os canais.
 - `web-desktop`: acelerador e esterço são binários; a condição de forçar é atingida pelas duas teclas
-  mantidas acima de 45 km/h.
+  mantidas acima de 50 km/h.
 - `web-mobile`: a condição de forçar exige inclinação no ângulo mapeado para esterço 1 e toque de
   acelerador cheio; com esterço parcial a condição de forçar não se mantém e, fora da manobra de drift,
   vale a condução normal.
@@ -29,16 +29,15 @@ Como Jogador, quero uma traseira viva mas controlável, para escorregar e segura
 
 ## Pré-condições
 
-- Acerto Arcade assistido selecionado, na sua nova versão.
+- Acerto Arcade assistido selecionado, na sua nova versão (acerto agressivo, `DOMAIN/REF-02`).
 - O kart está no asfalto, em estado `grip`.
 
 ## Critérios de aceite
 
 - AC-US-0003-01: No estado da simulação, em todo passo de condução normal (condição de forçar não
   mantida e fora da manobra de drift de `requirements/11`), a telemetria não reporta `oversteer` nem
-  `sliding`; em particular, na curva de referência a
-  45 km/h com esterço cheio e acelerador cheio, o estado é `grip` ou `understeer` em todos os passos
-  (`SEED/US-3`, primeiro critério; `DOMAIN/DEC-02`).
+  `sliding`; em particular, na curva de referência a 50 km/h com esterço cheio e acelerador cheio, o
+  estado é `grip` ou `understeer` em todos os passos (`SEED/US-3`, primeiro critério; `DOMAIN/DEC-02`).
 - AC-US-0003-02: No estado da simulação, os estados `oversteer` e `sliding` só ocorrem em passos em que a
   condição de forçar se mantém ou dentro da manobra de drift de `requirements/11`.
 - AC-US-0003-03: No estado da simulação, com a traseira solta (telemetria em `oversteer` ou `sliding`
@@ -81,9 +80,11 @@ Como Jogador, quero uma traseira viva mas controlável, para escorregar e segura
 - `SEED/US-3` — história e seus três critérios.
 - `SEED/RD-01` — direção comum fácil sem exigir drift.
 - `SEED/RD-05`, `DOMAIN/REF-01` — traseira viva mas controlável.
+- `DOMAIN/REF-02` — acerto agressivo da revisão 2: a condição de forçar sobe com a velocidade de
+  referência.
 - `SEED/NF-03` — teclado e inclinação atendem ambos.
 - `SEED/IM-I9` — ensaio determinístico.
-- `DOMAIN/DEC-02` — 45 km/h; `DOMAIN/DEC-04` — 400 ms.
+- `DOMAIN/DEC-02` — 50 km/h (em vigor; substitui 45 km/h); `DOMAIN/DEC-04` — 400 ms (mantido).
 
 ## Pontos em aberto
 

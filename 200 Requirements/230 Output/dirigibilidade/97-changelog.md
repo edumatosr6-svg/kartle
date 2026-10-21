@@ -3,7 +3,7 @@ title: Changelog — dirigibilidade do Arcade assistido
 feature: dirigibilidade
 stage: req
 status: validated
-version: 1.0.0
+version: 2.0.0
 sources: [SEED, DOMAIN]
 ---
 
@@ -151,3 +151,61 @@ limite de resposta próprio? O seed não o fixa."
 **Itens fechados**: ISSUE-01 e ISSUE-02. Divergências registradas: nenhuma.
 
 **Itens recusados, com motivo**: nenhum.
+
+## 2026-10-21 — rodada 5, Mode A (seed `revision: 2`, acerto agressivo de `DOMAIN.md`)
+
+**Gatilho**: o seed passou a `revision: 2` (mesma data, mesmo autor). O dono do produto testou a build atual
+("não vira, não ganha velocidade") e, na última entrada de `DOMAIN.md`, substituiu os valores fechados dos
+pontos abertos 01, 02, 05, 06 e 07 pelo acerto agressivo; 03, 04 e a regra "resposta do volante só mede
+guinada" permanecem; o ciclo do ponto 08 ficou definido (staging + feedback curto do dono, sem preset
+experimental extra). Decisões do autor recebidas para esta rodada e carregadas sem redescoberta.
+
+**O que mudou**
+
+- `01-context.md` (2.0.0): seed `revision: 2`; novo rótulo `DOMAIN/REF-02` (acerto agressivo) e
+  `DOMAIN/DEC-10` (ciclo de teste do ponto 08); `DOMAIN/DEC-01`, `02`, `05`, `06` e `07` redefinidos com
+  os valores em vigor (180 ms / 250 ms; 50 km/h; 2,5 s; 105 km/h; 25 s), cada um dizendo qual valor
+  substitui; `DOMAIN/DEC-09` passa a citar o ensaio de 50 km/h; parágrafo do ponto 08 descreve o ciclo em
+  staging e a ausência de preset experimental no painel. Famílias de NFR, restrições e lista fora do escopo
+  inalteradas.
+- `02-glossary.md` (2.0.0): "Condição de forçar" e "Curva de referência" a 50 km/h; termos novos "Acerto
+  agressivo" e "Staging".
+- US-0001 (2.0.0): 180 ms (subida) e 250 ms (queda) nos critérios 01 a 04, na seção Canais e no caso
+  anormal de velocidade; critério 05 cita o ensaio de 50 km/h; `DOMAIN/REF-02` em `sources:`.
+- US-0002 (2.0.0): curva de referência a 50 km/h nos critérios 01 e 02, na seção Canais e no primeiro
+  caso anormal; 200 ms e 15 % mantidos.
+- US-0003 (2.0.0): condição de forçar acima de 50 km/h na seção Canais e no critério 01; 400 ms e
+  0,65 rad mantidos.
+- US-0004 (2.0.0): 2,5 s no critério 01; 105 km/h no critério 02; grama com entrada a 50 km/h no critério
+  04 e no caso anormal; critério 07 passa a dizer "bench de física" em vez de nomear o script
+  (`ISSUE-01` info do relatório `req-validation-20261021-1627.md`, aceita).
+- US-0005 (2.0.0): 25 s no critério 03 e no caso anormal; caso anormal novo "Rodada de acerto reprovada
+  pelo dono do produto em staging" (`DOMAIN/DEC-10`), sem critério novo.
+- NFR-0002, NFR-0007 (2.0.0): "bench de física" em vez de `npm run bench:physics` (mesma info).
+  NFR-0004 (2.0.0): idem, e a entrada de `docs/physics.md` passa a dizer a versão de acerto a que se
+  refere, com os limites da revisão 2 ao lado dos da linha de base (`DOMAIN/REF-02` em `sources:`).
+- NFR-0001, NFR-0003, NFR-0005, NFR-0006, NFR-0008, NFR-0009 e `98-divergences.md`: sem mudança de
+  conteúdo; carregados na versão 1.0.0 (nenhum número da revisão 2 os atinge).
+- `00-index.md` e `99-traceability.md` não foram escritos: o gate os regenera.
+
+**Tabela de migração** (conventions §17): nenhum item retirado. Cinco histórias e nove NFRs antes e depois;
+32 critérios antes e depois (6 + 5 + 7 + 7 + 6 + 0 novos); só valores numéricos e referências mudaram.
+
+**Itens fechados**: nenhum `ISSUE-<nn>`/`FB-<nn>` pendente (o último relatório era SUCCESS); a `ISSUE-01`
+info daquele relatório foi aplicada. Divergências registradas: nenhuma.
+
+**Itens recusados, com motivo**
+
+- Decisão do autor "código fica na raiz do repositório (`src/`, `tests/`); presets em `src/physics.ts`;
+  benches em `scripts/`": não escrita em `01-context.md` nem em critério, pelo mesmo motivo da rodada 3
+  (ISSUE-05, R7: escolha de desenho). Fica registrada aqui como contexto para as etapas de F-Spec e D-Spec,
+  que o autor pediu para reprocessar contra a revisão 2.
+- "Sem preset experimental extra" não entrou na lista Fora do escopo: a lista é a do seed, que não o
+  nomeia; a decisão está no parágrafo do ponto 08 de `01-context.md` (`DOMAIN/DEC-10`).
+- Nenhum critério de aceite para o ciclo em staging: o veredito do dono do produto não é observável pelo
+  sistema; permanece condição humana de fechamento (`DOMAIN/DEC-08`, `DOMAIN/DEC-10`).
+- Os valores anteriores (250/300 ms, 45 km/h, 3,0 s, 95 km/h, 27 s) não permanecem como critério
+  alternativo nem como piso: `DOMAIN.md` diz "substitui".
+- Os itens recusados das rodadas 1 e 3 continuam recusados pelos mesmos motivos (parede sem percentual;
+  grama abaixo da velocidade de referência; recuperação com esterço parcial; janela de estabilização;
+  inversão do esterço). As duas propostas de `SCOPE-BACKLOG.md` daquelas rodadas seguem valendo.

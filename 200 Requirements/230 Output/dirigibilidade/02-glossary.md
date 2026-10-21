@@ -3,7 +3,7 @@ title: Glossário — dirigibilidade do Arcade assistido
 feature: dirigibilidade
 stage: req
 status: validated
-version: 1.0.0
+version: 2.0.0
 sources: [SEED, DOMAIN]
 ---
 
@@ -38,9 +38,11 @@ Os termos valem igualmente em `web-desktop` e `web-mobile`, salvo indicação.
 | Sobre-esterço (`oversteer`) | A traseira perde aderência antes da frente: "traseira solta" | ambos |
 | Derrapagem (`sliding`) | Os dois eixos sem aderência | ambos |
 | Derrapagem lateral | Ângulo entre a direção do kart e a direção do seu movimento, em rad, no estado da simulação | ambos |
-| Condição de forçar | Acelerador cheio e esterço cheio com velocidade acima de 45 km/h (`DOMAIN/DEC-02`); fora da manobra de drift, único contexto em que `oversteer` ou `sliding` podem ocorrer (`SEED/US-3`) | ambos |
+| Condição de forçar | Acelerador cheio e esterço cheio com velocidade acima de 50 km/h (`DOMAIN/DEC-02`); fora da manobra de drift, único contexto em que `oversteer` ou `sliding` podem ocorrer (`SEED/US-3`) | ambos |
 | Condução normal | Qualquer passo em que a condição de forçar não se mantém **e** a manobra de drift de `requirements/11` não está em andamento | ambos |
-| Curva de referência | Curva de raio 18 m, o menor raio da pista sintética, percorrida a 45 km/h com esterço cheio (`DOMAIN/DEC-02`) | ambos |
+| Curva de referência | Curva de raio 18 m, o menor raio da pista sintética, percorrida a 50 km/h com esterço cheio (`DOMAIN/DEC-02`) | ambos |
+| Acerto agressivo | Conjunto de limites em vigor após a revisão 2 do seed (`DOMAIN/REF-02`): 180 ms / 250 ms de resposta do volante, 50 km/h na curva de referência, 0–60 km/h em 2,5 s, 105 km/h estabilizada, volta do piloto de teste em 25 s | ambos |
+| Staging | Publicação de uma rodada de código para o teste do dono do produto no ciclo de fechamento humano (`DOMAIN/DEC-10`); não é critério de aceite desta etapa | ambos |
 | Velocidade de início do subesterço | Menor velocidade, no ensaio da curva de referência com velocidade crescente, em que a telemetria reporta `understeer` por mais de 200 ms consecutivos | nenhum (bench) |
 | Drift | Manobra de `requirements/11` que pontua; continua possível e continua pontuando com o novo acerto | ambos |
 | Direção comum | Pilotar a volta sem usar a manobra de drift; permanece fácil (`SEED/RD-01`) | ambos |

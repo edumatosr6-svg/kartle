@@ -4,8 +4,8 @@ title: Aderência em curva sem sair de frente
 feature: dirigibilidade
 stage: req
 status: validated
-version: 1.0.0
-sources: [SEED/US-2, SEED/RD-01, SEED/RD-05, SEED/NF-03, SEED/IM-I9, DOMAIN/REF-01, DOMAIN/DEC-02, DOMAIN/DEC-03]
+version: 2.0.0
+sources: [SEED/US-2, SEED/RD-01, SEED/RD-05, SEED/NF-03, SEED/IM-I9, DOMAIN/REF-01, DOMAIN/REF-02, DOMAIN/DEC-02, DOMAIN/DEC-03]
 ---
 
 # US-0002 — Aderência em curva sem sair de frente
@@ -16,7 +16,7 @@ Como Jogador, quero que o kart faça a curva que eu pedi, para não sair de fren
 
 ## Canais
 
-- `web-desktop` e `web-mobile`: mesmos limites (45 km/h no raio de 18 m; 200 ms de `understeer`
+- `web-desktop` e `web-mobile`: mesmos limites (50 km/h no raio de 18 m; 200 ms de `understeer`
   consecutivo; início do subesterço pelo menos 15 % acima da linha de base), medidos no estado da
   simulação com esterço cheio. Nenhuma diferença de limite entre os canais.
 - `web-desktop`: esterço cheio é a única entrada de direção que o teclado produz.
@@ -27,20 +27,20 @@ Como Jogador, quero que o kart faça a curva que eu pedi, para não sair de fren
 
 ## Pré-condições
 
-- Acerto Arcade assistido selecionado, na sua nova versão.
+- Acerto Arcade assistido selecionado, na sua nova versão (acerto agressivo, `DOMAIN/REF-02`).
 - O kart está no asfalto, na entrada da curva de referência (raio 18 m, o menor da pista sintética), em
   estado `grip`.
 
 ## Critérios de aceite
 
-- AC-US-0002-01: No estado da simulação, percorrendo a curva de referência a 45 km/h com esterço cheio
+- AC-US-0002-01: No estado da simulação, percorrendo a curva de referência a 50 km/h com esterço cheio
   mantido, em cada uma das duas condições de acelerador ensaiadas — acelerador 0 mantido durante toda a
   curva e acelerador cheio mantido durante toda a curva —, a telemetria não reporta `understeer` por mais
   de 200 ms consecutivos de tempo simulado em nenhum trecho da curva (`DOMAIN/DEC-02`, `DOMAIN/DEC-03`).
-- AC-US-0002-02: No estado da simulação, percorrendo a curva de referência a 45 km/h com esterço cheio
+- AC-US-0002-02: No estado da simulação, percorrendo a curva de referência a 50 km/h com esterço cheio
   mantido, em cada uma das duas condições de acelerador ensaiadas — acelerador 0 mantido durante toda a
   curva e acelerador cheio mantido durante toda a curva —, a trajetória do kart permanece no asfalto em
-  todos os passos: a curva de 18 m é feita a 45 km/h sem sair de frente e sem depender de o Jogador soltar
+  todos os passos: a curva de 18 m é feita a 50 km/h sem sair de frente e sem depender de o Jogador soltar
   o acelerador.
 - AC-US-0002-03: O ensaio da curva de referência com velocidade de entrada crescente registra, com a linha
   de base (acerto anterior), a velocidade de início do subesterço V0; com o novo acerto, a velocidade de
@@ -54,7 +54,7 @@ Como Jogador, quero que o kart faça a curva que eu pedi, para não sair de fren
 
 ## Casos anormais
 
-- **Velocidade de entrada acima de 45 km/h na curva de referência**: o kart pode reportar `understeer` por
+- **Velocidade de entrada acima de 50 km/h na curva de referência**: o kart pode reportar `understeer` por
   mais de 200 ms; a perda é progressiva (critério 04) e a direção comum continua sem exigir drift
   (`SEED/RD-01`).
 - **Esterço aplicado tarde (kart já fora da linha ideal)**: o conjunto não fixa limite; vale só o critério
@@ -74,9 +74,10 @@ Como Jogador, quero que o kart faça a curva que eu pedi, para não sair de fren
 - `SEED/US-2` — história e seus dois critérios.
 - `SEED/RD-01` — direção comum permanece fácil sem exigir drift.
 - `SEED/RD-05`, `DOMAIN/REF-01` — muita aderência em alta velocidade; sintoma relatado: sai de frente.
+- `DOMAIN/REF-02` — acerto agressivo da revisão 2: o dono do produto relatou que o kart "não vira".
 - `SEED/NF-03` — teclado e inclinação atendem ambos.
 - `SEED/IM-I9` — ensaio determinístico.
-- `DOMAIN/DEC-02` — 45 km/h no raio de 18 m; `DOMAIN/DEC-03` — 200 ms.
+- `DOMAIN/DEC-02` — 50 km/h no raio de 18 m (em vigor; substitui 45 km/h); `DOMAIN/DEC-03` — 200 ms.
 
 ## Pontos em aberto
 
