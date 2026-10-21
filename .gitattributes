@@ -1,0 +1,2 @@
+# Workflow scripts must stay LF: the Workflow tool rejects CR as a hidden control character.
+*.js text eol=lf

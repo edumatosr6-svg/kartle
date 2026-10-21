@@ -1,0 +1,21 @@
+{
+  "project": {
+    "name": "Kartle",
+    "description": "Jogo de kart 3D no navegador com uma pista real por dia, igual para todos, e resultado compartilhável.",
+    "version": "0.1.0",
+    "principle": "Challenge-first: tudo é chaveado por challengeNumber (trackId + trackVersion), nunca pela data local ou pelo nome da pista."
+  },
+  "metadata": {
+    "skillsDir": "../.github/skills",
+    "agentsDir": "./agents",
+    "instructionsDir": "./instructions"
+  },
+  "skills": {},
+  "agents": {},
+  "instructions": {
+    "system": "./instructions/system.md",
+    "guidelines": "./instructions/guidelines.md",
+    "context": "./instructions/context.md",
+    "protocols": "./instructions/protocols.md"
+  }
+}

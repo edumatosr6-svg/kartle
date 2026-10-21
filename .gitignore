@@ -1,0 +1,26 @@
+node_modules/
+dist/
+*.local
+.DS_Store
+
+# Word lock files, created while a .docx or .xlsx is open.
+~$*
+
+# Documents assembled by .claude/skills/req-docx-export are derived: the Markdown and its
+# ORDER.md are the source, and the .docx can be rebuilt at any time. Add each one here as
+# it is produced - deliberately, one path at a time, so a .docx that is a real input to the
+# project is not swept up by a pattern.
+
+# Documents assembled by req-docx-export from the collaborators' drafts
+200 Requirements/240 Colaborative/*/*.docx
+
+.env
+
+# Python bytecode of the pipeline scripts
+__pycache__/
+*.pyc
+
+# .claude/hooks/feature_lock.py writes one claim per running loop; they are per machine
+.claude/locks/
+.claude/scheduled_tasks.lock
+.claude/settings.local.json

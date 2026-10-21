@@ -1,0 +1,55 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python .claude/skills/pipeline-progress/scripts/pipeline_progress.py:*)",
+      "Bash(python .claude/skills/pipeline-progress/scripts/lint_artifacts.py:*)",
+      "Bash(python .claude/skills/pipeline-progress/scripts/reduce_run.py:*)",
+      "Bash(python .claude/skills/pipeline-progress/scripts/phase_log.py:*)",
+      "Bash(python .claude/skills/colab-loop/scripts/colab_tools.py inventory:*)",
+      "Bash(python .claude/skills/colab-loop/scripts/colab_tools.py lint:*)",
+      "Bash(python .claude/skills/colab-loop/scripts/colab_tools.py --lang pt-BR index:*)",
+      "Bash(python .claude/skills/colab-loop/scripts/colab_tools.py --lang pt-BR questions:*)",
+      "Bash(python .claude/skills/colab-loop/scripts/colab_tools.py --lang en index:*)",
+      "Bash(python .claude/skills/colab-loop/scripts/colab_tools.py --lang en questions:*)",
+      "Bash(python .claude/skills/diag-loop/scripts/diag_harvest.py:*)",
+      "Bash(python .claude/hooks/feature_lock.py:*)",
+      "PowerShell(python .claude/skills/pipeline-progress/scripts/pipeline_progress.py:*)",
+      "PowerShell(python .claude/skills/pipeline-progress/scripts/lint_artifacts.py:*)",
+      "PowerShell(python .claude/skills/pipeline-progress/scripts/reduce_run.py:*)",
+      "PowerShell(python .claude/skills/pipeline-progress/scripts/phase_log.py:*)",
+      "PowerShell(python .claude/skills/colab-loop/scripts/colab_tools.py inventory:*)",
+      "PowerShell(python .claude/skills/colab-loop/scripts/colab_tools.py lint:*)",
+      "PowerShell(python .claude/skills/colab-loop/scripts/colab_tools.py --lang pt-BR index:*)",
+      "PowerShell(python .claude/skills/colab-loop/scripts/colab_tools.py --lang pt-BR questions:*)",
+      "PowerShell(python .claude/skills/colab-loop/scripts/colab_tools.py --lang en index:*)",
+      "PowerShell(python .claude/skills/colab-loop/scripts/colab_tools.py --lang en questions:*)",
+      "PowerShell(python .claude/skills/diag-loop/scripts/diag_harvest.py:*)",
+      "PowerShell(python .claude/hooks/feature_lock.py:*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/git_guard.py\"",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/release_session_locks.py\"",
+            "timeout": 20
+          }
+        ]
+      }
+    ]
+  }
+}

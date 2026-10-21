@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#13241e" />
+    <meta name="description" content="Kartle: protótipo de kart no navegador. Entre na pista e teste sua melhor volta." />
+    <title>Kartle — Entre na pista</title>
+  </head>
+  <body>
+    <div id="app">
+      <header><a class="brand" href="/">kartle<span>↗</span></a><span class="edition">THE DAILY KART CLUB</span><span class="badge">LAB / 001</span></header>
+      <main>
+        <section class="intro"><div><p class="eyebrow">MENOS PRESSA. MAIS VELOCIDADE.</p><h1>Só mais uma volta<span>.</span></h1></div><p class="description">Encontre o traçado. Acerte a curva.<br />O próximo recorde é seu.</p></section>
+        <section class="game-shell" aria-label="Jogo de kart">
+          <div id="scene"></div>
+          <div class="track-label"><span class="live-dot"></span><div><strong>Circuito Aurora</strong><small id="preset-label">ARCADE ASSISTIDO · TREINO LIVRE</small></div></div>
+          <div class="timing"><small>VOLTA ATUAL</small><strong id="timer">0:00.000</strong><span>Melhor <b id="best">—</b></span><span class="style-score">ESTILO <b id="style-score">0</b> <em id="combo"></em></span></div>
+          <div id="welcome" class="welcome"><span class="eyebrow">CURVA BOA PEDE BIS</span><h2>Entre de lado. Saia voando.</h2><p>Acelere, encaixe o drift e solte para dar o impulso.<br />Seu próximo recorde começa na curva.</p><p id="track-status" class="lap-chip">carregando a pista</p><div id="lap-offer"></div><small>WASD / setas · Espaço + curva para drift</small></div>
+          <div id="lap-countdown" class="lap-chip hidden" role="status" aria-live="assertive"></div>
+          <div id="lap-state" class="lap-chip hidden" role="status" aria-live="polite" data-validity="VALID"></div>
+          <div id="lap-paused" class="lap-chip hidden" role="status"></div>
+          <ul id="lap-sectors" class="hidden" aria-label="Setores"></ul>
+          <div id="lap-control-fallback" class="lap-chip hidden" role="status"></div>
+          <div id="lap-result" class="lap-result hidden" role="dialog" aria-labelledby="lap-result-title"><h2 id="lap-result-title" class="lap-chip"></h2><p id="lap-result-total" class="lap-chip"></p><ul id="lap-result-sectors"></ul><button id="lap-new-lap" class="primary"></button></div>
+          <div id="message" role="status" aria-live="polite"></div>
+          <canvas id="minimap" width="220" height="150" aria-label="Minimapa da pista"></canvas>
+          <div class="handling-readout"><span id="handling" data-state="grip">Aderência</span><small>Lateral <b id="lateral-g">0.00 g</b></small></div>
+          <div class="speed"><strong id="speed">0</strong><span>KM/H</span></div>
+          <div class="drift-hud" id="drift-hud"><strong id="drift-label">ESPAÇO + CURVA</strong><div id="drift-meter" class="drift-meter" role="progressbar" aria-label="Carga do drift" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="drift-fill"></i></div><small id="drift-help">Segure para deslizar. Solte para acelerar.</small></div>
+          <div class="touch-controls" aria-label="Controles de toque"><div><button data-control="left" aria-label="Virar à esquerda">←</button><button data-control="right" aria-label="Virar à direita">→</button></div><button data-control="drift" aria-label="Segurar para drift">Drift</button><div><button data-control="brake" aria-label="Frear">Freio</button><button data-control="throttle" aria-label="Acelerar">Acelerar</button></div></div>
+        </section>
+        <section class="toolbar"><div><span class="key">W</span><span class="key">A</span><span class="key">S</span><span class="key">D</span><span class="control-hint">Dirigir · Espaço: drift → turbo</span></div><div class="actions"><button id="sound" aria-pressed="false">Som desligado</button><button id="tilt">Ativar inclinação</button><button id="reset">↺ Reposicionar</button><button id="pause" class="hidden">▶ continuar</button></div></section>
+        <section class="maneuver-guide" aria-label="Como fazer drift"><div><span>01</span><p><strong>Entre na curva</strong>Acelere e segure Espaço + A/D.</p></div><div><span>02</span><p><strong>Segure o drift</strong>Deslize no asfalto para carregar.</p></div><div><span>03</span><p><strong>Solte e dispare</strong>Solte Espaço: turbo e pontos de estilo.</p></div></section>
+        <details class="physics-panel">
+          <summary>Acerto & telemetria <span>ESCOLHA SEU RITMO</span></summary>
+          <div class="physics-grid">
+            <div class="mass-control"><label for="handling-preset">Estilo de pilotagem</label><select id="handling-preset"><option value="arcade" selected>Arcade assistido — fácil de pilotar</option><option value="rental">Realista — aluguel 4T</option></select><p id="assist-description">Direção progressiva, freio equilibrado e ajuda para conter rodadas. Você escolhe a trajetória.</p><label for="driver-mass">Peso do piloto <strong id="mass-value">75 kg</strong></label><input id="driver-mass" type="range" min="45" max="120" step="5" value="75" /><p>Kart + piloto: <b id="total-mass">228 kg</b>. Alterar peso ou estilo vale na próxima volta.</p></div>
+            <div class="load-display"><span>CARGA NOS PNEUS · FRENTE ↑</span><div class="tire-grid"><div id="load-0" aria-label="Carga dianteira esquerda">470 N</div><div id="load-1" aria-label="Carga dianteira direita">470 N</div><div id="load-2" aria-label="Carga traseira esquerda">649 N</div><div id="load-3" aria-label="Carga traseira direita">649 N</div></div><small>Laranja: demanda acima da aderência disponível.</small></div>
+            <div class="slip-display"><div>Deslizamento dianteiro <b id="front-slip">0.0°</b></div><div>Deslizamento traseiro <b id="rear-slip">0.0°</b></div><div>Aceleração / frenagem <b id="longitudinal-g">+0.00 g</b></div><p>Freie antes de virar. Frear forte já em curva pode soltar a traseira.</p></div>
+          </div>
+        </details>
+        <section class="details"><article><span>01 / SINTA O PESO</span><h3>Cada quilo faz diferença.</h3><p>O peso muda a aceleração, a inércia e a carga nos pneus. Compare pilotos no acerto acima.</p></article><article><span>02 / ENCONTRE O LIMITE</span><h3>Virar mais nem sempre ajuda.</h3><p>Se a frente escapar, reduza o esterço e a velocidade. A aderência é compartilhada entre frear e fazer a curva.</p></article><article><span>03 / EM CALIBRAÇÃO</span><h3>Física em evolução.</h3><p>Modelo inspirado em kart de aluguel 4 tempos. Pneus e chassi ainda precisam de validação com dados reais.</p></article></section>
+      </main><footer><span>kartle — feito para a próxima volta.</span><span>PROTÓTIPO 0.1 · PISTA FICTÍCIA</span></footer>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
