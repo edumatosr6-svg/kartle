@@ -1,7 +1,7 @@
 ---
 name: dirigibilidade
 description: Sensação de pilotagem do acerto Arcade assistido — resposta do volante, aderência em curva, aceleração e sensação de velocidade — com referência em Karting Superstars. Ler antes de qualquer mudança nos presets de kart, nas assistências de direção ou no bench de volta.
-revision: 1
+revision: 2
 date: 2026-10-21
 author: eduardo.matos
 channels: [web-desktop, web-mobile]
@@ -99,13 +99,13 @@ sensação de velocidade. O acerto **Realista — aluguel 4T** continua existind
 
 ## Riscos e incógnitas
 
-- **OPEN-01** Tempo de resposta do volante (proposta: 250 ms para 90 %; 300 ms para cair a 10 %).
-- **OPEN-02** Velocidade de curva de referência no raio de 18 m (proposta: 45 km/h).
-- **OPEN-03** Tolerância de `understeer` consecutivo (proposta: 200 ms).
-- **OPEN-04** Tempo para recuperar `grip` ao soltar o esterço (proposta: 400 ms).
-- **OPEN-05** 0–60 km/h (proposta: 3,0 s; hoje ~6 s extrapolado).
-- **OPEN-06** Velocidade estabilizada (proposta: 95 km/h; hoje 79,4).
-- **OPEN-07** Tempo-alvo do piloto de teste na volta sintética (proposta: ≤ 27 s; hoje ~31,4).
+- **OPEN-01** Tempo de resposta do volante (fechado em `DOMAIN.md`: 180 ms para 90 %; 250 ms para cair a 10 %).
+- **OPEN-02** Velocidade de curva de referência no raio de 18 m (fechado em `DOMAIN.md`: 50 km/h).
+- **OPEN-03** Tolerância de `understeer` consecutivo (fechado em `DOMAIN.md`: 200 ms).
+- **OPEN-04** Tempo para recuperar `grip` ao soltar o esterço (fechado em `DOMAIN.md`: 400 ms).
+- **OPEN-05** 0–60 km/h (fechado em `DOMAIN.md`: 2,5 s; hoje ~6 s extrapolado).
+- **OPEN-06** Velocidade estabilizada (fechado em `DOMAIN.md`: 105 km/h; hoje 79,4).
+- **OPEN-07** Tempo-alvo do piloto de teste na volta sintética (fechado em `DOMAIN.md`: ≤ 25 s; hoje ~31,4).
 - **OPEN-08** A sensação é subjetiva: critérios numéricos são necessários, não suficientes. Prevista uma
   rodada de teste do dono do produto antes de fechar a feature.
 

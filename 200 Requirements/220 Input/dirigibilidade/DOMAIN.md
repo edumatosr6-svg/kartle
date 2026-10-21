@@ -24,3 +24,15 @@ Decisões fechadas pelo dono do produto. Prevalecem sobre os pontos em aberto co
   esterço cheio (OPEN-01), o critério é o tempo de resposta da taxa de guinada; `understeer` transitório
   reportado pela telemetria durante esse ensaio **é aceitável**. A aderência em curva é julgada apenas
   pelo ensaio de 45 km/h no raio de 18 m (OPEN-02/OPEN-03). AC-US-0001-05 fica restrito a isso.
+- 2026-10-21 (revisão 2 do seed) — **Acerto agressivo (Eduardo Matos),** após testar o build atual
+  ("não vira, não ganha velocidade"). Substitui os valores de OPEN-01, 02, 05, 06 e 07 fechados acima:
+  - **OPEN-01:** guinada a 90 % do regime em **180 ms**; ao soltar, cai a 10 % em **250 ms**.
+  - **OPEN-02:** curva de raio 18 m a **50 km/h** sem `understeer` por mais de 200 ms (OPEN-03 mantido).
+  - **OPEN-05:** 0–60 km/h em no máximo **2,5 s**.
+  - **OPEN-06:** velocidade estabilizada de pelo menos **105 km/h**.
+  - **OPEN-07:** piloto de teste completa a volta sintética em no máximo **25 s**.
+  OPEN-04 (400 ms) e a regra "resposta do volante só mede guinada" permanecem.
+- 2026-10-21 — **Ciclo de teste (OPEN-08, Eduardo Matos):** cada rodada de código é publicada em
+  staging; o dono testa e devolve feedback curto (vira? acelera? traseira?); os presets são iterados
+  dentro do pipeline (nova rodada de código/testes) até a aprovação dele. Nenhum preset experimental
+  extra no painel.
