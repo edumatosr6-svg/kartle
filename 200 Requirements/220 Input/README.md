@@ -41,7 +41,7 @@ become `OPEN-<nn>` in the seed that carries them, and only then is the set moved
 | Slug | Current location | Channels | Collaborator | Revision | What it covers |
 |---|---|---|---|---|---|
 | race-lap-validation | `220 Input/race-lap-validation/` | web-desktop, web-mobile | eduardo.matos | 2 | Largada, cronometragem, setores e validade da volta |
-| dirigibilidade | `220 Input/dirigibilidade/` | web-desktop, web-mobile | eduardo.matos | 2 | Sensação de pilotagem do Arcade: resposta do volante, aderência, aceleração |
+| dirigibilidade | `220 Input/dirigibilidade/` | web-desktop, web-mobile | eduardo.matos | 3 | Sensação de pilotagem do Arcade: resposta do volante, aderência, aceleração |
 
 ## Conventions
 

@@ -1,7 +1,7 @@
 ---
 name: dirigibilidade
 description: Sensação de pilotagem do acerto Arcade assistido — resposta do volante, aderência em curva, aceleração e sensação de velocidade — com referência em Karting Superstars. Ler antes de qualquer mudança nos presets de kart, nas assistências de direção ou no bench de volta.
-revision: 2
+revision: 3
 date: 2026-10-21
 author: eduardo.matos
 channels: [web-desktop, web-mobile]
@@ -36,13 +36,15 @@ sensação de velocidade. O acerto **Realista — aluguel 4T** continua existind
 
 - **US-1** Como Jogador, quero que o kart responda ao volante de imediato, para apontar para a curva
   sem antecipar.
-  - Em reta a 50 km/h, ao aplicar esterço cheio, a taxa de guinada atinge 90 % do seu regime em no
-    máximo `OPEN-01` ms de tempo simulado.
+  - Em reta, com a velocidade mantida em 50 km/h pelo acelerador, ao aplicar esterço cheio a taxa de
+    guinada atinge 90 % do seu regime (o valor estabilizado com a velocidade mantida) em no máximo
+    `OPEN-01` ms de tempo simulado.
   - Ao soltar o esterço, a guinada cai a 10 % do regime em no máximo `OPEN-01` ms.
   - O comportamento vale para entrada binária (teclado) e proporcional (inclinação).
 - **US-2** Como Jogador, quero que o kart faça a curva que eu pedi, para não sair de frente.
-  - Em curva de raio 18 m (o menor raio da pista sintética) a `OPEN-02` km/h com esterço cheio, a
-    telemetria não reporta `understeer` por mais de `OPEN-03` ms consecutivos.
+  - Em **ensaio de pista de teste** — arco de raio 18 m, faixa da largura da pista, sem paredes, fora da
+    pista sintética (cujos raios mínimos são 24 m e um grampo de 4 m) — a `OPEN-02` km/h com esterço
+    cheio, a telemetria não reporta `understeer` por mais de `OPEN-03` ms consecutivos.
   - Acima dessa velocidade, o kart perde a frente de forma progressiva: a velocidade em que o
     subesterço começa é pelo menos 15 % maior que a de hoje no mesmo ensaio.
 - **US-3** Como Jogador, quero uma traseira viva mas controlável, para escorregar e segurar.
@@ -72,6 +74,7 @@ sensação de velocidade. O acerto **Realista — aluguel 4T** continua existind
 | Passo fixo `STEP`, solver e significado de `Input` não mudam | I8 |
 | Mudar acerto que altera tempos é mudança versionada | I3 |
 | Sensação alvo: Karting Superstars (direção direta, aderência alta em velocidade, traseira viva controlável) | decisão do dono do produto, 2026-10-21 |
+| Os ensaios de resposta do volante e de curva de referência rodam em ambiente de ensaio próprio (pista de teste), não na pista sintética; só o ensaio de volta do piloto de teste usa a pista sintética | revisão 3 do seed, 2026-10-21 |
 
 ## Requisitos não funcionais
 

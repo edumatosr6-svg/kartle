@@ -36,3 +36,11 @@ Decisões fechadas pelo dono do produto. Prevalecem sobre os pontos em aberto co
   staging; o dono testa e devolve feedback curto (vira? acelera? traseira?); os presets são iterados
   dentro do pipeline (nova rodada de código/testes) até a aprovação dele. Nenhum preset experimental
   extra no painel.
+- 2026-10-21 (revisão 3 do seed) — **Correção de fato e método dos ensaios (redator, após FAIL SPEC
+  do código; não muda nenhum limiar do dono):** a pista sintética **não tem** curva de 18 m (raios
+  mínimos 24 m, 25 m e um grampo de 4 m). A "curva de raio 18 m" de OPEN-02/03 é um **ensaio em pista de
+  teste**: arco de raio 18 m com faixa de `WIDTH`, sem paredes, ambiente de ensaio próprio (como o
+  `TEST_PAD`), não um segmento da pista sintética. O ensaio de resposta do volante (OPEN-01) roda em
+  reta com a **velocidade mantida em 50 km/h** pelo acelerador, e "regime" é o valor estabilizado
+  nessa condição (janela curta e estacionária), não um valor que deriva com a desaceleração. O ensaio
+  de volta do piloto de teste (OPEN-07) continua na pista sintética.
