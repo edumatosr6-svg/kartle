@@ -2,7 +2,7 @@
 stage: deploy
 feature: race-lap-validation
 status: draft
-generated: 2026-10-21T15:53:50Z
+generated: 2026-10-21T16:02:09Z
 files: 10
 ---
 
@@ -12,13 +12,13 @@ files: 10
 
 | File | Id | Title | Status | Version |
 |---|---|---|---|---|
-| `01-release.md` | - | Release — validação de volta de corrida | draft | 1.1.2 |
-| `97-changelog.md` | - | Registro de mudanças — validação de volta de corrida (estágio de deploy) | draft | 1.1.2 |
-| `98-divergences.md` | - | Registro de divergências e lacunas devidas ao humano (estágio de deploy) | draft | 1.1.2 |
+| `01-release.md` | - | Release — validação de volta de corrida | draft | 1.1.3 |
+| `97-changelog.md` | - | Registro de mudanças — validação de volta de corrida (estágio de deploy) | draft | 1.1.3 |
+| `98-divergences.md` | - | Registro de divergências e lacunas devidas ao humano (estágio de deploy) | draft | 1.1.3 |
 | `REL-0001-config.md` | REL-0001 | Configuração de ambiente — nomes e significados, nunca valores | draft | 1.1.1 |
 | `REL-0002-migration.md` | REL-0002 | Migração — arquivo de pista versão 2, estado da volta em memória, dado persistido intocado | draft | 1.0.1 |
-| `REL-0003-rollout.md` | REL-0003 | Rollout — ordem de operações, janela de compatibilidade e o pipeline do GitHub Pages | draft | 1.1.1 |
+| `REL-0003-rollout.md` | REL-0003 | Rollout — ordem de operações, janela de compatibilidade e o pipeline do GitHub Pages | draft | 1.1.2 |
 | `REL-0004-mobile.md` | REL-0004 | Canal web-mobile — a mesma página, sem loja, sem assinatura, sem versão mínima instalada | draft | 1.0.1 |
-| `REL-0005-observability.md` | REL-0005 | Observabilidade — o que a release registra, o que se mede e o que faria soar um alerta | draft | 1.1.1 |
-| `runbook.md` | - | Runbook — promover, verificar e reverter a release de validação de volta | draft | 1.1.2 |
+| `REL-0005-observability.md` | REL-0005 | Observabilidade — o que a release registra, o que se mede e o que faria soar um alerta | draft | 1.1.2 |
+| `runbook.md` | - | Runbook — promover, verificar e reverter a release de validação de volta | draft | 1.1.3 |
 | `smoke.md` | - | Verificações de fumaça — por canal, cada uma observando um limiar | draft | 1.1.1 |

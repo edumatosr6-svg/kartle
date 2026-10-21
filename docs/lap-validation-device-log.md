@@ -49,6 +49,30 @@ o que não foi executado fica marcado como tal — ausência de registro nunca v
 | D12, D13 | não executados |
 | D14 | ver relatório do validador de deploy (0 ocorrências de OSM/ODbL em `dist/`) |
 
+## Execução 2 — 2026-10-21, web-desktop, site de staging publicado (HTTPS)
+
+| | |
+|---|---|
+| URL | `https://edumatosr6-svg.github.io/kartle-staging/` — GitHub Pages do repositório `edumatosr6-svg/kartle-staging`, ramo `staging` |
+| Build | commit `c1e488b` (código e testes idênticos a `c41c6c3`), construído pelo workflow `pages` (run 39629837192, reexecutado após a correção da política de ramos do ambiente) |
+| Navegador | Chromium 152 (painel do Claude Desktop), Windows 11, janela 467×1218, DPR 1, idioma `pt-BR` |
+| Operador | Claude (sessão do pipeline), a pedido de Eduardo Matos |
+| Limitação | painel em segundo plano (rAF ~2 quadros/s): só verificações de carga, estrutura e texto; nenhuma medida de ritmo |
+
+| Linha | Resultado | Evidência |
+|---|---|---|
+| D1 HTTPS | **passa** | `location.protocol` = `https:`, `isSecureContext` = true, `nextHopProtocol` = h2, certificado válido (`curl` `ssl_verify_result` 0); nenhum recurso em `http://` (`anyInsecure` = false) |
+| D2 carga em 4G | **não medido** | sem limitação de rede disponível no painel; sem limitação: `domContentLoaded` 401 ms, `load` 467 ms (informativo) |
+| D3 transferência | **passa** | `transferSize` total 155 257 bytes: HTML 3 150 + JS 148 528 (`index-Cqfgl3da.js`) + CSS 3 579 (`index-dgojskay.css`); limite RNF02 3 145 728 bytes; hashes iguais ao build local de `01-release.md` |
+| D4 estado e oferta | **passa** | `#track-status` = `synthetic`; `#lap-offer` = um botão `volta de treino`, nenhuma opção oficial (DES-0009) |
+| D14 OSM/ODbL | **passa** | nenhuma ocorrência de `OpenStreetMap`/`ODbL` no texto da página (`dist/` já verificado pelo validador: 0 ocorrências) |
+| D5–D13 | **não executados nesta execução** | ver Execução 1 (estado/texto no build local) e pendências abaixo |
+
+**Observações para o dono do produto (não são linhas do smoke):**
+
+1. A página carrega `https://fonts.googleapis.com/css2?family=DM+Sans…&family=Space+Grotesk…` — uma dependência externa pré-existente no `index.html`. Impacto: uma requisição a terceiro no carregamento (privacidade, RNF10) e fonte alternativa do sistema quando offline (RNF08 não é afetado durante a volta: 0 requisições entre largada e resultado, Execução 1). Decisão: manter, ou embutir as fontes no build.
+2. O link da marca (`a.brand`, `href="/"`) aponta para a raiz de `edumatosr6-svg.github.io`, fora de `/kartle-staging/` (DIV-DP-12 — item de código).
+
 ### Pendências para uma execução humana
 
 1. Janela em primeiro plano, notebook de referência nomeado: E2E-01 (3 s), E2E-02 (volta completa, marcador pulado), E2E-10 (fps).

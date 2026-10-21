@@ -3,7 +3,7 @@ title: Registro de mudanças — validação de volta de corrida (estágio de de
 feature: race-lap-validation
 stage: deploy
 status: draft
-version: 1.1.2
+version: 1.1.3
 sources: []
 ---
 
@@ -288,3 +288,85 @@ rodada (§16: nenhuma superfície além do que estas entradas nomeiam):
 
 - Nenhum comando `git`, `npm`, `gh` ou chamada a host remoto executado nesta rodada; nenhum valor de segredo escrito;
   nenhum número ou resultado de execução do Actions afirmado.
+
+## 2026-10-21 — rodada 6, Modo B (fatos das primeiras execuções do workflow, apurados pelo condutor do loop)
+
+Entradas novas, apuradas pelo condutor do loop depois dos pushes (nenhum outro fato foi acrescentado; superfície
+congelada, §16 — nenhuma linha de fumaça, precondição nova, comando novo ou decisão):
+
+1. `master` enviado a `origin` e, como `staging`, a `kartle-staging`: `162b1b3` e depois `c1e488b` (registro de release
+   da rodada 5; só `600 Deploy/Output/`).
+2. **Produção** (`kartle`, workflow `pages`): execução 39627810079 (`162b1b3`) — `build` concluído, `deploy` em *Waiting*
+   à espera do revisor (por desenho; **não aprovado**); execução 39629830827 (`c1e488b`) — pendente atrás dela (grupo de
+   concorrência `pages`). Nada promovido.
+3. **Staging** (`kartle-staging`): execuções 39627817908 (`162b1b3`) e 39629837192 (`c1e488b`) — `build` concluído,
+   `deploy` **falhado com zero passos executados**. **Causa raiz**: o ambiente `github-pages`, criado automaticamente ao
+   ativar o Pages, restringe as implantações ao ramo padrão (`custom_branch_policies: true, protected_branches: false`),
+   e a implantação a partir do ramo `staging` é recusada na preparação do trabalho. **Correção** aplicada pelo condutor
+   do loop pela API (`PUT repos/edumatosr6-svg/kartle-staging/environments/github-pages`, `deployment_branch_policy:
+   null`). Reexecução de 39629837192: `build` e `deploy` concluídos; `https://edumatosr6-svg.github.io/kartle-staging/`
+   responde 200 em HTTPS com certificado válido (`curl`).
+
+**O que mudou**
+
+- `runbook.md`: tabela de nomes com a ponta `c1e488b` (três commits posteriores a `<sha>`, nenhum toca a árvore
+  verificada); o aviso do cabeçalho passa a dizer que as **primeiras** execuções constam das precondições como
+  evidência. Precondição do repositório de produção: a política de ramos do ambiente fica na restrição padrão (só
+  `master`), como segunda tranca ao lado do revisor. Precondição do repositório de staging: **passo explícito**
+  Settings → Environments → `github-pages` → *Deployment branches and tags* = **No restriction** (ou acrescentar
+  `staging`), com o resultado observável (um push em `staging` produz um `deploy` que executa os seus passos) e a
+  falha que a sua falta produz. Precondição "primeira execução verde observada" marcada `[x]` com as execuções
+  39629837192 (staging, verde após reexecução, 200 em HTTPS) e 39627810079 / 39629830827 (produção, *Waiting*, não
+  aprovado). Ficam `[ ]`: validação de staging `SUCCESS` e execução 2 do log. Passo 1 com `git log -4`; passos 7 e 10
+  com o estado das execuções e, no 7, o diagnóstico do `deploy` sem passos; nota de *Roll back* com a execução verde
+  existente e o ensaio de R1/R2 ainda por fazer.
+- `REL-0003-rollout.md`: ordem de operações 2 e 4 com as execuções e os resultados; tabela *Staging e produção* com a
+  linha *Deployment branches and tags* (produção: restrição padrão mantida; staging: sem restrição, configurado em
+  2026-10-21, com o resultado observável); parágrafo "tudo isto existe" com as execuções registradas; etapa 7 do
+  pipeline com o pré-requisito da política; parágrafo final com a prova de reprodução pelo pipeline; risco novo na tabela
+  de riscos (`deploy` falhado sem passos → política do ambiente; `FAIL` deste estágio).
+- `01-release.md`: commits de `master` com `c1e488b`; remoto de produção com a política de ramos padrão; staging com
+  a política aberta e "instalado e observado"; **linha nova *Evidência do pipeline*** com as quatro execuções, a causa
+  raiz da falha de staging, a correção e a reexecução — conclusão: artefato construído pelo pipeline para `c1e488b` nos
+  dois repositórios, produção à espera de aprovação. Precondição humana 1 (ler a primeira execução) passa a cumprida;
+  restam a execução 2 do log de aparelho (agora possível) e o ensaio de R1/R2. Seção *O que o pipeline faz* com o
+  pré-requisito da política em staging.
+- `REL-0005-observability.md`: o histórico do Actions recebe as primeiras entradas como tabela (repositório, execução,
+  commit, `build`, `deploy`, leitura); **modo de falha novo**: `deploy` falhado com zero passos executados — sintoma,
+  causa (política de ramos do ambiente), remédio (abrir a política e *Re-run all jobs*), classificação (configuração do
+  repositório, `FAIL` deste estágio, nunca defeito da aplicação) e o que o mesmo sintoma significaria em produção.
+- `98-divergences.md`: DIV-DP-02 com as execuções em que o `build` concluiu (o pipeline reproduz o build); DIV-DP-03
+  e DIV-DP-04 com staging publicado e o ensaio de R1/R2 devido ao validador; DIV-DP-07 com a URL a responder 200 (RNF01
+  agora mensurável; segue `open`); DIV-DP-10 e DIV-DP-11 com a evidência observada ("construído pelo pipeline",
+  "executado em staging") e o que fica devido (confirmação do validador, `<hash>` no HTML servido, `smoke.md`, R1/R2);
+  **DIV-DP-13** nova e `resolved` (política de ramos do ambiente de staging; causa, correção, o que a documenta);
+  rodapé com o que fica `open` após a rodada 6 e o que é devido ao validador sem linha própria.
+- `version:` movido (patch): `01-release.md`, `runbook.md`, `98-divergences.md`, `97-changelog.md` → `1.1.3`;
+  `REL-0003`, `REL-0005` → `1.1.2`. `smoke.md`, `REL-0001`, `REL-0002`, `REL-0004` não editados.
+
+**Itens fechados**
+
+- **Causa raiz da falha do `deploy` em staging** (zero passos executados) identificada, corrigida e documentada como
+  passo do runbook, linha de `REL-0003`, modo de falha de `REL-0005` e DIV-DP-13 `resolved`.
+- **Precondição "primeira execução verde observada"** do `runbook.md` cumprida com os números das execuções.
+- **Precondição humana 1** de `01-release.md` (ler a primeira execução) cumprida.
+
+**Itens que continuam abertos, com o que os fecha — devidos à próxima execução do validador**
+
+- **ISSUE-01** (construído pelo pipeline e observado) e **ISSUE-02** (instalado em staging e observado): a evidência
+  está agora registrada neste registro (execuções, URL em HTTPS); o fecho é a confirmação pelo validador, na aba
+  Actions e na URL, no próximo relatório.
+- **ISSUE-04** (R1/R2 ensaiados em staging): **não ensaiado** nesta rodada; agora possível, porque existe execução verde
+  em `kartle-staging`.
+- **ISSUE-03** (26 linhas de fumaça em staging; execução 2 do log de aparelho, DIV-DP-06): depende do testador com os
+  aparelhos nomeados; a URL de staging está publicada.
+- **DIV-DP-07** (RNF01 medido na URL): agora mensurável em staging; D2/M2 ainda não correram.
+- **DIV-DP-12 / ISSUE-15** (`href="/"` da marca): sem decisão do dono do produto; inalterado.
+- **ISSUE-09** (info, sem flag): a ordem de `REL-0003` foi confrontada com a primeira execução em staging e um passo
+  faltava (a política do ambiente), agora acrescentado; nada mais a tratar.
+
+**Itens recusados**: nenhum.
+
+- Nenhum comando `git`, `npm`, `gh` ou chamada a host remoto executado por esta rodada (a correção pela API foi do
+  condutor do loop, antes dela, e é registrada aqui como fato); nenhum valor de segredo escrito; nenhum número ou
+  resultado de execução além dos apurados pelo condutor do loop.
