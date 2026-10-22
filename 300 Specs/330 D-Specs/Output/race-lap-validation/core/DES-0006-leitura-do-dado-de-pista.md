@@ -4,7 +4,7 @@ title: Leitura e verificação do dado de pista
 feature: race-lap-validation
 stage: dspec
 status: validated
-version: 1.0.0
+version: 1.1.0
 sources: [FEAT-0002, FEAT-0008, REQ-FEAT-0002-13, REQ-FEAT-0008-01, REQ-FEAT-0008-02, REQ-FEAT-0008-03, REQ-FEAT-0008-05, REQ-FEAT-0008-08, REQ-FEAT-0008-09, REQ-FEAT-0008-10, REQ-FEAT-0008-11, REQ-FEAT-0008-12, REQ-FEAT-0008-13, REQ-FEAT-0008-14]
 ---
 
@@ -34,7 +34,7 @@ anterior (NFR-0012). Contrato: API-0003. Esquema: [DM-0001](../data/DM-0001-arqu
 
 | Símbolo | Assinatura | Descrição |
 |---|---|---|
-| `TRACK_SCHEMA_VERSION` | `2` | maior versão que o leitor conhece |
+| `TRACK_SCHEMA_VERSION` | `2` nesta feature (DM-0001) | maior versão de esquema que o leitor conhece. Exportada para que toda prova se refira à constante e nunca a um literal de versão: uma feature que acrescente uma versão de esquema sobe a constante junto com o seu leitor (D-DS-02) sem reprovar as provas desta (FB-01 de `pista-kart-park`) |
 | `DEFAULT_CUT_DISTANCE_M`, `DEFAULT_CUT_DURATION_MS` | `3`, `1000` | padrões neutros de `DEC-01` |
 | `BARRIER_REACH_M` | `WIDTH / 2 + 9` | alcance mínimo das linhas de barreira (DM-0001, C6) |
 | `readTrackData(source)` | `(string \| object \| null \| undefined) => TrackReading` | classifica e devolve os campos válidos |
@@ -70,7 +70,7 @@ publicada nunca é editada no lugar: qualquer mudança do dado é nova `trackVer
 | Situação | Resultado | Registro (apenas identificadores) |
 |---|---|---|
 | texto que não é JSON, entrada ausente, objeto sem forma | `UNREADABLE` | `console.warn('track-data', 'UNREADABLE')` na aplicação |
-| `schemaVersion` maior que 2 | `UNSUPPORTED_SCHEMA`; arquivo intacto; nenhuma volta | `console.warn('track-data', 'UNSUPPORTED_SCHEMA', schemaVersion)` |
+| `schemaVersion` maior que `TRACK_SCHEMA_VERSION` | `UNSUPPORTED_SCHEMA`; arquivo intacto; nenhuma volta | `console.warn('track-data', 'UNSUPPORTED_SCHEMA', schemaVersion)` |
 | campo declarado fora de forma, ou reprovado em C1 a C7 | `INCOMPLETE`; só treino | `console.warn('track-data', 'INCOMPLETE', trackId, trackVersion, ids reprovados)` |
 
 Nada do conteúdo do arquivo além de `trackId`, `trackVersion`, `schemaVersion` e os identificadores C1 a C7 é
@@ -80,11 +80,16 @@ registrado. Sem tempo-limite, nova tentativa nem rede: o dado está empacotado (
 ## Determinismo (D-DS-07)
 
 Função pura, sem relógio, sem sorteio, sem DOM; o resultado depende só do arquivo e da geometria constante. Provas
-em `tests/track-data.test.ts`: o arquivo sintético é `COMPLETE` e passa em C1 a C7; um arquivo `schemaVersion` 1
-(`tests/fixtures/track-v1.json`) é `INCOMPLETE` sem erro (NFR-0012); `schemaVersion` 3 é `UNSUPPORTED_SCHEMA` e o
-objeto de entrada fica idêntico (congelado antes, comparado depois); texto corrompido é `UNREADABLE`; cada
+em `tests/track-data.test.ts`: o arquivo sintético é `COMPLETE`, passa em C1 a C7 e declara `schemaVersion` igual a
+`TRACK_SCHEMA_VERSION`, maior que a versão da forma anterior (NFR-0012); um arquivo na forma anterior
+(`tests/fixtures/track-v1.json`) é `INCOMPLETE` sem erro (NFR-0012); um arquivo derivado do sintético com
+`schemaVersion` igual a `TRACK_SCHEMA_VERSION + 1` é `UNSUPPORTED_SCHEMA`, devolvido com essa `schemaVersion`, e o
+objeto de entrada fica idêntico (congelado antes, comparado depois) (NFR-0012); texto corrompido é `UNREADABLE`; cada
 verificação C1 a C7 tem um arquivo derivado do sintético que a reprova e vira `INCOMPLETE`; só um limite de corte
-declarado usa o padrão do outro; a leitura repetida é igual.
+declarado usa o padrão do outro; a leitura repetida é igual. **Nenhuma prova afirma um literal de versão de
+esquema**: a versão declarada e a versão posterior são derivadas da constante exportada por `src/trackData.ts`, de
+modo que subir a versão do esquema em outra feature (com o seu leitor) não reprova estas verificações (FB-01 de
+`pista-kart-park`, aceito na rodada de 2026-10-22).
 
 ## Feature flag
 

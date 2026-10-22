@@ -4,7 +4,7 @@ title: Invariantes da simulação, física congelada e verificação das regras
 feature: race-lap-validation
 stage: dspec
 status: validated
-version: 1.0.0
+version: 1.0.1
 sources: [FEAT-0005, FEAT-0009, REQ-FEAT-0005-07, REQ-FEAT-0009-02, REQ-FEAT-0009-03, REQ-FEAT-0009-04, REQ-FEAT-0009-10]
 ---
 
@@ -39,6 +39,11 @@ verificações (papel de árvore, não camada). Arquivos de teste novos em `test
 | `tests/lap-kinds.test.ts` | DES-0005 | reposicionamento; reconhecimento e treino; pista de dado incompleto |
 | `tests/track-data.test.ts` | DES-0006 | dado incompleto; versão anterior; versão desconhecida |
 | `tests/lap-determinism.test.ts` | DES-0001, DES-0002 | duas execuções iguais; 30 e 60 quadros; com e sem pausa |
+
+Nomes em uso na árvore: a etapa de testes nomeia os arquivos `tests/<feature>-<área>.test.ts`; cada
+`tests/lap-<área>.test.ts` desta tabela corresponde a `tests/race-lap-validation-<área>.test.ts` e
+`tests/track-data.test.ts` a `tests/race-lap-validation-track-data.test.ts`. Os nomes desta tabela, os citados nos
+demais itens de projeto e os nomes curtos da test-strategy designam esses arquivos.
 
 Benchmarks: antes de alterar o código, o código registra em `docs/lap-validation-bench.md` a saída completa de
 `npm run bench:physics` e de `npm run bench:handling` (NFR-0011); depois da mudança, repete e acrescenta o

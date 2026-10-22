@@ -4,7 +4,7 @@ title: Ciclo da volta, comandos e consultas
 feature: race-lap-validation
 stage: dspec
 status: validated
-version: 1.0.0
+version: 1.1.0
 sources: [FEAT-0001, FEAT-0002, FEAT-0003, FEAT-0004, FEAT-0008, FEAT-0009, REQ-FEAT-0001-04, REQ-FEAT-0001-06, REQ-FEAT-0001-07, REQ-FEAT-0001-11, REQ-FEAT-0001-12, REQ-FEAT-0002-11, REQ-FEAT-0002-12, REQ-FEAT-0002-15, REQ-FEAT-0003-08, REQ-FEAT-0003-09, REQ-FEAT-0003-10, REQ-FEAT-0003-12, REQ-FEAT-0003-13, REQ-FEAT-0003-14, REQ-FEAT-0004-14, REQ-FEAT-0008-15, REQ-FEAT-0009-01, REQ-FEAT-0009-12]
 ---
 
@@ -31,13 +31,13 @@ anterior. Rejeições são valores, não exceções (API-0002).
 
 | Função | Entradas | Saída | Rejeições |
 |---|---|---|---|
-| `startLap(current, request, reading, config, environment = CIRCUIT)` | `current: LapSession`, ausente ou encerrada; `request: {lapKind, trackId, trackVersion, challengeNumber?}`; `reading: TrackReading`; `config: KartConfig` | `{ok: true, lap}` em `COUNTDOWN`, ou `{ok: false, code}` | `LAP_ALREADY_ACTIVE`, `TRACK_DATA_UNREADABLE`, `TRACK_SCHEMA_UNSUPPORTED`, `OFFICIAL_NOT_AVAILABLE` |
+| `startLap(current, request, reading, config, environment = CIRCUIT)` | `current: LapSession`, ausente ou encerrada; `request: {lapKind, trackId, trackVersion, challengeNumber?, setupId?, setupVersion?}` (API-0002); `reading: TrackReading`; `config: KartConfig` | `{ok: true, lap}` em `COUNTDOWN`, ou `{ok: false, code}` | `LAP_ALREADY_ACTIVE`, `TRACK_DATA_UNREADABLE`, `TRACK_SCHEMA_UNSUPPORTED`, `OFFICIAL_NOT_AVAILABLE` |
 | `pauseLap(lap, cause)` | `cause`: `ESC_KEY`, `FOCUS_LOST`, `SENSOR_LOST` | `{ok: true, lap}` em `PAUSED` com `resumePhase` | `NO_ACTIVE_LAP`, `LAP_ENDED`, `ALREADY_PAUSED` |
 | `resumeLap(lap)` | — | `{ok: true, lap}` na fase em `resumePhase` | `NO_ACTIVE_LAP`, `LAP_ENDED`, `NOT_PAUSED` |
 | `repositionKart(lap)` | — | `{ok: true, lap}` (efeito em [DES-0005](DES-0005-tipos-de-volta-e-reposicionamento.md)) | `NO_ACTIVE_LAP`, `LAP_ENDED`, `NOT_RUNNING` |
 | `stepLap(lap, input)` | `input: Input` normalizado, inalterado | nova `LapSession`; a própria `lap` em `PAUSED` e `ENDED` | nenhuma |
 | `getLapState(lap)` | `LapSession` ou ausente | `LapStateView` com os campos de API-0001, ou `{code: 'NO_ACTIVE_LAP'}` | — |
-| `getLapResult(lap)` | `LapSession` ou ausente | `LapResult`, ou `{code: 'NO_RESULT'}` | — |
+| `getLapResult(lap)` | `LapSession` ou ausente | `LapResult` de [DM-0002](../data/DM-0002-estado-da-volta-em-memoria.md), com `challengeNumber`, `setupId` e `setupVersion` copiados da sessão quando presentes (API-0001), ou `{code: 'NO_RESULT'}` | — |
 
 Ordem das verificações de `startLap`, para que a resposta seja determinística: (1) volta em `COUNTDOWN`,
 `RUNNING` ou `PAUSED` em `current`: `LAP_ALREADY_ACTIVE`; (2) `reading` `UNREADABLE`:
@@ -45,6 +45,10 @@ Ordem das verificações de `startLap`, para que a resposta seja determinística
 `request.trackVersion` diferentes dos da leitura: `TRACK_DATA_UNREADABLE` (o dado nomeado não é o dado lido; não
 se cria código novo); (5) `OFFICIAL` com leitura `INCOMPLETE`: `OFFICIAL_NOT_AVAILABLE`. Em qualquer rejeição a
 sessão anterior fica como estava. `trackId` e `trackVersion` da sessão vêm da leitura (REQ-FEAT-0008-15).
+`challengeNumber`, `setupId` e `setupVersion` do pedido são copiados para a sessão sem interpretação, e ficam ausentes
+quando o pedido não os traz: nenhum deles entra em verificação, em regra de volta nem em rejeição (API-0002 não
+tem rejeição nova; um `setupId` fora do enum é resolvido pelo leitor do dado publicado de `dirigibilidade`,
+`src/setupRecords.ts`, e não aqui). `src/lap.ts` não importa `src/setupRecords.ts`: o sentido é o inverso.
 
 Posição inicial: com leitura que traz `startPosition`, o `kart` inicial é `initialState()` com `x` = `xM`, `z` = `zM`
 e `heading` = `headingDeg * Math.PI / 180`; sem ela (dado `INCOMPLETE` sem largada válida), é `initialState()`

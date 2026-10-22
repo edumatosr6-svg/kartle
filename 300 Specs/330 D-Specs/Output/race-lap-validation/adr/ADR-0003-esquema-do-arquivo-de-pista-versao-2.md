@@ -4,7 +4,7 @@ title: Esquema do arquivo de pista na versão 2 e leitor da forma anterior
 feature: race-lap-validation
 stage: dspec
 status: validated
-version: 1.0.0
+version: 1.0.1
 sources: [FEAT-0008, REQ-FEAT-0008-08, REQ-FEAT-0008-09, REQ-FEAT-0008-10, REQ-FEAT-0008-11, REQ-FEAT-0008-12]
 ---
 
@@ -25,7 +25,10 @@ feature.
    campos fica em DM-0001.
 2. A forma anterior (`schemaVersion` 1, com `trackId` e `trackVersion`) é lida **sem erro** e classificada
    `INCOMPLETE`: só treino. Não é descartada, alterada nem convertida no lugar.
-3. `schemaVersion` maior que 2 é `UNSUPPORTED_SCHEMA`: o arquivo fica intacto, é reportado e não é usado.
+3. `schemaVersion` maior que a versão que o leitor conhece (`TRACK_SCHEMA_VERSION`, 2 nesta decisão) é
+   `UNSUPPORTED_SCHEMA`: o arquivo fica intacto, é reportado e não é usado. A prova dessa regra se refere à
+   constante (`TRACK_SCHEMA_VERSION + 1`), nunca a um literal, para que subir a versão do esquema em outra feature
+   não a reprove (FB-01 de `pista-kart-park`).
 4. Campos novos: `direction`, `startPosition`, `finishLine`, `sectorLimits` (exatamente 3), `markers` (1 ou mais),
    `cutDistanceM`, `cutDurationMs`. Os de corte são opcionais, com padrão neutro de 3 m e 1000 ms.
 5. A geometria (linha central e largura) continua em `src/track.ts` e **não** entra no arquivo nesta versão: seus

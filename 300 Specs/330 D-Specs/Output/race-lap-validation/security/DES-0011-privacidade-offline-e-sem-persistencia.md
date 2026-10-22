@@ -4,7 +4,7 @@ title: Privacidade, uso offline e ausência de persistência
 feature: race-lap-validation
 stage: dspec
 status: validated
-version: 1.0.0
+version: 1.1.0
 sources: [FEAT-0001, FEAT-0002, FEAT-0003, FEAT-0004, FEAT-0005, FEAT-0006, FEAT-0009, REQ-FEAT-0001-14, REQ-FEAT-0002-16, REQ-FEAT-0003-15, REQ-FEAT-0004-15, REQ-FEAT-0005-12, REQ-FEAT-0006-16, REQ-FEAT-0009-07, REQ-FEAT-0009-08, REQ-FEAT-0009-09, REQ-FEAT-0009-11]
 ---
 
@@ -46,7 +46,7 @@ autenticação são de outra feature e não são projetados aqui.
 
 | Dado | Onde vive | Para que serve | Persistido ou transmitido |
 |---|---|---|---|
-| `trackId`, `trackVersion`, `challengeNumber` (opcional) | `LapSession`, `LapResult` | identificar a pista e o desafio do resultado (I1) | não |
+| `trackId`, `trackVersion`, `challengeNumber` (opcional), `setupId` e `setupVersion` (opcionais) | `LapSession`, `LapResult` | identificar a pista, o desafio e o acerto do resultado (I1; API-0001); os dois últimos são identificadores do dado publicado de `dirigibilidade`, copiados sem interpretação, sem dado pessoal | não |
 | contadores de passos, marcadores, setores, validade, motivo | `LapSession` | regras de volta | não |
 | `lapMs`, `sectorMs` | `LapResult` | mostrar o tempo | não |
 | idioma do navegador | lido a cada quadro | escolher o texto | não gravado, não enviado |

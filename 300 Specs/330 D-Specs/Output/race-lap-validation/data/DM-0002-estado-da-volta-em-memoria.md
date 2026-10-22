@@ -4,7 +4,7 @@ title: Estado e resultado da volta em memória
 feature: race-lap-validation
 stage: dspec
 status: validated
-version: 1.0.0
+version: 1.1.0
 sources: [FEAT-0001, FEAT-0002, FEAT-0003, REQ-FEAT-0001-05, REQ-FEAT-0002-04, REQ-FEAT-0002-11, REQ-FEAT-0003-08]
 ---
 
@@ -25,6 +25,8 @@ quando a página é recarregada ou abandonada (REQ-FEAT-0009-11).
 | `trackId` | texto | — | não | da leitura | nunca da data, do relógio ou do nome |
 | `trackVersion` | texto ou inteiro | — | não | da leitura | copiado sem interpretação |
 | `challengeNumber` | inteiro | — | sim | ausente | copiado do pedido; ausente não muda nada |
+| `setupId` | `ARCADE_ASSISTIDO`, `REALISTA_ALUGUEL_4T` | — | sim | ausente | copiado do pedido sem interpretação (API-0002); ausente não muda nada; um valor fora do enum não é verificado aqui: é resolvido pelo leitor do dado publicado de `dirigibilidade` |
+| `setupVersion` | texto | — | sim | ausente | copiado do pedido sem interpretação (API-0002); ausente não muda nada |
 | `trackStatus` | `COMPLETE`, `INCOMPLETE` | — | não | da leitura | decide `official` e quais linhas são avaliadas |
 | `lines` | estrutura de linhas e limites de corte | m, ms | não | da leitura | referência ao dado lido, não copiada; vazia em `INCOMPLETE` |
 | `config` | `KartConfig` congelado | — | não | configuração vigente ao iniciar | fixa durante a volta; mudar peso ou estilo vale para a volta seguinte |
@@ -52,6 +54,8 @@ volta, congelado na pausa, e no fim igual a `lapMs` de uma volta válida ou a `t
 | `trackId` | texto | — | não | |
 | `trackVersion` | texto ou inteiro | — | não | |
 | `challengeNumber` | inteiro | — | sim | só presente se o pedido o trouxe |
+| `setupId` | `ARCADE_ASSISTIDO`, `REALISTA_ALUGUEL_4T` | — | sim | só presente se o pedido o trouxe, copiado da sessão; ausente lê-se `ARCADE_ASSISTIDO` pelo leitor de registros de `dirigibilidade` (`resolveSetupRef`, `src/setupRecords.ts`), nunca por esta simulação (API-0001) |
+| `setupVersion` | texto | — | sim | só presente se o pedido o trouxe, copiado da sessão; ausente lê-se a `previousSetupVersion` do `setupId` pelo mesmo leitor (API-0001) |
 | `lapKind` | enum | — | não | |
 | `lapValidity` | `VALID`, `INVALID` | — | não | |
 | `invalidReason` | enum | — | sim | só com `INVALID` |
@@ -61,6 +65,13 @@ volta, congelado na pausa, e no fim igual a `lapMs` de uma volta válida ou a `t
 
 O resultado não tem campo de identidade de jogador, de dispositivo, de data nem de relógio (NFR-0005).
 
+`setupId` e `setupVersion` identificam o acerto do resultado como `trackId` e `trackVersion` identificam a pista;
+nenhum dos dois altera validade, tempo ou motivo, e a simulação os copia sem ler o dado publicado do acerto
+(API-0001; sentido de dependência: `src/setupRecords.ts` importa `src/lap.ts`, nunca o contrário). O resultado é a
+fonte da qual o replay e o texto compartilhado — registros de `dirigibilidade`, em `src/setupRecords.ts` e
+`src/handlingMessages.ts` — copiam os dois campos; este modelo não os descreve. Fonte: FB-01 de `dirigibilidade`,
+aceito no F-Spec na rodada de 2026-10-22 (API-0001 1.1.0, API-0002 1.1.0).
+
 ## Invariantes verificáveis
 
 | Id | Invariante |
@@ -68,7 +79,7 @@ O resultado não tem campo de identidade de jogador, de dispositivo, de data nem
 | INV-1 | `phase` `ENDED` se, e somente se, existe exatamente um `result`; depois de `ENDED` nenhum comando nem passo muda a sessão |
 | INV-2 | `resumePhase` e `pauseCause` existem se, e somente se, `phase` é `PAUSED` |
 | INV-3 | Em `PAUSED` e em `ENDED` nenhum contador (`countdownSteps`, `stepCount`, `offTrackSteps`, `markersPassedCount`, `sectorBoundsMs`) e nem `kart` mudam |
-| INV-4 | `lapKind`, `trackId`, `trackVersion`, `challengeNumber`, `trackStatus`, `lines` e `config` não mudam durante a sessão |
+| INV-4 | `lapKind`, `trackId`, `trackVersion`, `challengeNumber`, `setupId`, `setupVersion`, `trackStatus`, `lines` e `config` não mudam durante a sessão |
 | INV-5 | Resultado `VALID` tem `sectorMs` com 4 inteiros cuja soma é `lapMs`, com diferença de 0 ms, e cada elemento maior ou igual a 0 |
 | INV-6 | `INVALID` tem `invalidReason`, e o resultado não tem `lapMs` nem `sectorMs` |
 | INV-7 | `markersPassedCount` e `sectorBoundsMs.length` só crescem, no máximo de 1 por passo, e nunca passam do total declarado |
@@ -86,11 +97,13 @@ Nenhum.
 ## Janela de compatibilidade
 
 Nenhuma: o tipo é interno ao cliente. O contrato visível é o de API-0001 e API-0002, cujos nomes e unidades não
-mudam depois de publicados (I3).
+mudam depois de publicados (I3). Rodada de 2026-10-22: `setupId` e `setupVersion` entram nos dois tipos como campos
+opcionais e aditivos; nenhum campo é renomeado, removido ou muda de significado, e um `LapResult` sem os dois
+campos continua válido e é lido pelos padrões de API-0001 (I5).
 
 ## Retenção e privacidade
 
-Retido só enquanto a página está aberta. Contém identificadores de pista e números de passo; não contém dado
+Retido só enquanto a página está aberta. Contém identificadores de pista, de acerto e números de passo; não contém dado
 pessoal, identificador de jogador, idioma nem horário (D-DS-04, I6). Nada é enviado pela rede nem gravado em
 `localStorage`, `sessionStorage` ou IndexedDB por esta feature. A persistência do resultado é do desafio diário
 (etapa 5).

@@ -3,7 +3,7 @@ title: Estratégia de testes — validação de volta de corrida
 feature: race-lap-validation
 stage: dspec
 status: validated
-version: 1.0.0
+version: 1.1.1
 sources: []
 ---
 
@@ -26,7 +26,7 @@ com a posição do kart ou um contador alterados, como um estado de partida seme
 |---|---|---|
 | Unitário | `npm test` | funções puras: `toMs`, `interpolateMs`, `isCutExceeded`, `crossLine`, `readTrackData`, `checkConsistency`, `resolveLanguage`, `formatLapTime`, `describeLap`, `advanceClock`, `offeredLapKinds` |
 | Integração | `npm test` | a máquina de estados completa de `src/lap.ts` sobre a física real (`step`, `CIRCUIT`) e a pista sintética: volta inteira, marcador pulado, corte, pausa, reposicionamento |
-| Contrato de API | `npm test` | `tests/lap-contract.test.ts`: forma e unidades de `getLapState`, `getLapResult`, `readTrackData`, códigos de rejeição por operação, ausência de campo além dos contratados (inclusive de dado pessoal) |
+| Contrato de API | `npm test` | `tests/lap-contract.test.ts`: forma e unidades de `getLapState`, `getLapResult`, `readTrackData`, códigos de rejeição por operação, ausência de campo além dos contratados (inclusive de dado pessoal); os campos opcionais `setupId` e `setupVersion` de API-0001 presentes no resultado exatamente quando o pedido `startLap` os trouxe, copiados sem interpretação, e ausentes quando não (API-0002) |
 | Web E2E | roteiro registrado em Chrome, Edge, Firefox e Safari nas versões atuais, em `web-desktop` | texto na tela, tamanhos, contraste, escala de cinza, Esc, perda de foco, idioma, rede bloqueada, tempos iguais entre navegadores |
 | Mobile E2E | roteiro registrado em celular intermediário de referência (RNF03), em `web-mobile` | inclinação e perda do sensor, retorno ao toque com estado visível, texto de 16 px, 30 fps |
 
@@ -38,7 +38,8 @@ com a posição do kart ou um contador alterados, como um estado de partida seme
 | `tests/fixtures/track-v1.json` | `{schemaVersion: 1, trackId, trackVersion: 1}` | leitura da forma anterior, `INCOMPLETE` (NFR-0012) |
 | arquivo derivado sem `markers` | cópia do sintético sem a lista de marcadores | `INCOMPLETE` por dado faltante |
 | arquivos derivados reprovando C1 a C7 | cópias do sintético com uma única inconsistência cada | `INCOMPLETE` por inconsistência |
-| `schemaVersion` 3 e texto corrompido | literais no teste | `UNSUPPORTED_SCHEMA` e `UNREADABLE` |
+| `schemaVersion` igual a `TRACK_SCHEMA_VERSION + 1`, e texto corrompido | cópia do sintético cuja versão de esquema é derivada da constante exportada por `src/trackData.ts` (nenhum literal de versão no teste); texto corrompido em literal | `UNSUPPORTED_SCHEMA` (devolvido com essa `schemaVersion`, objeto de entrada intacto) e `UNREADABLE` |
+| pedido de `startLap` com `setupId` e `setupVersion` | literais do enum de API-0002 e um texto de versão, no teste, copiados sem interpretação | resultado com os dois campos; o mesmo pedido sem eles dá resultado sem os campos (os padrões de leitura são do leitor de registros de `dirigibilidade`, fora deste conjunto) |
 | `withCutLimits(1, 300)` | cópia do sintético com `cutDistanceM` 1 e `cutDurationMs` 300 (`trackVersion` 3) | corte pelos limites da pista |
 | `withShortMarker(2)` | cópia do sintético em que o marcador 2 é um segmento curto de −1 m a +9 m do lado direito da linha central | marcador que um kart a −4 m da linha central não cruza |
 | `autopilot(state, offsetM)` em `tests/helpers/autopilot.ts` | controlador determinístico de entradas a 10 Hz, derivado do de `scripts/keyboard-lap.ts`, com deslocamento lateral opcional em função da posição de arco | volta completa (cerca de 3770 passos); excursões laterais curtas; marcador pulado na pista sintética publicada |
@@ -71,7 +72,7 @@ comparação com o oráculo do próprio teste (`toMs(k) < lapMs < toMs(k + 1)` p
 | Id | O que se faz e se registra | Canal |
 |---|---|---|
 | E2E-01 | iniciar a volta; ver 3, 2, 1 e VERDE em texto com 48 px no mínimo e contraste de 4,5:1; cronômetro `0:00.000` durante a contagem; acelerar antes do VERDE sem efeito | desktop e celular |
-| E2E-02 | completar uma volta; ver "válida em andamento", tempo de cada setor ao completá-lo e o resultado com tempo total e quatro tempos; repetir pulando um marcador, cortando e reposicionando em volta oficial de fixture, e ver os motivos | desktop e celular |
+| E2E-02 | completar uma volta; ver "válida em andamento", tempo de cada setor ao completá-lo e o resultado com tempo total e quatro tempos; repetir pulando um marcador, cortando e reposicionando em volta oficial de fixture, e ver os motivos. Comparação de tempos (SCR-0003, DES-0010): com uma volta válida concluída no acerto corrente, trocar o acerto no seletor existente `#handling-preset` (só entre voltas) e concluir outra volta válida — a tela de resultado não exibe comparação alguma com o tempo do outro acerto (diferença, melhor tempo ou ordenação) e o melhor tempo exibido não é o dele; concluir uma segunda volta válida no mesmo acerto — a comparação é exibida (melhor tempo entre as duas). A decisão fica em `compareLapRecords`; os ramos `SETUP_VERSION_DIFFERS` e `TRACK_DIFFERS` não são alcançáveis pela tela desta feature (uma única pista empacotada; o seletor só oferece versões publicadas de acerto) e, sem superfície só de teste, ficam provados nos testes de `compareLapRecords` de `dirigibilidade` | desktop e celular |
 | E2E-03 | Esc pausa; o cronômetro para; continuar pelo botão ou por Esc; o cronômetro retoma do mesmo valor | desktop |
 | E2E-04 | trocar de aba e voltar: a volta fica pausada com o mesmo cronômetro e só continua quando o Jogador continua | desktop e celular |
 | E2E-05 | cobrir ou desativar o sensor com a inclinação ativa: a volta pausa em cerca de 0,5 s; negar a permissão antes da volta: o texto de controle por toque fica visível | celular |
@@ -84,7 +85,11 @@ comparação com o oráculo do próprio teste (`toMs(k) < lapMs < toMs(k + 1)` p
 
 ## Critérios de aceite: como o teste chega a cada um
 
-`U` é unitário, `I` integração; o arquivo está em `tests/`.
+`U` é unitário, `I` integração; o arquivo está em `tests/`. Nome em uso na árvore: a etapa de testes nomeia os
+arquivos `tests/<feature>-<área>.test.ts`, de modo que o nome curto desta estratégia (`lap-<área>`, `frame-clock`,
+`track-data`) e o nome `tests/lap-<área>.test.ts` ou `tests/track-data.test.ts` citado nos itens de projeto designam
+`tests/race-lap-validation-<área>.test.ts` (áreas: `contract`, `crossing`, `cut`, `determinism`, `frame-clock`,
+`frozen`, `hud-css`, `kinds`, `layering`, `messages`, `state`, `timing`, `track-data`, `validity`).
 
 | Critério | Teste e caminho |
 |---|---|
@@ -176,7 +181,7 @@ comparação com o oráculo do próprio teste (`toMs(k) < lapMs < toMs(k + 1)` p
 | NFR-0009 | os arquivos da tabela de DES-0012, um por regra |
 | NFR-0010 | `lap-frozen` |
 | NFR-0011 | registro de benchmarks em `docs/lap-validation-bench.md`, antes e depois |
-| NFR-0012 | `track-data` (forma anterior lida sem erro, `schemaVersion` 2 declarado, versão desconhecida intacta) |
+| NFR-0012 | `track-data`: forma anterior lida sem erro; o arquivo sintético declara `schemaVersion` igual a `TRACK_SCHEMA_VERSION`, maior que a versão da forma anterior; `TRACK_SCHEMA_VERSION + 1` é `UNSUPPORTED_SCHEMA` com o objeto de entrada intacto. Sem literal de versão de esquema em nenhuma verificação: os valores derivam da constante exportada, para que subir o esquema em outra feature não reprove a prova (FB-01 de `pista-kart-park`) |
 
 ## Cobertura das regras de REQ-FEAT-0009-10
 

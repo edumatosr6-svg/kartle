@@ -3,7 +3,7 @@ title: Arquitetura — validação de volta de corrida
 feature: race-lap-validation
 stage: dspec
 status: validated
-version: 1.0.0
+version: 1.1.1
 sources: []
 ---
 
@@ -20,7 +20,10 @@ banco; por isso não existem as pastas `backend/` e `mobile/` deste estágio: os
 
 A volta é identificada pelo par `trackId` + `trackVersion` do dado de pista lido e, quando o desafio diário a
 informa, por `challengeNumber`. Nenhuma chave, regra ou resultado da volta usa a data, o relógio do aparelho
-ou o nome da pista. O tempo da volta é contado em passos de `STEP`, nunca em tempo de parede.
+ou o nome da pista. O tempo da volta é contado em passos de `STEP`, nunca em tempo de parede. O resultado leva
+ainda `setupId` e `setupVersion` (o acerto, identificador do dado publicado de `dirigibilidade`), copiados do
+pedido `startLap` sem interpretação: identificam o acerto do resultado e nunca são chave de regra nem de tempo
+(API-0001; rodada de 2026-10-22).
 
 ## Posicionamento por camada (I2)
 
@@ -46,7 +49,12 @@ Sentido das dependências (permitido): `lap.ts` importa `physics.ts`, `track.ts`
 `lapTiming.ts`; `trackData.ts` importa só `track.ts`; `main.ts` importa tudo isso e
 `lapMessages.ts`/`frameClock.ts`. Nenhum módulo de simulação ou de dado de pista importa `three`, o DOM,
 `src/audio.ts` ou `src/main.ts`, nem lê `Date`, `performance.now` ou `Math.random` (verificado por teste
-de camada, [DES-0012](core/DES-0012-invariantes-da-simulacao.md)).
+de camada, [DES-0012](core/DES-0012-invariantes-da-simulacao.md)). O módulo `src/setupRecords.ts` (de
+`dirigibilidade`, camada Simulação, existente) importa `src/lap.ts` para construir registros e decidir a
+comparabilidade; `src/main.ts` o chama para `compareLapRecords` ([DES-0010](web/DES-0010-resultado-da-volta.md)).
+A oferta de volta lê `setupId` e `setupVersion` do `PublishedSetup` corrente que a aplicação já guarda
+(`PUBLISHED_SETUPS`, `src/physics.ts`, camada Simulação), sem chamar `getSetupVersion`
+([DES-0009](web/DES-0009-inicio-de-volta-e-erros.md)); nenhum módulo desta feature importa `src/setupRecords.ts`.
 
 ## Fluxo alterado
 
