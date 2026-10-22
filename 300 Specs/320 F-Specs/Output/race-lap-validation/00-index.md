@@ -2,7 +2,7 @@
 stage: fspec
 feature: race-lap-validation
 status: validated
-generated: 2026-10-20T18:57:37Z
+generated: 2026-10-22T16:32:37Z
 files: 29
 ---
 
@@ -13,11 +13,11 @@ files: 29
 | File | Id | Title | Status | Version |
 |---|---|---|---|---|
 | `01-overview.md` | - | Visão geral — validação de volta de corrida | validated | 1.0.0 |
-| `02-glossary.md` | - | Glossário — validação de volta de corrida | validated | 1.0.0 |
-| `97-changelog.md` | - | Registro de mudanças — validação de volta de corrida | validated | 1.0.0 |
+| `02-glossary.md` | - | Glossário — validação de volta de corrida | validated | 1.1.0 |
+| `97-changelog.md` | - | Registro de mudanças — validação de volta de corrida | validated | 1.1.0 |
 | `98-divergences.md` | - | Divergências — validação de volta de corrida | validated | 1.0.0 |
-| `api/API-0001-resultado-e-estado-da-volta.md` | API-0001 | Contrato do resultado e do estado da volta | validated | 1.0.0 |
-| `api/API-0002-comandos-da-volta.md` | API-0002 | Contrato dos comandos da volta | validated | 1.0.0 |
+| `api/API-0001-resultado-e-estado-da-volta.md` | API-0001 | Contrato do resultado e do estado da volta | validated | 1.1.0 |
+| `api/API-0002-comandos-da-volta.md` | API-0002 | Contrato dos comandos da volta | validated | 1.1.0 |
 | `api/API-0003-dado-de-pista.md` | API-0003 | Contrato do dado de pista com largada, sentido, setores e marcadores | validated | 1.0.1 |
 | `features/FEAT-0001-contagem-regressiva-e-largada.md` | FEAT-0001 | Contagem regressiva e largada | validated | 1.0.0 |
 | `features/FEAT-0002-conclusao-da-volta-tempos-e-setores.md` | FEAT-0002 | Conclusão da volta, tempo total e quatro tempos de setor | validated | 1.0.0 |
@@ -40,4 +40,4 @@ files: 29
 | `rules/RULE-0006-mensagens-de-estado-e-motivo.md` | RULE-0006 | Mensagens de estado e motivo, idioma e legibilidade | validated | 1.0.0 |
 | `screens/SCR-0001-corrida-hud-da-volta.md` | SCR-0001 | Corrida, contagem e estado da volta | validated | 1.0.1 |
 | `screens/SCR-0002-inicio-de-volta.md` | SCR-0002 | Início de volta e oferta de tipo de volta | validated | 1.0.0 |
-| `screens/SCR-0003-resultado-da-volta.md` | SCR-0003 | Resultado da volta | validated | 1.0.1 |
+| `screens/SCR-0003-resultado-da-volta.md` | SCR-0003 | Resultado da volta | validated | 1.1.0 |

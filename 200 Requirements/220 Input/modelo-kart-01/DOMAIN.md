@@ -14,3 +14,8 @@ Decisões fechadas pelo dono do produto. Prevalecem sobre os pontos em aberto co
 - 2026-10-22 — **OPEN-04 fechado:** antes da largada, a câmera mostra a pista do alto e **desce para trás
   do piloto durante a contagem regressiva**. No sinal verde, ela já está na posição de corrida.
 - 2026-10-22 — **OPEN-05 fechado:** o kart **projeta sombra** no chão.
+- 2026-10-22 — **Câmera depois do fim da volta (Eduardo Matos),** após parada do F-Spec: quando a volta
+  termina, válida ou invalidada (inclusive por reposicionamento), e o painel de resultado aparece, a
+  câmera **continua atrás do piloto**, na pose de corrida, e o kart continua pilotável. A visão geral do
+  alto existe **só antes da contagem regressiva**. "Em corrida", para a câmera, vai do sinal verde até a
+  próxima visão geral, sem terminar em `ENDED`.

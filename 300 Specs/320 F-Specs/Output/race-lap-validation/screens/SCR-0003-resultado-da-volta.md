@@ -4,7 +4,7 @@ title: Resultado da volta
 feature: race-lap-validation
 stage: fspec
 status: validated
-version: 1.0.1
+version: 1.1.0
 sources: [US-0002, US-0004, US-0008, AC-US-0002-01, AC-US-0002-02, AC-US-0002-03, AC-US-0002-06, AC-US-0004-03, AC-US-0004-04, AC-US-0008-01, NFR-0004, NFR-0005]
 ---
 
@@ -42,11 +42,24 @@ Quando `lapPhase` chega a `ENDED` em [SCR-0001](SCR-0001-corrida-hud-da-volta.md
 Todo texto de estado e de motivo está nos dois idiomas, conforme o idioma do navegador
 ([RULE-0006](../rules/RULE-0006-mensagens-de-estado-e-motivo.md)).
 
+## Comparação de tempos
+
+O resultado lido traz `setupId` e `setupVersion` ([API-0001](../api/API-0001-resultado-e-estado-da-volta.md)).
+Esta tela só compara dois tempos — diferença, melhor tempo ou ordenação — quando a `comparability` dos dois
+registros, decidida por `compareLapRecords` do contrato `API-0002` de `dirigibilidade` (mesma pista, mesmo
+acerto e mesma `setupVersion`), é `COMPARABLE`; com `SETUP_VERSION_DIFFERS`, `SETUP_DIFFERS` ou
+`TRACK_DIFFERS` nenhuma comparação é exibida. A decisão de comparabilidade é da simulação e do leitor de
+registros, nunca da renderização (D-FS-05, I2). Um resultado anterior, sem os dois campos, entra na
+comparação com os padrões de leitura de API-0001 (I5). Quais tempos são comparados e de onde vêm (melhor
+tempo gravado, tentativa anterior) é do desafio diário; esta feature fixa apenas a precondição. Fonte: FB-01
+de `dirigibilidade` (AC-US-0005-05 daquela feature), aceito na rodada de 2026-10-22.
+
 ## Ações do Jogador
 
 Esta feature não define ação nesta tela além de sair dela: iniciar outra volta volta a
 [SCR-0002](SCR-0002-inicio-de-volta.md). O que se faz com o resultado (compartilhar, gravar, consumir
-tentativa) é do desafio diário.
+tentativa) é do desafio diário; qualquer texto compartilhado derivado deste resultado leva a `setupVersion`
+dele e obedece à mesma precondição de comparabilidade (FB-01 de `dirigibilidade`).
 
 ## Navegação
 

@@ -4,7 +4,7 @@ title: Contrato dos comandos da volta
 feature: race-lap-validation
 stage: fspec
 status: validated
-version: 1.0.0
+version: 1.1.0
 sources: [US-0001, US-0003, US-0007, US-0008, AC-US-0001-06, AC-US-0003-05, AC-US-0003-06, AC-US-0003-07, AC-US-0003-08, AC-US-0007-01, AC-US-0007-04, AC-US-0008-03, NFR-0010]
 ---
 
@@ -41,9 +41,12 @@ camada de aplicação, que só encaminham o que o Jogador ou o navegador fez (I2
 | `trackId` | texto | sim | pista do dado lido ([API-0003](API-0003-dado-de-pista.md)) |
 | `trackVersion` | valor do dado da pista | sim | versão do dado lido |
 | `challengeNumber` | inteiro | não | padrão: ausente. Neutro: ausente não muda a volta; é só copiado para o resultado ([API-0001](API-0001-resultado-e-estado-da-volta.md)) |
+| `setupId` | enum `ARCADE_ASSISTIDO`, `REALISTA_ALUGUEL_4T` | não | padrão: ausente; no resultado, ausente lê-se `ARCADE_ASSISTIDO`. Acerto corrente da volta, informado pela camada de aplicação a partir do dado publicado (`getSetupVersion`, contrato `API-0002` de `dirigibilidade`); esta feature não o deriva nem o valida: o valor é copiado sem interpretação, e um valor fora do enum é resolvido pelo leitor do dado publicado, não por este comando. Neutro: ausente não muda a volta (validade, tempo, motivo); é só copiado para o resultado (I5; FB-01 de `dirigibilidade`) |
+| `setupVersion` | texto | não | padrão: ausente; no resultado, ausente lê-se a `previousSetupVersion` do `setupId`. Versão corrente do acerto, informada pela camada de aplicação a partir do dado publicado; esta feature não a deriva nem a interpreta. Neutro: ausente não muda a volta; é só copiada para o resultado. Toda volta iniciada a partir desta mudança informa os dois campos, para que o seu resultado não seja lido pelos padrões como um registro anterior (I3, I5; FB-01 de `dirigibilidade`) |
 
 Efeito: cria a volta em `COUNTDOWN` com `countdownRemainingMs` 3000, o kart parado na posição de largada e
-`lapValidity` `VALID`. Resposta: aceito, com o estado inicial de `getLapState`.
+`lapValidity` `VALID`; `challengeNumber`, `setupId` e `setupVersion` são guardados sem interpretação para o
+resultado. Resposta: aceito, com o estado inicial de `getLapState`.
 
 ## `pauseLap`
 
@@ -106,3 +109,9 @@ Não se aplica: os comandos são pontuais.
 
 Contrato novo, sem campo publicado anterior. O avanço da simulação com `Input` não muda (NFR-0010); um pedido
 de aposentadoria de campo existente não se aplica porque nenhum campo existente é renomeado ou removido.
+
+Rodada de 2026-10-22 (FB-01 de `dirigibilidade`, aceito): `setupId` e `setupVersion` são acrescentados ao
+pedido `startLap` como campos opcionais e aditivos. Um emissor que não os informa continua aceito, com o
+mesmo efeito de antes sobre a volta; o resultado que ele produz é lido pelos padrões de
+[API-0001](API-0001-resultado-e-estado-da-volta.md). Nenhum campo existente muda de nome, significado ou
+unidade, e nenhuma rejeição nova é introduzida.

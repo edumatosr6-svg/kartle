@@ -4,7 +4,7 @@ title: Contrato do resultado e do estado da volta
 feature: race-lap-validation
 stage: fspec
 status: validated
-version: 1.0.0
+version: 1.1.0
 sources: [US-0002, US-0004, US-0008, US-0009, AC-US-0002-04, AC-US-0002-05, AC-US-0002-11, AC-US-0002-12, AC-US-0004-03, AC-US-0008-02, AC-US-0008-05, AC-US-0009-01, NFR-0004, NFR-0005]
 ---
 
@@ -71,9 +71,17 @@ cruzada na contramão, recarregada ou abandonada não tem resultado.
 | `official` | booleano | — | sim | `true` somente em volta `OFFICIAL`, `VALID`, concluída e em pista de dado `COMPLETE` ([RULE-0005](../rules/RULE-0005-tipos-de-volta-e-reposicionamento.md)); `false` nos demais casos (AC-US-0008-02, AC-US-0008-05) |
 | `lapMs` | inteiro | ms | só com `VALID` | tempo total; ausente com `INVALID` (AC-US-0004-03) |
 | `sectorMs` | lista de exatamente 4 inteiros | ms | só com `VALID` | soma igual a `lapMs`, diferença de 0 ms (AC-US-0002-05); ausente com `INVALID` |
+| `setupId` | enum `ARCADE_ASSISTIDO`, `REALISTA_ALUGUEL_4T` | — | não | padrão quando ausente: `ARCADE_ASSISTIDO`, o acerto padrão anterior à declaração de versão do acerto. Copiado do pedido `startLap` ([API-0002](API-0002-comandos-da-volta.md)) sem interpretação; esta feature não o deriva. Neutro: um resultado sem o campo é lido como o acerto que o produziu e nenhum comportamento da volta (validade, tempo, motivo) muda (I5; FB-01 de `dirigibilidade`) |
+| `setupVersion` | texto | — | não | padrão quando ausente: a `previousSetupVersion` declarada para o `setupId` no dado publicado (`getSetupVersion`, contrato `API-0002` de `dirigibilidade`). Copiado do pedido `startLap` sem interpretação; esta feature não o deriva. Neutro: um resultado anterior continua legível e só passa a ser distinguível de um novo pela leitura deste campo (I3, I5; FB-01 de `dirigibilidade`) |
 
 Todos os valores de tempo são milissegundos inteiros (AC-US-0002-04). A forma na resposta vazia: sem
 resultado, a operação retorna `NO_RESULT` e nenhum campo.
+
+`setupId` e `setupVersion` identificam o acerto do resultado como `trackId` e `trackVersion` identificam a
+pista; nenhum dos dois altera validade, tempo ou motivo. O resultado é o registro do qual o replay e o texto
+compartilhado — contratos que não pertencem a este conjunto — copiam os dois campos. A comparabilidade entre
+dois resultados é decidida fora desta feature (`compareLapRecords`, contrato `API-0002` de `dirigibilidade`)
+e consumida pela tela de resultado ([SCR-0003](../screens/SCR-0003-resultado-da-volta.md)).
 
 Nenhum campo do resultado carrega dado pessoal (NFR-0005).
 
@@ -104,3 +112,9 @@ preliminar por gates sequenciais do protótipo é aposentada e substituída por 
 [API-0002](API-0002-comandos-da-volta.md); os requisitos não nomeiam campo publicado dessa validação, então
 não há campo a rejeitar. Os campos de unidade carregam o sufixo no nome (`Ms`), e o significado de nenhum
 deles muda em versões futuras sem mudança de nome (I3).
+
+Rodada de 2026-10-22 (FB-01 de `dirigibilidade`, aceito): `setupId` e `setupVersion` são acrescentados à
+resposta de `getLapResult` como campos opcionais e aditivos. Nenhum campo é renomeado ou removido e nenhum
+muda de significado ou de unidade. Um resultado gravado antes desta mudança é lido sem erro, com os padrões
+da tabela (I5); um resultado produzido a partir dela carrega os dois campos informados em `startLap`. Não há
+campo a rejeitar.

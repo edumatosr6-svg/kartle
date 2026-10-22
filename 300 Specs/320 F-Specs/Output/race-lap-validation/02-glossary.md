@@ -3,7 +3,7 @@ title: Glossário — validação de volta de corrida
 feature: race-lap-validation
 stage: fspec
 status: validated
-version: 1.0.0
+version: 1.1.0
 sources: []
 ---
 
@@ -49,7 +49,7 @@ glossário dos requisitos; as linhas de enum e de campo são as dos contratos de
 | Dado da pista | Dado versionado de cada pista; `trackId` e `trackVersion` a identificam |
 | Pista sintética | Pista de teste atual, mantida jogável até as pistas reais da etapa 3 |
 | Passo de simulação (`STEP`) | Passo fixo da simulação; o tempo oficial é função da sequência de passos |
-| Acerto | Preset de kart e configuração da simulação usados numa volta |
+| Acerto | Preset de kart e configuração da simulação usados numa volta; identificado no resultado por `setupId` e `setupVersion` (FB-01 de `dirigibilidade`) |
 | Runtime | Navegador e versão em que a simulação executa |
 | Sensor de inclinação | Sensor do celular que alimenta a direção em `web-mobile` |
 
@@ -71,3 +71,6 @@ glossário dos requisitos; as linhas de enum e de campo são as dos contratos de
 | `cutDistanceM`, `cutDurationMs` | limites de corte do dado da pista | [API-0003](api/API-0003-dado-de-pista.md) |
 | `official` | verdadeiro só para volta oficial válida e concluída em pista de dado completo | API-0001 |
 | `startLap`, `pauseLap`, `resumeLap`, `repositionKart` | comandos da volta | [API-0002](api/API-0002-comandos-da-volta.md) |
+| `setupId` | `ARCADE_ASSISTIDO`, `REALISTA_ALUGUEL_4T`; acerto que produziu o resultado; ausente lê-se `ARCADE_ASSISTIDO` | API-0001, API-0002 |
+| `setupVersion` | versão declarada do acerto; ausente lê-se a `previousSetupVersion` do `setupId` (contrato `API-0002` de `dirigibilidade`) | API-0001, API-0002 |
+| `comparability` | `COMPARABLE`, `SETUP_VERSION_DIFFERS`, `SETUP_DIFFERS`, `TRACK_DIFFERS`; decidida fora desta feature (`compareLapRecords`, `dirigibilidade`); a tela de resultado só compara tempos com `COMPARABLE` | [SCR-0003](screens/SCR-0003-resultado-da-volta.md) |
