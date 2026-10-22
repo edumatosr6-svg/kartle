@@ -4,8 +4,8 @@ title: Jogo continua justo com o novo acerto
 feature: dirigibilidade
 stage: req
 status: validated
-version: 2.0.0
-sources: [SEED/US-5, SEED/RD-03, SEED/RD-04, SEED/NF-01, SEED/IM-I3I5, SEED/IM-I8, SEED/IM-I9, DOMAIN/REF-02, DOMAIN/DEC-07]
+version: 3.0.0
+sources: [SEED/US-5, SEED/RD-03, SEED/RD-04, SEED/RD-06, SEED/NF-01, SEED/IM-I3I5, SEED/IM-I8, SEED/IM-I9, DOMAIN/REF-02, DOMAIN/REF-03, DOMAIN/DEC-07]
 ---
 
 # US-0005 — Jogo continua justo com o novo acerto
@@ -20,7 +20,10 @@ que o de qualquer outro jogador com as mesmas entradas.
 - `web-desktop` e `web-mobile`: mesma regra de determinismo e mesma versão de acerto declarada; o
   resultado de uma volta é função só da sequência de `Input` por passo, seja ela produzida por teclado,
   inclinação ou toque. Nenhuma diferença entre os canais.
-- Piloto de teste (`npm run bench:handling`): sem canal de jogo; é a régua do critério 03.
+- Piloto de teste (`npm run bench:handling`): sem canal de jogo; é a régua dos critérios 02 e 03. A
+  volta do piloto de teste é o único ensaio desta feature que roda na pista sintética (raios mínimos de
+  curva 24 m e 25 m, grampo de 4 m); os ensaios de US-0001 a US-0003 rodam na pista de teste
+  (`SEED/RD-06`, `DOMAIN/REF-03`).
 - `web-mobile` com sensor ausente ou permissão negada: controle por toque com estado visível (I4); a
   sequência de `Input` resultante segue a mesma regra de determinismo.
 
@@ -72,6 +75,7 @@ que o de qualquer outro jogador com as mesmas entradas.
 - `SEED/US-5` — história e seus três critérios.
 - `SEED/RD-03`, `SEED/IM-I8` — passo, solver e `Input` não mudam.
 - `SEED/RD-04`, `SEED/IM-I3I5` — mudança versionada; tempos antigos não comparáveis.
+- `SEED/RD-06`, `DOMAIN/REF-03` — só o ensaio de volta do piloto de teste usa a pista sintética.
 - `SEED/NF-01` — determinismo (RNF07).
 - `SEED/IM-I9` — ensaio determinístico.
 - `DOMAIN/REF-02` — acerto agressivo da revisão 2.

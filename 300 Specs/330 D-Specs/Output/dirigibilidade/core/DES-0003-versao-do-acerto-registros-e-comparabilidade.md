@@ -4,7 +4,7 @@ title: Versão do acerto, registros de volta e replay e comparabilidade (API-000
 feature: dirigibilidade
 stage: dspec
 status: validated
-version: 1.0.1
+version: 1.1.1
 sources: [API-0002, RULE-0003, FLOW-0003, FEAT-0005, FEAT-0006, REQ-FEAT-0005-01, REQ-FEAT-0005-05, REQ-FEAT-0005-06, REQ-FEAT-0005-08, REQ-FEAT-0005-09, REQ-FEAT-0005-10, REQ-FEAT-0006-03]
 ---
 
@@ -22,24 +22,26 @@ Decisão: [ADR-0002](../adr/ADR-0002-formato-do-replay-e-registro-de-volta-em-me
 
 ## Posicionamento
 
-Módulo **novo** `src/setupRecords.ts`, camada **Simulação**. Motivo de ser novo: reproduzir um replay exige
-`startLap`/`stepLap` de `src/lap.ts`, e `src/physics.ts` não pode importar a volta (sentido de dependência);
-`src/lap.ts` é de `race-lap-validation` e o seu `LapResult` fica intacto. Importa `src/physics.ts`
-(`PUBLISHED_SETUPS`, tipos), `src/lap.ts`, `src/lapTiming.ts` (`COUNTDOWN_STEPS`) e tipos de `src/trackData.ts`.
+Módulo `src/setupRecords.ts`, camada **Simulação**, **existente** (escrito pela rodada de código 1 segundo
+este item; 127 linhas) e mantido sem mudança nesta rodada. Motivo de ser módulo próprio: reproduzir um
+replay exige `startLap`/`stepLap` de `src/lap.ts`, e `src/physics.ts` não pode importar a volta (sentido
+de dependência); `src/lap.ts` é de `race-lap-validation` e o seu `LapResult` fica intacto. Importa
+`src/physics.ts` (`PUBLISHED_SETUPS`, tipos), `src/lap.ts`, `src/lapTiming.ts` (`COUNTDOWN_STEPS`) e tipos
+de `src/trackData.ts` (`:3-6`).
 
 ## Interface
 
 | Função | Entradas | Saída | Rejeições |
 |---|---|---|---|
-| `getSetupVersion(setupId)` | `setupId: unknown` | `{setupId, setupVersion, previousSetupVersion?}` copiados de `PUBLISHED_SETUPS`, `previousSetupVersion` só quando declarada | `{code: 'UNKNOWN_SETUP'}` para valor fora do enum |
-| `resolveSetupRef(partial)` | `{setupId?: unknown, setupVersion?: unknown}` | `{setupId, setupVersion, setupVersionSource}`: `setupId` ausente ou inválido → `ARCADE_ASSISTIDO`; `setupVersion` texto não vazio → `DECLARED`; ausente → `previousSetupVersion` do `setupId` (ou a `setupVersion` corrente se não há anterior), `RESOLVED_FROM_ABSENCE` | nenhuma |
-| `readReplay(source)` | `source: unknown` (objeto, texto JSON de no máximo `MAX_REPLAY_TEXT_CHARS` caracteres, `null`, `undefined`); `inputs` com no máximo `MAX_REPLAY_INPUT_STEPS` elementos | `{replayStatus: 'READABLE', trackId, trackVersion, setupId, setupVersion, setupVersionSource, inputStepCount}` | `{replayStatus: 'UNREADABLE'}` (inclusive texto ou `inputs` acima do teto); `{replayStatus: 'UNSUPPORTED_FORMAT'}` |
-| `MAX_REPLAY_TEXT_CHARS` | constante `4_194_304` (caracteres UTF-16 de `source.length`; 4 Mi) | teto do texto aceito por `readReplay`: 36 000 `Input` serializados ocupam cerca de 2,2 M caracteres | — |
-| `MAX_REPLAY_INPUT_STEPS` | constante `36_000` (passos de `STEP`; 300 s simulados a 120 Hz) | teto de `inputs.length`: nenhuma volta do desafio chega a 5 min, e `replayLap` aplica um `stepLap` por elemento, logo o teto limita o trabalho da reprodução; distinto de `MAX_LAP_STEPS` 6 000 (teto do piloto de teste, [DES-0004](DES-0004-ensaios-de-dirigibilidade-e-saida.md)) | — |
-| `compareLapRecords(a, b)` | dois registros com `trackId?`, `trackVersion?`, `setupId?`, `setupVersion?` | `{comparability}` pela tabela de RULE-0003, após `resolveSetupRef` em cada um | `{code: 'INCOMPLETE_RECORD'}` se `trackId` ou `trackVersion` ausente em um deles; nenhuma comparação |
-| `buildLapRecord(result, setup)` | `result: LapResult` (de `getLapResult`), `setup: SetupRef` | `LapRecord = {...result, setupId, setupVersion}` | nenhuma |
-| `buildReplayRecord(lap, inputs, setup)` | `lap: LapSession` encerrada, `inputs: readonly Input[]` por passo `RUNNING`, `setup: SetupRef` | `ReplayRecord` versão 1 (DM-0001, seção 3) | nenhuma |
-| `replayLap(record, reading, setup, driverMassKg = 75)` | `record: ReplayRecord` legível, `reading: TrackReading`, `setup: PublishedSetup` corrente, `driverMassKg` (kg) | `{ok: true, record: LapRecord, comparability}` com `comparability = compareLapRecords(replay, obtido).comparability` | `{ok: false, code}` com `code` de `startLap` (`TRACK_DATA_UNREADABLE`, `TRACK_SCHEMA_UNSUPPORTED`, `OFFICIAL_NOT_AVAILABLE`) ou `NO_RESULT` quando os `Input` acabam antes do fim da volta |
+| `getSetupVersion(setupId)` (`:39-43`) | `setupId: unknown` | `{setupId, setupVersion, previousSetupVersion?}` copiados de `PUBLISHED_SETUPS`, `previousSetupVersion` só quando declarada | `{code: 'UNKNOWN_SETUP'}` para valor fora do enum |
+| `resolveSetupRef(partial)` (`:46-51`) | `{setupId?: unknown, setupVersion?: unknown}` | `{setupId, setupVersion, setupVersionSource}`: `setupId` ausente ou inválido → `ARCADE_ASSISTIDO`; `setupVersion` texto não vazio → `DECLARED`; ausente → `previousSetupVersion` do `setupId` (ou a `setupVersion` corrente se não há anterior), `RESOLVED_FROM_ABSENCE` | nenhuma |
+| `readReplay(source)` (`:54-76`) | `source: unknown` (objeto, texto JSON de no máximo `MAX_REPLAY_TEXT_CHARS` caracteres, `null`, `undefined`); `inputs` com no máximo `MAX_REPLAY_INPUT_STEPS` elementos | `{replayStatus: 'READABLE', trackId, trackVersion, setupId, setupVersion, setupVersionSource, inputStepCount}` | `{replayStatus: 'UNREADABLE'}` (inclusive texto ou `inputs` acima do teto); `{replayStatus: 'UNSUPPORTED_FORMAT'}` |
+| `MAX_REPLAY_TEXT_CHARS` (`:8`) | constante `4_194_304` (caracteres UTF-16 de `source.length`; 4 Mi) | teto do texto aceito por `readReplay`: 36 000 `Input` serializados ocupam cerca de 2,2 M caracteres | — |
+| `MAX_REPLAY_INPUT_STEPS` (`:9`) | constante `36_000` (passos de `STEP`; 300 s simulados a 120 Hz) | teto de `inputs.length`: nenhuma volta do desafio chega a 5 min, e `replayLap` aplica um `stepLap` por elemento, logo o teto limita o trabalho da reprodução; distinto de `MAX_LAP_STEPS` 6 000 (teto do piloto de teste, [DES-0004](DES-0004-ensaios-de-dirigibilidade-e-saida.md)) | — |
+| `compareLapRecords(a, b)` (`:79-88`) | dois registros com `trackId?`, `trackVersion?`, `setupId?`, `setupVersion?` | `{comparability}` pela tabela de RULE-0003, após `resolveSetupRef` em cada um | `{code: 'INCOMPLETE_RECORD'}` se `trackId` ou `trackVersion` ausente em um deles; nenhuma comparação |
+| `buildLapRecord(result, setup)` (`:91-93`) | `result: LapResult` (de `getLapResult`), `setup: SetupRef` | `LapRecord = {...result, setupId, setupVersion}` | nenhuma |
+| `buildReplayRecord(lap, inputs, setup)` (`:96-104`) | `lap: LapSession` encerrada, `inputs: readonly Input[]` por passo `RUNNING`, `setup: SetupRef` | `ReplayRecord` versão 1 (DM-0001, seção 3) | nenhuma |
+| `replayLap(record, reading, setup, driverMassKg = 75)` (`:107-127`) | `record: ReplayRecord` legível, `reading: TrackReading`, `setup: PublishedSetup` corrente, `driverMassKg` (kg) | `{ok: true, record: LapRecord, comparability}` com `comparability = compareLapRecords(replay, obtido).comparability` | `{ok: false, code}` com `code` de `startLap` (`TRACK_DATA_UNREADABLE`, `TRACK_SCHEMA_UNSUPPORTED`, `OFFICIAL_NOT_AVAILABLE`) ou `NO_RESULT` quando os `Input` acabam antes do fim da volta |
 
 Ordem das verificações de `readReplay`, para resposta determinística: (1) texto → se
 `source.length > MAX_REPLAY_TEXT_CHARS`, `UNREADABLE` antes de qualquer análise; senão `JSON.parse` em `try`,
@@ -50,12 +52,13 @@ inteiro ≥ 1, senão `UNREADABLE`; (5) `inputs` é lista (`Array.isArray`) não
 `inputs.length <= MAX_REPLAY_INPUT_STEPS`, senão `UNREADABLE` **antes de ler qualquer elemento**; (6) cada
 elemento tem `throttle`, `brake`, `steer` numéricos finitos e `drift` ausente ou booleano, senão
 `UNREADABLE`; (7) `resolveSetupRef`; `inputStepCount = inputs.length`. Um registro acima do teto nunca chega
-a `replayLap`, que só aceita um registro `READABLE`. A função nunca grava, apaga nem altera `source`: o registro de formato
-desconhecido é "mantido intacto" porque só é lido (I4).
+a `replayLap`, que só aceita um registro `READABLE`. A função nunca grava, apaga nem altera `source`: o
+registro de formato desconhecido é "mantido intacto" porque só é lido (I4).
 
-`compareLapRecords`: `trackId` e `trackVersion` comparados por igualdade estrita após normalização
-(`trackVersion` inteiro e texto do mesmo inteiro são diferentes, como `src/lap.ts` já trata); decisão na
-ordem `TRACK_DIFFERS` → `SETUP_DIFFERS` → `SETUP_VERSION_DIFFERS` → `COMPARABLE`.
+`compareLapRecords`: `trackId` e `trackVersion` comparados por igualdade estrita, sem normalização
+(`trackVersion` inteiro e texto do mesmo inteiro são diferentes, como `src/lap.ts:102` já trata);
+`setupId` e `setupVersion` comparados depois de `resolveSetupRef` em cada lado; decisão na ordem
+`TRACK_DIFFERS` → `SETUP_DIFFERS` → `SETUP_VERSION_DIFFERS` → `COMPARABLE` (`:79-88`).
 
 `replayLap`: `startLap(undefined, {lapKind, trackId, trackVersion, challengeNumber?}, reading,
 {...setup.config, driverMass: driverMassKg})`; `COUNTDOWN_STEPS` passos com `Input` nulo; um `stepLap` por
@@ -68,8 +71,8 @@ reprodução com o acerto corrente, nunca o gravado: um replay de `arcade-assist
 
 Chama `PUBLISHED_SETUPS` (`src/physics.ts`), `startLap`, `stepLap`, `getLapResult` (`src/lap.ts`),
 `COUNTDOWN_STEPS` (`src/lapTiming.ts`). É chamado por `src/main.ts` (resultado, melhor tempo, texto
-compartilhado), por `src/handlingMessages.ts` (tipos), por `scripts/handlingBench.ts` (`SETUP_VERSION`,
-`DETERMINISM`, `TEST_PILOT_LAP`) e pelos testes.
+compartilhado), por `src/handlingMessages.ts` (tipos), por `scripts/handlingBench.ts` (`SETUP_VERSION`:
+`readReplay`, `compareLapRecords`, `resolveSetupRef`) e pelos testes.
 
 ## Estado e concorrência
 

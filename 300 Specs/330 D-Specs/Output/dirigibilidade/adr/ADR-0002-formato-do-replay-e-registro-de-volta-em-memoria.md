@@ -4,7 +4,7 @@ title: Formato do replay versão 1 e registro de volta que envolve o LapResult, 
 feature: dirigibilidade
 stage: dspec
 status: validated
-version: 1.0.0
+version: 1.0.1
 sources: [API-0002, RULE-0003, FLOW-0003, FEAT-0005, REQ-FEAT-0005-05, REQ-FEAT-0005-06, REQ-FEAT-0005-08, REQ-FEAT-0005-10, NFR-0006, NFR-0009]
 ---
 
@@ -16,7 +16,7 @@ API-0002 acrescenta `setupId` e `setupVersion` ao replay, ao resultado da volta 
 exige leitura sem erro de registros anteriores à feature. No código em execução não existe replay nem
 resultado gravado: `race-lap-validation` proíbe armazenamento no navegador
 (`tests/race-lap-validation-layering.test.ts:43-49`) e exige que `getLapResult` devolva exatamente os
-campos de API-0001 daquela feature (`tests/race-lap-validation-contract.test.ts:35-41`). O F-Spec diz que
+campos de API-0001 daquela feature (`tests/race-lap-validation-contract.test.ts:34-41`). O F-Spec diz que
 a gravação é da feature que a possui e que este contrato não acrescenta gravação.
 
 ## Decisão

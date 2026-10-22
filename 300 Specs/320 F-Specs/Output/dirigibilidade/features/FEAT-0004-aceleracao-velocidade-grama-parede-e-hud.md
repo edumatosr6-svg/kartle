@@ -4,7 +4,7 @@ title: Aceleração, velocidade estabilizada, grama, parede e HUD
 feature: dirigibilidade
 stage: fspec
 status: validated
-version: 2.0.0
+version: 2.1.0
 sources: [US-0004, AC-US-0004-01, AC-US-0004-02, AC-US-0004-03, AC-US-0004-04, AC-US-0004-05, AC-US-0004-06, AC-US-0004-07]
 ---
 
@@ -45,7 +45,8 @@ estado visível, requisitos inalterados (I4).
 - REQ-FEAT-0004-07: O sistema SHALL conter, na saída de `npm test` ou do bench de física, para o
   acerto Arcade assistido, os registros `ACCELERATION` (`zeroToSixtyKmhMs`), `TOP_SPEED` (`topSpeedMps`),
   `GRASS_LOSS` (`speedAfterOneSMps` para as duas velocidades de entrada) e `WALL_CONTACT` (`contacts` com
-  velocidade antes e depois de cada contato), campos SI apresentados também em km/h e s (AC-US-0004-07).
+  velocidade antes e depois de cada contato), cada um com o seu `benchEnvironment`, campos SI apresentados
+  também em km/h e s (AC-US-0004-07).
 - REQ-FEAT-0004-08: O sistema SHALL reduzir a velocidade do kart na grama também abaixo de 50 km/h e com
   esterço diferente de 0, sem percentual exigido [DOMAIN] (`SEED/US-4` via US-0004, casos anormais "Grama a
   velocidade abaixo de 50 km/h" e "Entrada na grama com esterço diferente de 0").
@@ -88,7 +89,10 @@ do contato: ambos são funções da posição no estado do passo, ordenadas por 
 ## Configuração
 
 Nenhuma. A massa do piloto (75 kg) é parâmetro do ensaio e do acerto, não configuração exposta; nenhuma
-configuração existe para forçar um evento, injetar um estado ou habilitar um caminho de depuração.
+configuração existe para forçar um evento, injetar um estado ou habilitar um caminho de depuração. O
+ambiente dos ensaios de 0–60 km/h e de velocidade estabilizada não é fixado pelos requisitos (lacuna
+deliberada de `01-overview.md`) e é reportado em `benchEnvironment`; grama e parede são ensaiadas na pista
+sintética, porque a pista de teste não tem grama nem parede ([RULE-0002](../rules/RULE-0002-ensaios-e-limiares.md)).
 
 ## Critérios de aceite
 
@@ -100,8 +104,8 @@ configuração existe para forçar um evento, injetar um estado ou habilitar um 
   requisitos 05 e 10).
 - Na tela, nos dois canais, velocidade em km/h e estado de aderência em texto em todos os quadros do sinal
   verde ao fim da volta; valores mantidos na pausa (satisfaz AC-US-0004-06; cobre os requisitos 06 e 09).
-- A saída de `npm test` ou do bench de física contém os quatro registros com os campos nomeados
-  (satisfaz AC-US-0004-07; cobre o requisito 07).
+- A saída de `npm test` ou do bench de física contém os quatro registros com os campos nomeados e o seu
+  `benchEnvironment` (satisfaz AC-US-0004-07; cobre o requisito 07).
 
 ## Pontos em aberto
 

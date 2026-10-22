@@ -4,7 +4,7 @@ title: Passo de simulação com o Arcade assistido e exibição no HUD
 feature: dirigibilidade
 stage: fspec
 status: validated
-version: 1.0.0
+version: 1.1.0
 sources: [US-0001, US-0002, US-0003, US-0004, NFR-0003, NFR-0005, AC-US-0001-01, AC-US-0002-01, AC-US-0003-03, AC-US-0004-06]
 ---
 
@@ -41,7 +41,7 @@ sequenceDiagram
 | 1 | Jogador | Esterça, acelera ou freia pelo teclado (`web-desktop`), pela inclinação e toque (`web-mobile`) ou só pelo toque (sensor ausente ou negado) | volta em andamento | US-0001 a US-0004, Canais |
 | 2 | Adaptador de controle | Entrega o `Input` normalizado: esterço −1 a 1 (binário no teclado e no toque, proporcional na inclinação), acelerador 0 a 1; valor fora da faixa saturado (I4); nenhuma regra de pilotagem no adaptador (I2) | | NFR-0003, NFR-0005; US-0001, caso anormal "Esterço fora da faixa" |
 | 3 | Simulação | Avança um passo de `STEP` com o acerto Arcade assistido na `setupVersion` corrente; as assistências e os parâmetros do acerto decidem resposta do volante, aderência, recuperação, aceleração, perda na grama e na parede | `simStepCount` + 1 | NFR-0005, NFR-0006; [RULE-0001](../rules/RULE-0001-estado-de-aderencia-e-condicao-de-forcar.md) |
-| 4 | Simulação | Classifica o passo (condução normal, forçando, drift) e calcula `handling`, `sideslipRad`, `yawRateRadPerS`, `surface`, `wallContact` | | [RULE-0001](../rules/RULE-0001-estado-de-aderencia-e-condicao-de-forcar.md), [API-0001](../api/API-0001-telemetria-de-dirigibilidade.md) |
+| 4 | Simulação | Classifica o passo (condução normal, forçando, drift, recuperação) e calcula `handling`, `sideslipRad`, `yawRateRadPerS`, `surface`, `wallContact` | | [RULE-0001](../rules/RULE-0001-estado-de-aderencia-e-condicao-de-forcar.md), [API-0001](../api/API-0001-telemetria-de-dirigibilidade.md) |
 | 5 | Apresentação | Lê `getHandlingTelemetry` em cada quadro entre o sinal verde e o fim da volta | | AC-US-0004-06 |
 | 6 | Apresentação | Exibe a velocidade convertida para km/h e o texto do estado de aderência ([SCR-0001](../screens/SCR-0001-hud-de-velocidade-e-aderencia.md)) | | AC-US-0004-06 |
 

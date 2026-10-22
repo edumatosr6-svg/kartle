@@ -3,7 +3,7 @@ title: Contexto — dirigibilidade do Arcade assistido
 feature: dirigibilidade
 stage: req
 status: validated
-version: 2.0.0
+version: 3.2.0
 sources: [SEED, DOMAIN]
 ---
 
@@ -28,16 +28,33 @@ build atual ("não vira, não ganha velocidade"), o dono do produto subiu os lim
 agressivo** registrado na revisão 2 do seed (`DOMAIN/REF-02`). O acerto **Realista — aluguel 4T** continua
 existindo e não muda.
 
+**Onde cada ensaio roda (revisão 3 do seed, `SEED/RD-06`, `DOMAIN/REF-03`).** A pista sintética **não tem**
+curva de raio 18 m: os seus raios mínimos são 24 m e 25 m, com um grampo de 4 m. Por isso os ensaios de
+resposta do volante (US-0001) e de curva de referência (US-0002, US-0003) rodam em **ambiente de ensaio
+próprio — a pista de teste** —, não na pista sintética: a curva de referência é um arco de raio 18 m, com
+faixa da largura da pista e sem paredes; a reta do ensaio de resposta do volante tem a velocidade
+**mantida em 50 km/h pelo acelerador**, e o regime da taxa de guinada é o valor estabilizado nessa condição
+(janela curta e estacionária), não um valor que deriva com a desaceleração. Só o ensaio de volta do piloto
+de teste (US-0005) usa a pista sintética. Essa correção é de fato e de método: nenhum limiar do dono do
+produto mudou. O ambiente de ensaio não é dado de pista publicado e não altera a pista sintética nem a
+validação de volta (`SEED/RE-04`, NFR-0008).
+
 **Padrão seguro.** O seed não prevê chave para escolher entre o acerto antigo e o novo: o novo Arcade
 assistido vale como padrão assim que a feature é entregue, declarado como nova versão de acerto
-(`SEED/IM-I3I5`), de modo que nenhum tempo, replay ou resultado anterior é tratado como comparável. Nenhum
-preset experimental extra é exposto no painel do jogo durante o ciclo de acerto (`DOMAIN/DEC-10`).
+(`SEED/IM-I3I5`), de modo que nenhum tempo, replay ou resultado anterior é tratado como comparável. A tela
+de seleção de acerto não recebe elemento novo nesta feature: continua oferecendo os acertos Arcade assistido
+e Realista — aluguel 4T, e nenhum preset experimental extra é exposto no painel do jogo durante o ciclo de
+acerto (`DOMAIN/DEC-10`).
 
-Seed: `200 Requirements/220 Input/dirigibilidade/SEED.md`, `revision: 2`, `date: 2026-10-21`, autor
+Seed: `200 Requirements/220 Input/dirigibilidade/SEED.md`, `revision: 3`, `date: 2026-10-21`, autor
 `eduardo.matos`. Camada de domínio durável: `DOMAIN.md` da mesma pasta, cujas decisões de 2026-10-21
 prevalecem sobre os pontos em aberto correspondentes do seed; a entrada "Acerto agressivo (revisão 2 do
-seed)" substitui os valores fechados antes para os pontos 01, 02, 05, 06 e 07, e este conjunto usa só os
-valores em vigor.
+seed)" substitui os valores fechados antes para os pontos 01, 02, 05, 06 e 07, e a entrada "Correção de
+fato e método dos ensaios (revisão 3 do seed)" fixa onde e como os ensaios rodam sem mudar nenhum limiar.
+A entrada de 2026-10-22 "Fim da varredura de início do subesterço" fixa quando o ensaio de início do
+subesterço termina e quando reprova (`DOMAIN/DEC-11`), e a entrada da mesma data "Esclarecimento de
+método da varredura" define, sem mudar essa decisão, o que é uma velocidade medida da varredura
+(`DOMAIN/REF-04`). Este conjunto usa só os valores em vigor.
 
 ## Atores e canais
 
@@ -55,7 +72,9 @@ da simulação**, em tempo simulado (passos de `STEP`), a partir do valor normal
 adaptador de controle entrega (I2, I8). Por isso os mesmos limites valem para `web-desktop` e
 `web-mobile`: o que muda entre os canais é o adaptador — teclado produz esterço 0 ou 1; inclinação produz
 esterço proporcional entre −1 e 1; toque produz esterço binário no recuo do sensor. Onde um critério
-depende de esterço parcial, a história diz o que vale só em `web-mobile`.
+depende de esterço parcial, a história diz o que vale só em `web-mobile`. Os ensaios de US-0001 a US-0003
+rodam na pista de teste e alimentam a simulação com a mesma forma de `Input` que os adaptadores produzem;
+o Jogador não pilota na pista de teste.
 
 ## Itens do seed e decisões de domínio (chave de rastreabilidade)
 
@@ -71,6 +90,7 @@ rótulo aos itens deste conjunto.
 | `SEED/RD-03` | Passo fixo `STEP`, solver e significado de `Input` não mudam (I8) |
 | `SEED/RD-04` | Mudar acerto que altera tempos é mudança versionada (I3) |
 | `SEED/RD-05` | Sensação alvo: Karting Superstars — direção direta, aderência alta em velocidade, traseira viva controlável (decisão do dono do produto, 2026-10-21) |
+| `SEED/RD-06` | Os ensaios de resposta do volante e de curva de referência rodam em ambiente de ensaio próprio (pista de teste), não na pista sintética; só o ensaio de volta do piloto de teste usa a pista sintética (revisão 3 do seed, 2026-10-21) |
 | `SEED/NF-01` | Determinismo preservado: tempos idênticos em 100 % das execuções repetidas (RNF07) |
 | `SEED/NF-02` | Custo por passo da simulação não aumenta mais de 10 % no bench (RNF03) |
 | `SEED/NF-03` | Teclado e inclinação atendem, ambos, US-1 a US-4 |
@@ -85,23 +105,28 @@ rótulo aos itens deste conjunto.
 | `SEED/IM-I9` | Cada critério tem ensaio determinístico em `npm test` ou nos benches |
 | `DOMAIN/REF-01` | Referência de sensação: Karting Superstars; sintomas relatados no acerto atual: sai de frente, lento ao volante, pouca sensação de velocidade e risco |
 | `DOMAIN/REF-02` | Acerto agressivo (revisão 2 do seed, 2026-10-21): após testar a build atual ("não vira, não ganha velocidade"), o dono do produto substituiu os valores fechados dos pontos 01, 02, 05, 06 e 07 pelos valores abaixo; 03, 04 e a regra de medição só da guinada permanecem |
-| `DOMAIN/DEC-01` | Resposta do volante (em vigor, revisão 2): taxa de guinada atinge 90 % do regime em no máximo 180 ms após esterço cheio a 50 km/h em reta; ao soltar, cai a 10 % em no máximo 250 ms. Substitui 250 ms / 300 ms |
-| `DOMAIN/DEC-02` | Velocidade de curva de referência no raio de 18 m (em vigor, revisão 2): 50 km/h. Substitui 45 km/h |
-| `DOMAIN/DEC-03` | Nessa curva, a telemetria não reporta `understeer` por mais de 200 ms consecutivos (mantido) |
+| `DOMAIN/REF-03` | Correção de fato e método dos ensaios (revisão 3 do seed, 2026-10-21, sem mudar limiar): a pista sintética não tem curva de 18 m (raios mínimos 24 m e 25 m, grampo de 4 m); a curva de referência dos pontos 02/03 é um ensaio em pista de teste (arco de raio 18 m, faixa da largura da pista, sem paredes, ambiente de ensaio próprio); o ensaio de resposta do volante (ponto 01) roda em reta com a velocidade mantida em 50 km/h pelo acelerador, e o regime é o valor estabilizado nessa condição (janela curta e estacionária); o ensaio de volta do piloto de teste (ponto 07) continua na pista sintética |
+| `DOMAIN/REF-04` | Esclarecimento de método da varredura (2026-10-22, redator, sem mudar `DOMAIN/DEC-11`): a varredura de início do subesterço mede em patamares de velocidade mantida no arco de raio 18 m da pista de teste; uma velocidade medida é um patamar completo; em cada patamar compara-se a maior sequência de `understeer` consecutivo dentro dele, e não um máximo acumulado ao longo da varredura; o tamanho do patamar em km/h e a duração de cada um são parâmetros do ensaio, registrados em `docs/physics.md` (NFR-0004), não limiares de domínio |
+| `DOMAIN/DEC-01` | Resposta do volante (em vigor, revisão 2; método da revisão 3): em reta da pista de teste, com a velocidade mantida em 50 km/h pelo acelerador, a taxa de guinada atinge 90 % do regime em no máximo 180 ms após esterço cheio; ao soltar, cai a 10 % em no máximo 250 ms; regime é o valor estabilizado com a velocidade mantida. Substitui 250 ms / 300 ms |
+| `DOMAIN/DEC-02` | Velocidade de curva de referência (em vigor, revisão 2; local da revisão 3): 50 km/h no arco de raio 18 m da pista de teste. Substitui 45 km/h |
+| `DOMAIN/DEC-03` | Nesse ensaio, a telemetria não reporta `understeer` por mais de 200 ms consecutivos (mantido) |
 | `DOMAIN/DEC-04` | Ao reduzir o esterço com a traseira solta, o kart volta a `grip` em no máximo 400 ms (mantido) |
 | `DOMAIN/DEC-05` | 0–60 km/h em no máximo 2,5 s, piloto de 75 kg (em vigor, revisão 2). Substitui 3,0 s |
 | `DOMAIN/DEC-06` | Velocidade estabilizada em reta de pelo menos 105 km/h (em vigor, revisão 2). Substitui 95 km/h |
 | `DOMAIN/DEC-07` | O piloto de teste completa a volta sintética sem sair do asfalto em no máximo 25 s (em vigor, revisão 2; hoje ~31,4 s). Substitui 27 s |
 | `DOMAIN/DEC-08` | Rodada de teste do dono do produto na build antes de fechar a feature; os números são necessários, não suficientes |
-| `DOMAIN/DEC-09` | Decisão de 2026-10-21 sem ponto aberto próprio: o ensaio de resposta do volante (reta a 50 km/h, esterço cheio) mede só o tempo de resposta da taxa de guinada; `understeer` transitório nesse ensaio é aceitável; a aderência em curva é julgada só pelo ensaio de 50 km/h no raio de 18 m |
+| `DOMAIN/DEC-09` | Decisão de 2026-10-21 sem ponto aberto próprio: o ensaio de resposta do volante (reta a 50 km/h mantidos, esterço cheio) mede só o tempo de resposta da taxa de guinada; `understeer` transitório nesse ensaio é aceitável; a aderência em curva é julgada só pelo ensaio de 50 km/h no arco de raio 18 m da pista de teste |
 | `DOMAIN/DEC-10` | Ciclo de teste do ponto 08: cada rodada de código é publicada em staging; o dono do produto testa e devolve feedback curto (vira? acelera? traseira?); os presets são iterados dentro do pipeline até a aprovação dele; nenhum preset experimental extra no painel |
+| `DOMAIN/DEC-11` | Fim da varredura de início do subesterço (2026-10-22, após a parada do D-Spec): no ensaio em que a velocidade sobe no arco de raio 18 m da pista de teste — o ensaio de início do subesterço —, sair da faixa abaixo de 50 km/h reprova por saída do asfalto; sair da faixa acima de 50 km/h é o fim natural da varredura e não reprova, desde que pelo menos duas velocidades acima de 50 km/h tenham sido medidas antes da saída, para que o critério de que o subesterço não diminui tenha dados; se a saída ocorrer antes da segunda medição acima de 50 km/h, o ensaio reprova por falta de medida, motivo distinto da saída do asfalto |
 
 ## Decisões de domínio aplicadas
 
 Cada decisão `DOMAIN/DEC-01` a `DOMAIN/DEC-08` fecha o ponto aberto de mesmo número (nn) do seed, com o
-valor em vigor após a revisão 2 (`DOMAIN/REF-02`); `DOMAIN/DEC-09` e `DOMAIN/DEC-10` são decisões de
-2026-10-21 que não correspondem a ponto aberto numerado próprio (a segunda detalha o ciclo do ponto 08).
-Onde cada uma é aplicada:
+valor em vigor após a revisão 2 (`DOMAIN/REF-02`) e o local e método de ensaio da revisão 3
+(`DOMAIN/REF-03`); `DOMAIN/DEC-09` e `DOMAIN/DEC-10` são decisões de 2026-10-21 que não correspondem a
+ponto aberto numerado próprio (a segunda detalha o ciclo do ponto 08); `DOMAIN/DEC-11` é a decisão de
+2026-10-22, também sem ponto aberto próprio, que fixa o fim do ensaio de início do subesterço. Onde cada
+uma é aplicada:
 
 | Decisão | Histórias e NFRs |
 |---|---|
@@ -115,6 +140,9 @@ Onde cada uma é aplicada:
 | `DOMAIN/DEC-08` | Critério final humano, fora dos critérios de aceite (ver abaixo) |
 | `DOMAIN/DEC-09` | US-0001 (critério 05) |
 | `DOMAIN/DEC-10` | Ciclo de fechamento humano (ver abaixo); nenhum critério de aceite |
+| `DOMAIN/DEC-11` | US-0002 (critérios 03, 04 e 06, ensaio de início do subesterço, e caso anormal de saída da faixa); não muda os critérios 01 e 02, da curva de referência com entrada a 50 km/h, em que toda saída da faixa reprova |
+| `DOMAIN/REF-04` | US-0002 (critérios 03, 04 e 06 e caso anormal de saída da faixa: a velocidade medida da varredura é um patamar completo de velocidade mantida); o tamanho e a duração do patamar são parâmetros do ensaio, registrados como os demais parâmetros de ensaio de NFR-0004 |
+| `DOMAIN/REF-03`, `SEED/RD-06` | US-0001, US-0002, US-0003 (pista de teste), US-0005 (pista sintética), NFR-0004 (parâmetros do ambiente de ensaio registrados) |
 
 **Ponto aberto 08 — critério final humano.** O dono do produto decidiu que a sensação é subjetiva: os
 critérios numéricos deste conjunto são necessários, não suficientes, e uma rodada de teste dele na build
@@ -141,7 +169,9 @@ Não resta ponto em aberto bloqueante neste conjunto.
 O conjunto validado de `race-lap-validation` exige, para a entrega daquela feature, que física e presets
 não mudem (NFR-0011 daquele conjunto). A exigência é escopada à entrega daquela feature; esta feature muda
 o preset Arcade assistido como mudança versionada (`SEED/RD-04`, NFR-0009) e deixa a validação de volta
-intacta (NFR-0008). Nenhum feedback é enviado àquela feature: nenhum requisito dela precisa mudar.
+intacta (NFR-0008). A pista de teste dos ensaios de US-0001 a US-0003 é ambiente de ensaio, não pista
+publicada: não cria pista nova (`SEED.md`, Fora do escopo) nem toca a pista sintética. Nenhum feedback é
+enviado àquela feature: nenhum requisito dela precisa mudar.
 
 ## Famílias de requisitos não funcionais
 

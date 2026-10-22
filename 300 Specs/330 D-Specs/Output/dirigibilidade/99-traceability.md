@@ -1,8 +1,8 @@
 ---
 stage: dspec
 feature: dirigibilidade
-generated: 2026-10-21T18:08:49Z
-rows: 206
+generated: 2026-10-22T16:16:49Z
+rows: 248
 ---
 
 # Traceability
@@ -27,21 +27,25 @@ Upstream item -> this stage's item -> the ids that make it verifiable.
 | API-0003 | DES-0008 | - | `security/DES-0008-privacidade-dos-registros-e-da-saida-dos-ensaios.md` |
 | API-0003 | DM-0001 | - | `data/DM-0001-dado-publicado-registros-e-linha-de-base.md` |
 | FEAT-0001 | ADR-0004 | - | `adr/ADR-0004-ensaios-como-biblioteca-e-parametros-de-ensaio.md` |
+| FEAT-0001 | ADR-0005 | - | `adr/ADR-0005-pista-de-teste-como-ambiente-da-simulacao-e-velocidade-mantida.md` |
 | FEAT-0001 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
 | FEAT-0001 | DES-0002 | - | `core/DES-0002-telemetria-de-dirigibilidade.md` |
 | FEAT-0001 | DES-0004 | - | `core/DES-0004-ensaios-de-dirigibilidade-e-saida.md` |
 | FEAT-0001 | DES-0007 | - | `web/DES-0007-integracao-da-aplicacao-e-adaptadores.md` |
 | FEAT-0002 | ADR-0003 | - | `adr/ADR-0003-linha-de-base-legivel-por-maquina-em-docs-physics.md` |
 | FEAT-0002 | ADR-0004 | - | `adr/ADR-0004-ensaios-como-biblioteca-e-parametros-de-ensaio.md` |
+| FEAT-0002 | ADR-0005 | - | `adr/ADR-0005-pista-de-teste-como-ambiente-da-simulacao-e-velocidade-mantida.md` |
 | FEAT-0002 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
 | FEAT-0002 | DES-0002 | - | `core/DES-0002-telemetria-de-dirigibilidade.md` |
 | FEAT-0002 | DES-0004 | - | `core/DES-0004-ensaios-de-dirigibilidade-e-saida.md` |
 | FEAT-0003 | ADR-0004 | - | `adr/ADR-0004-ensaios-como-biblioteca-e-parametros-de-ensaio.md` |
+| FEAT-0003 | ADR-0005 | - | `adr/ADR-0005-pista-de-teste-como-ambiente-da-simulacao-e-velocidade-mantida.md` |
 | FEAT-0003 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
 | FEAT-0003 | DES-0002 | - | `core/DES-0002-telemetria-de-dirigibilidade.md` |
 | FEAT-0003 | DES-0004 | - | `core/DES-0004-ensaios-de-dirigibilidade-e-saida.md` |
 | FEAT-0003 | DES-0007 | - | `web/DES-0007-integracao-da-aplicacao-e-adaptadores.md` |
 | FEAT-0004 | ADR-0004 | - | `adr/ADR-0004-ensaios-como-biblioteca-e-parametros-de-ensaio.md` |
+| FEAT-0004 | ADR-0005 | - | `adr/ADR-0005-pista-de-teste-como-ambiente-da-simulacao-e-velocidade-mantida.md` |
 | FEAT-0004 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
 | FEAT-0004 | DES-0002 | - | `core/DES-0002-telemetria-de-dirigibilidade.md` |
 | FEAT-0004 | DES-0004 | - | `core/DES-0004-ensaios-de-dirigibilidade-e-saida.md` |
@@ -70,6 +74,7 @@ Upstream item -> this stage's item -> the ids that make it verifiable.
 | FLOW-0001 | DES-0005 | - | `web/DES-0005-hud-velocidade-e-aderencia.md` |
 | FLOW-0001 | DES-0007 | - | `web/DES-0007-integracao-da-aplicacao-e-adaptadores.md` |
 | FLOW-0002 | ADR-0004 | - | `adr/ADR-0004-ensaios-como-biblioteca-e-parametros-de-ensaio.md` |
+| FLOW-0002 | ADR-0005 | - | `adr/ADR-0005-pista-de-teste-como-ambiente-da-simulacao-e-velocidade-mantida.md` |
 | FLOW-0002 | DES-0004 | - | `core/DES-0004-ensaios-de-dirigibilidade-e-saida.md` |
 | FLOW-0003 | ADR-0002 | - | `adr/ADR-0002-formato-do-replay-e-registro-de-volta-em-memoria.md` |
 | FLOW-0003 | DES-0003 | - | `core/DES-0003-versao-do-acerto-registros-e-comparabilidade.md` |
@@ -79,23 +84,30 @@ Upstream item -> this stage's item -> the ids that make it verifiable.
 | NFR-0002 | ADR-0003 | - | `adr/ADR-0003-linha-de-base-legivel-por-maquina-em-docs-physics.md` |
 | NFR-0002 | DES-0004 | - | `core/DES-0004-ensaios-de-dirigibilidade-e-saida.md` |
 | NFR-0003 | ADR-0004 | - | `adr/ADR-0004-ensaios-como-biblioteca-e-parametros-de-ensaio.md` |
+| NFR-0003 | ADR-0005 | - | `adr/ADR-0005-pista-de-teste-como-ambiente-da-simulacao-e-velocidade-mantida.md` |
 | NFR-0003 | DES-0004 | - | `core/DES-0004-ensaios-de-dirigibilidade-e-saida.md` |
 | NFR-0003 | DES-0007 | - | `web/DES-0007-integracao-da-aplicacao-e-adaptadores.md` |
 | NFR-0004 | ADR-0003 | - | `adr/ADR-0003-linha-de-base-legivel-por-maquina-em-docs-physics.md` |
 | NFR-0004 | DES-0004 | - | `core/DES-0004-ensaios-de-dirigibilidade-e-saida.md` |
 | NFR-0004 | DES-0008 | - | `security/DES-0008-privacidade-dos-registros-e-da-saida-dos-ensaios.md` |
 | NFR-0004 | DM-0001 | - | `data/DM-0001-dado-publicado-registros-e-linha-de-base.md` |
+| NFR-0005 | ADR-0005 | - | `adr/ADR-0005-pista-de-teste-como-ambiente-da-simulacao-e-velocidade-mantida.md` |
 | NFR-0005 | DES-0007 | - | `web/DES-0007-integracao-da-aplicacao-e-adaptadores.md` |
 | NFR-0006 | ADR-0002 | - | `adr/ADR-0002-formato-do-replay-e-registro-de-volta-em-memoria.md` |
 | NFR-0007 | ADR-0001 | - | `adr/ADR-0001-versao-do-acerto-como-registro-novo-no-codigo.md` |
 | NFR-0007 | ADR-0003 | - | `adr/ADR-0003-linha-de-base-legivel-por-maquina-em-docs-physics.md` |
+| NFR-0007 | ADR-0004 | - | `adr/ADR-0004-ensaios-como-biblioteca-e-parametros-de-ensaio.md` |
 | NFR-0007 | DES-0004 | - | `core/DES-0004-ensaios-de-dirigibilidade-e-saida.md` |
+| NFR-0008 | ADR-0005 | - | `adr/ADR-0005-pista-de-teste-como-ambiente-da-simulacao-e-velocidade-mantida.md` |
 | NFR-0008 | DES-0004 | - | `core/DES-0004-ensaios-de-dirigibilidade-e-saida.md` |
 | NFR-0009 | ADR-0001 | - | `adr/ADR-0001-versao-do-acerto-como-registro-novo-no-codigo.md` |
 | NFR-0009 | ADR-0002 | - | `adr/ADR-0002-formato-do-replay-e-registro-de-volta-em-memoria.md` |
+| NFR-0009 | ADR-0004 | - | `adr/ADR-0004-ensaios-como-biblioteca-e-parametros-de-ensaio.md` |
 | NFR-0009 | DES-0008 | - | `security/DES-0008-privacidade-dos-registros-e-da-saida-dos-ensaios.md` |
 | NFR-0009 | DM-0001 | - | `data/DM-0001-dado-publicado-registros-e-linha-de-base.md` |
+| REQ-FEAT-0001-01 | ADR-0005 | - | `adr/ADR-0005-pista-de-teste-como-ambiente-da-simulacao-e-velocidade-mantida.md` |
 | REQ-FEAT-0001-01 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
+| REQ-FEAT-0001-02 | ADR-0005 | - | `adr/ADR-0005-pista-de-teste-como-ambiente-da-simulacao-e-velocidade-mantida.md` |
 | REQ-FEAT-0001-02 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
 | REQ-FEAT-0001-03 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
 | REQ-FEAT-0001-04 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
@@ -106,23 +118,41 @@ Upstream item -> this stage's item -> the ids that make it verifiable.
 | REQ-FEAT-0001-07 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
 | REQ-FEAT-0001-07 | DES-0007 | - | `web/DES-0007-integracao-da-aplicacao-e-adaptadores.md` |
 | REQ-FEAT-0001-08 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
+| REQ-FEAT-0001-09 | ADR-0004 | - | `adr/ADR-0004-ensaios-como-biblioteca-e-parametros-de-ensaio.md` |
+| REQ-FEAT-0001-09 | ADR-0005 | - | `adr/ADR-0005-pista-de-teste-como-ambiente-da-simulacao-e-velocidade-mantida.md` |
+| REQ-FEAT-0001-09 | DES-0004 | - | `core/DES-0004-ensaios-de-dirigibilidade-e-saida.md` |
+| REQ-FEAT-0002-01 | ADR-0005 | - | `adr/ADR-0005-pista-de-teste-como-ambiente-da-simulacao-e-velocidade-mantida.md` |
 | REQ-FEAT-0002-01 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
 | REQ-FEAT-0002-02 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
+| REQ-FEAT-0002-03 | ADR-0005 | - | `adr/ADR-0005-pista-de-teste-como-ambiente-da-simulacao-e-velocidade-mantida.md` |
 | REQ-FEAT-0002-03 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
 | REQ-FEAT-0002-04 | ADR-0003 | - | `adr/ADR-0003-linha-de-base-legivel-por-maquina-em-docs-physics.md` |
+| REQ-FEAT-0002-04 | ADR-0004 | - | `adr/ADR-0004-ensaios-como-biblioteca-e-parametros-de-ensaio.md` |
 | REQ-FEAT-0002-04 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
 | REQ-FEAT-0002-04 | DES-0004 | - | `core/DES-0004-ensaios-de-dirigibilidade-e-saida.md` |
+| REQ-FEAT-0002-05 | ADR-0004 | - | `adr/ADR-0004-ensaios-como-biblioteca-e-parametros-de-ensaio.md` |
 | REQ-FEAT-0002-05 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
 | REQ-FEAT-0002-05 | DES-0004 | - | `core/DES-0004-ensaios-de-dirigibilidade-e-saida.md` |
 | REQ-FEAT-0002-06 | ADR-0004 | - | `adr/ADR-0004-ensaios-como-biblioteca-e-parametros-de-ensaio.md` |
 | REQ-FEAT-0002-06 | DES-0004 | - | `core/DES-0004-ensaios-de-dirigibilidade-e-saida.md` |
 | REQ-FEAT-0002-07 | ADR-0003 | - | `adr/ADR-0003-linha-de-base-legivel-por-maquina-em-docs-physics.md` |
 | REQ-FEAT-0002-07 | DES-0004 | - | `core/DES-0004-ensaios-de-dirigibilidade-e-saida.md` |
+| REQ-FEAT-0002-07 | DM-0001 | - | `data/DM-0001-dado-publicado-registros-e-linha-de-base.md` |
 | REQ-FEAT-0002-08 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
+| REQ-FEAT-0002-09 | ADR-0004 | - | `adr/ADR-0004-ensaios-como-biblioteca-e-parametros-de-ensaio.md` |
+| REQ-FEAT-0002-09 | ADR-0005 | - | `adr/ADR-0005-pista-de-teste-como-ambiente-da-simulacao-e-velocidade-mantida.md` |
+| REQ-FEAT-0002-09 | DES-0004 | - | `core/DES-0004-ensaios-de-dirigibilidade-e-saida.md` |
+| REQ-FEAT-0002-10 | ADR-0003 | - | `adr/ADR-0003-linha-de-base-legivel-por-maquina-em-docs-physics.md` |
+| REQ-FEAT-0002-10 | ADR-0004 | - | `adr/ADR-0004-ensaios-como-biblioteca-e-parametros-de-ensaio.md` |
+| REQ-FEAT-0002-10 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
+| REQ-FEAT-0002-10 | DES-0004 | - | `core/DES-0004-ensaios-de-dirigibilidade-e-saida.md` |
+| REQ-FEAT-0002-10 | DM-0001 | - | `data/DM-0001-dado-publicado-registros-e-linha-de-base.md` |
+| REQ-FEAT-0003-01 | ADR-0005 | - | `adr/ADR-0005-pista-de-teste-como-ambiente-da-simulacao-e-velocidade-mantida.md` |
 | REQ-FEAT-0003-01 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
 | REQ-FEAT-0003-02 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
 | REQ-FEAT-0003-03 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
 | REQ-FEAT-0003-03 | DES-0002 | - | `core/DES-0002-telemetria-de-dirigibilidade.md` |
+| REQ-FEAT-0003-04 | ADR-0005 | - | `adr/ADR-0005-pista-de-teste-como-ambiente-da-simulacao-e-velocidade-mantida.md` |
 | REQ-FEAT-0003-04 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
 | REQ-FEAT-0003-05 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
 | REQ-FEAT-0003-06 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
@@ -130,12 +160,17 @@ Upstream item -> this stage's item -> the ids that make it verifiable.
 | REQ-FEAT-0003-08 | ADR-0004 | - | `adr/ADR-0004-ensaios-como-biblioteca-e-parametros-de-ensaio.md` |
 | REQ-FEAT-0003-08 | DES-0004 | - | `core/DES-0004-ensaios-de-dirigibilidade-e-saida.md` |
 | REQ-FEAT-0003-09 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
+| REQ-FEAT-0003-10 | ADR-0005 | - | `adr/ADR-0005-pista-de-teste-como-ambiente-da-simulacao-e-velocidade-mantida.md` |
 | REQ-FEAT-0003-10 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
 | REQ-FEAT-0003-10 | DES-0002 | - | `core/DES-0002-telemetria-de-dirigibilidade.md` |
 | REQ-FEAT-0003-10 | DES-0007 | - | `web/DES-0007-integracao-da-aplicacao-e-adaptadores.md` |
 | REQ-FEAT-0003-11 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
+| REQ-FEAT-0003-12 | ADR-0005 | - | `adr/ADR-0005-pista-de-teste-como-ambiente-da-simulacao-e-velocidade-mantida.md` |
+| REQ-FEAT-0003-12 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
+| REQ-FEAT-0003-12 | DES-0004 | - | `core/DES-0004-ensaios-de-dirigibilidade-e-saida.md` |
 | REQ-FEAT-0004-01 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
 | REQ-FEAT-0004-02 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
+| REQ-FEAT-0004-03 | ADR-0005 | - | `adr/ADR-0005-pista-de-teste-como-ambiente-da-simulacao-e-velocidade-mantida.md` |
 | REQ-FEAT-0004-03 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
 | REQ-FEAT-0004-04 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
 | REQ-FEAT-0004-05 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
@@ -185,6 +220,7 @@ Upstream item -> this stage's item -> the ids that make it verifiable.
 | REQ-FEAT-0006-01 | DES-0002 | - | `core/DES-0002-telemetria-de-dirigibilidade.md` |
 | REQ-FEAT-0006-01 | DES-0005 | - | `web/DES-0005-hud-velocidade-e-aderencia.md` |
 | REQ-FEAT-0006-01 | DES-0007 | - | `web/DES-0007-integracao-da-aplicacao-e-adaptadores.md` |
+| REQ-FEAT-0006-02 | ADR-0005 | - | `adr/ADR-0005-pista-de-teste-como-ambiente-da-simulacao-e-velocidade-mantida.md` |
 | REQ-FEAT-0006-02 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
 | REQ-FEAT-0006-02 | DES-0002 | - | `core/DES-0002-telemetria-de-dirigibilidade.md` |
 | REQ-FEAT-0006-02 | DES-0004 | - | `core/DES-0004-ensaios-de-dirigibilidade-e-saida.md` |
@@ -193,6 +229,7 @@ Upstream item -> this stage's item -> the ids that make it verifiable.
 | REQ-FEAT-0006-03 | DES-0003 | - | `core/DES-0003-versao-do-acerto-registros-e-comparabilidade.md` |
 | REQ-FEAT-0006-03 | DES-0007 | - | `web/DES-0007-integracao-da-aplicacao-e-adaptadores.md` |
 | REQ-FEAT-0006-04 | ADR-0001 | - | `adr/ADR-0001-versao-do-acerto-como-registro-novo-no-codigo.md` |
+| REQ-FEAT-0006-04 | ADR-0004 | - | `adr/ADR-0004-ensaios-como-biblioteca-e-parametros-de-ensaio.md` |
 | REQ-FEAT-0006-04 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
 | REQ-FEAT-0006-04 | DES-0004 | - | `core/DES-0004-ensaios-de-dirigibilidade-e-saida.md` |
 | REQ-FEAT-0006-05 | ADR-0004 | - | `adr/ADR-0004-ensaios-como-biblioteca-e-parametros-de-ensaio.md` |
@@ -207,12 +244,17 @@ Upstream item -> this stage's item -> the ids that make it verifiable.
 | REQ-FEAT-0006-08 | DM-0001 | - | `data/DM-0001-dado-publicado-registros-e-linha-de-base.md` |
 | REQ-FEAT-0006-09 | ADR-0003 | - | `adr/ADR-0003-linha-de-base-legivel-por-maquina-em-docs-physics.md` |
 | REQ-FEAT-0006-09 | DES-0004 | - | `core/DES-0004-ensaios-de-dirigibilidade-e-saida.md` |
+| REQ-FEAT-0006-09 | DM-0001 | - | `data/DM-0001-dado-publicado-registros-e-linha-de-base.md` |
+| RULE-0001 | ADR-0005 | - | `adr/ADR-0005-pista-de-teste-como-ambiente-da-simulacao-e-velocidade-mantida.md` |
 | RULE-0001 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
 | RULE-0001 | DES-0002 | - | `core/DES-0002-telemetria-de-dirigibilidade.md` |
+| RULE-0001 | DES-0004 | - | `core/DES-0004-ensaios-de-dirigibilidade-e-saida.md` |
 | RULE-0002 | ADR-0003 | - | `adr/ADR-0003-linha-de-base-legivel-por-maquina-em-docs-physics.md` |
 | RULE-0002 | ADR-0004 | - | `adr/ADR-0004-ensaios-como-biblioteca-e-parametros-de-ensaio.md` |
+| RULE-0002 | ADR-0005 | - | `adr/ADR-0005-pista-de-teste-como-ambiente-da-simulacao-e-velocidade-mantida.md` |
 | RULE-0002 | DES-0001 | - | `core/DES-0001-acerto-arcade-assistido-v5-e-assistencias.md` |
 | RULE-0002 | DES-0004 | - | `core/DES-0004-ensaios-de-dirigibilidade-e-saida.md` |
+| RULE-0002 | DM-0001 | - | `data/DM-0001-dado-publicado-registros-e-linha-de-base.md` |
 | RULE-0003 | ADR-0001 | - | `adr/ADR-0001-versao-do-acerto-como-registro-novo-no-codigo.md` |
 | RULE-0003 | ADR-0002 | - | `adr/ADR-0002-formato-do-replay-e-registro-de-volta-em-memoria.md` |
 | RULE-0003 | DES-0003 | - | `core/DES-0003-versao-do-acerto-registros-e-comparabilidade.md` |

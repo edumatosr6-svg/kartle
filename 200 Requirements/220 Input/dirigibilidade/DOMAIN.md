@@ -50,3 +50,9 @@ Decisões fechadas pelo dono do produto. Prevalecem sobre os pontos em aberto co
   que pelo menos **duas velocidades acima de 50 km/h** tenham sido medidas antes da saída. Assim o
   critério de que o subesterço não diminui tem dados. Se a saída ocorrer antes da segunda medição acima
   de 50 km/h, o ensaio reprova por falta de medida.
+- 2026-10-22 — **Esclarecimento de método da varredura (redator, sem mudar a decisão acima):** a
+  varredura de início do subesterço mede em **patamares de velocidade mantida** no arco de 18 m. Uma
+  "velocidade medida" é um patamar completo. Em cada patamar, compara-se a **maior sequência de
+  `understeer` consecutivo dentro dele**, e não um máximo acumulado ao longo da varredura. O tamanho do
+  patamar em km/h e a duração de cada um são parâmetros do ensaio, registrados em `docs/physics.md`
+  (NFR-0004), não limiares de domínio.

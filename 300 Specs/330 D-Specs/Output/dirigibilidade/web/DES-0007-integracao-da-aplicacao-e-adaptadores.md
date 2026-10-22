@@ -4,7 +4,7 @@ title: Integração da aplicação — escolha do acerto publicado e adaptadores
 feature: dirigibilidade
 stage: dspec
 status: validated
-version: 1.0.1
+version: 1.0.2
 sources: [FLOW-0001, FEAT-0001, FEAT-0003, FEAT-0005, FEAT-0006, REQ-FEAT-0001-07, REQ-FEAT-0003-10, REQ-FEAT-0005-05, REQ-FEAT-0005-09, REQ-FEAT-0006-01, REQ-FEAT-0006-03, NFR-0003, NFR-0005]
 ---
 
@@ -16,12 +16,13 @@ Os `REQ-*` em `sources`: a aplicação pilota com o acerto corrente do dado publ
 anterior (REQ-FEAT-0005-05, -09); os adaptadores entregam só o `Input` normalizado, saturado na faixa,
 binário no teclado e no toque e proporcional na inclinação, sem regra de pilotagem (REQ-FEAT-0001-07,
 REQ-FEAT-0003-10, REQ-FEAT-0006-01; NFR-0003, NFR-0005); `Input` e o passo inalterados (REQ-FEAT-0006-03).
-Fluxo: FLOW-0001.
+Fluxo: FLOW-0001. O Jogador nunca pilota na pista de teste: nenhum adaptador nem tela a alcança.
 
 ## Posicionamento
 
 `src/main.ts`, camada **Aplicação** (os adaptadores de controle continuam dentro dele, como o mapa de
-camadas registra), alterado. Nenhum módulo novo.
+camadas registra), alterado (a rodada de código 1 não o tocou: as linhas citadas são as de hoje). Nenhum
+módulo novo.
 
 ## Interface
 
@@ -37,9 +38,10 @@ camadas registra), alterado. Nenhum módulo novo.
 | `:380-390` laço de passos | inalterado: `stepLap(lap, input)` com o `Input` amostrado uma vez por quadro |
 
 Saturação (I4): o adaptador de inclinação satura em `:284`; a simulação satura de novo em
-`src/physics.ts:133` e `:137-138`, de modo que um `Input` fora da faixa entregue por qualquer adaptador vale
-o saturado e os limites valem para esse valor (REQ-FEAT-0001-07). Nenhuma regra de pilotagem é decidida
-aqui: `forcing`, `handling`, superfície e parede só existem em `src/physics.ts`.
+`src/physics.ts:116` (condição de forçar), `:182` (esterço) e `:189-190` (acelerador e freio), de modo que
+um `Input` fora da faixa entregue por qualquer adaptador vale o saturado e os limites valem para esse valor
+(REQ-FEAT-0001-07). Nenhuma regra de pilotagem é decidida aqui: `forcing`, `handling`, a classe do passo,
+superfície e parede só existem em `src/physics.ts`.
 
 ## Colaboradores
 
@@ -63,7 +65,7 @@ Valor do `<select>` fora do mapa: ignorado, como hoje (`:231`). Sensor negado: t
 
 `tests/dirigibilidade-contract.test.ts` afirma que `src/main.ts` não importa `KART_PRESETS` nem
 `ARCADE_KART` e lê `PUBLISHED_SETUPS` (texto do módulo, como `tests/race-lap-validation-layering.test.ts`
-faz).
+faz), e que não importa `testPadLane`, `testPadArc` nem `classifyHandlingSteps`.
 
 ## Determinismo (D-DS-07)
 

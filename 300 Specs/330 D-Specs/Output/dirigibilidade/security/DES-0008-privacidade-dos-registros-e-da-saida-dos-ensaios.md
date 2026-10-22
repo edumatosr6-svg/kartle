@@ -4,7 +4,7 @@ title: Privacidade dos registros, do texto compartilhado e da saída dos ensaios
 feature: dirigibilidade
 stage: dspec
 status: validated
-version: 1.0.1
+version: 1.0.2
 sources: [API-0001, API-0002, API-0003, FEAT-0005, FEAT-0006, REQ-FEAT-0005-06, REQ-FEAT-0005-08, REQ-FEAT-0006-02, REQ-FEAT-0006-08, NFR-0004, NFR-0009]
 ---
 
@@ -32,8 +32,10 @@ verificação de sessão nem de RBAC porque não há autenticação no produto, 
 |---|---|---|---|
 | Web Share / área de transferência | `formatSharedText(record, lang)`: `trackId`, `trackVersion`, tempo, `setupVersion`, estado | só campos de `LapRecord`; nenhum campo de aparelho, idioma de sistema, data ou nome | `src/main.ts` (`#lap-share`) |
 | `readReplay(source)` | objeto ou texto de origem não confiável | tipo, forma, faixa e tamanho: texto com no máximo `MAX_REPLAY_TEXT_CHARS` (4 194 304 caracteres) e `inputs` com no máximo `MAX_REPLAY_INPUT_STEPS` (36 000 passos), verificados antes de ler qualquer elemento, excesso é `UNREADABLE`; `inputs` só com `throttle`, `brake`, `steer` finitos e `drift` booleano; `replayFormatVersion` inteiro; sem `eval`, sem consulta construída por texto | `src/setupRecords.ts` ([DES-0003](../core/DES-0003-versao-do-acerto-registros-e-comparabilidade.md)) |
-| `docs/physics.md` → `readBaseline` | JSON do bloco | `JSON.parse` em `try`; só campos de API-0003 e `runtimeId` lidos | `scripts/handlingBench.ts` |
-| stdout dos benches | registros e parâmetros | `runtimeId()` sem `os.hostname()` nem `os.userInfo()`; nenhum caminho de arquivo | `scripts/keyboard-lap.ts` (`runtimeId()`, `node:os`) e `scripts/handlingBench.ts` (`serialize`, sem `node:os`) |
+| `docs/physics.md` → `readBaseline` | JSON do bloco | `JSON.parse` em `try`; só `setupId`, `setupVersion`, `measuredAtUtc`, `runtimeId`, `parameters` e os campos de API-0003 de `records` são lidos; um registro sem `benchEnvironment` igual é ignorado | `scripts/handlingBench.ts` |
+| `src/physics.ts` → `STEP_CONTRACT` | texto do módulo | lido com `node:fs` só para comparar linhas literais; nunca executado nem impresso | `scripts/handlingBench.ts` |
+| `BenchOptions.oldRecords` | registros antigos (fixtures) | passam por `readReplay`/`compareLapRecords`, com as mesmas verificações de forma e tamanho | `scripts/handlingBench.ts` (`SETUP_VERSION`) |
+| stdout dos benches | registros, parâmetros e `runtimeId` | `runtimeId()` sem `os.hostname()` nem `os.userInfo()`; nenhum caminho de arquivo; nenhum nome de pista além de `trackId` publicado (a pista de teste não tem nome de dado) | `scripts/keyboard-lap.ts` (`runtimeId()`, `node:os`) e `scripts/handlingBench.ts` (`serialize`, sem `node:os`) |
 
 Registro em log: `console.warn` com códigos e identificadores apenas (`replay`/`UNREADABLE`,
 `UNSUPPORTED_FORMAT`, `lap-record`/`INCOMPLETE_RECORD`); nunca o conteúdo de um registro nem o texto
@@ -55,7 +57,8 @@ Sem estado. Nada é persistido; o texto compartilhado é entregue à API do nave
 ## Comportamento em falha
 
 Uma falha de compartilhamento não expõe nada além do `notify` existente. Uma entrada fora de forma em
-`readReplay` é `UNREADABLE`, sem lançar.
+`readReplay` é `UNREADABLE`, sem lançar. Um bloco de linha de base corrompido é `baselineAvailable` falso,
+sem lançar.
 
 ## Observabilidade
 

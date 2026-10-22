@@ -4,7 +4,7 @@ title: Contrato da telemetria de dirigibilidade por passo
 feature: dirigibilidade
 stage: fspec
 status: validated
-version: 1.0.0
+version: 1.1.0
 sources: [US-0001, US-0002, US-0003, US-0004, NFR-0005, NFR-0006, AC-US-0001-01, AC-US-0001-02, AC-US-0002-01, AC-US-0003-01, AC-US-0003-02, AC-US-0003-03, AC-US-0003-04, AC-US-0004-03, AC-US-0004-05, AC-US-0004-06]
 ---
 
@@ -40,12 +40,12 @@ passo em questão.
 | `simStepCount` | inteiro | passos | sim | 0 no estado inicial; incrementa 1 por passo de `STEP`; contador de sequência; não avança na suspensão |
 | `setupId` | enum `ARCADE_ASSISTIDO`, `REALISTA_ALUGUEL_4T` | — | sim | acerto em uso ([RULE-0003](../rules/RULE-0003-versao-do-acerto-e-comparabilidade.md)) |
 | `setupVersion` | texto | — | sim | versão corrente do acerto em uso ([API-0002](API-0002-versao-do-acerto.md)) |
-| `speedMps` | número | m/s | sim | 0 ou maior; a apresentação converte para km/h para o HUD (AC-US-0004-06); os ensaios reportam em km/h ([API-0003](API-0003-saida-dos-ensaios.md)) |
+| `speedMps` | número | m/s | sim | 0 ou maior; a apresentação converte para km/h para o HUD (AC-US-0004-06); os ensaios reportam em m/s, apresentados também em km/h ([API-0003](API-0003-saida-dos-ensaios.md)) |
 | `handling` | enum `grip`, `understeer`, `oversteer`, `sliding` | — | sim | estado de aderência ([RULE-0001](../rules/RULE-0001-estado-de-aderencia-e-condicao-de-forcar.md)); `grip` no estado inicial |
 | `sideslipRad` | número | rad | sim | derrapagem lateral, em módulo; 0 no estado inicial |
 | `yawRateRadPerS` | número | rad/s | sim | taxa de guinada, com sinal; 0 no estado inicial |
-| `surface` | enum `ASPHALT`, `GRASS` | — | sim | superfície sob o kart neste passo; `GRASS` é "fora do asfalto" |
-| `wallContact` | booleano | — | sim | `true` só no passo em que o kart entra em contato com a parede (AC-US-0004-05); `false` no estado inicial |
+| `surface` | enum `ASPHALT`, `GRASS` | — | sim | superfície sob o kart neste passo; `GRASS` é "fora do asfalto". Na pista de teste ([RULE-0002](../rules/RULE-0002-ensaios-e-limiares.md), `TEST_PAD`), `ASPHALT` dentro da faixa e `GRASS` fora dela; nenhum critério de grama é medido ali |
+| `wallContact` | booleano | — | sim | `true` só no passo em que o kart entra em contato com a parede (AC-US-0004-05); `false` no estado inicial; sempre `false` na pista de teste, que não tem parede |
 | `forcing` | booleano | — | sim | condição de forçar mantida neste passo ([RULE-0001](../rules/RULE-0001-estado-de-aderencia-e-condicao-de-forcar.md)); `false` no estado inicial |
 | `driftActive` | booleano | — | sim | manobra de drift de `requirements/11` em andamento; `false` no estado inicial |
 

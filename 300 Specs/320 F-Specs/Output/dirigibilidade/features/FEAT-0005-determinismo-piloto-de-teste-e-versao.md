@@ -4,7 +4,7 @@ title: Jogo justo — determinismo, piloto de teste e versão do acerto
 feature: dirigibilidade
 stage: fspec
 status: validated
-version: 2.0.0
+version: 2.1.0
 sources: [US-0005, NFR-0001, NFR-0009, AC-US-0005-01, AC-US-0005-02, AC-US-0005-03, AC-US-0005-04, AC-US-0005-05, AC-US-0005-06]
 ---
 
@@ -22,8 +22,11 @@ I3, I5); `STEP`, o solver e `Input` não mudam.
 
 `web-desktop` e `web-mobile`: mesma regra de determinismo e mesma versão declarada; o resultado de uma
 volta é função só da sequência de `Input` por passo, seja de teclado, inclinação ou toque. O piloto de teste
-não tem canal de jogo. Sem sensor ou sem permissão: toque com estado visível; a sequência resultante segue
-a mesma regra (I4).
+não tem canal de jogo; a sua volta é o único ensaio desta feature que roda na pista sintética (raios
+mínimos de curva 24 m e 25 m, grampo de 4 m), enquanto os ensaios de [FEAT-0001](FEAT-0001-resposta-do-volante.md)
+a [FEAT-0003](FEAT-0003-traseira-viva-e-controlavel.md) rodam na pista de teste (`SEED/RD-06`,
+`DOMAIN/REF-03`). Sem sensor ou sem permissão: toque com estado visível; a sequência resultante segue a
+mesma regra (I4).
 
 ## Requisitos
 
@@ -35,8 +38,8 @@ a mesma regra (I4).
   produzir estados por passo, tempo total e tempos de setor idênticos em 100 % de no mínimo 2 execuções
   repetidas, verificado na saída de `npm test` passo a passo com `STEP` (NFR-0001).
 - REQ-FEAT-0005-03: O sistema SHALL reportar, na saída de `npm run bench:handling`, o registro
-  `TEST_PILOT_LAP` com `offAsphaltStepCount` igual a 0 para a volta sintética do piloto de teste
-  (AC-US-0005-02).
+  `TEST_PILOT_LAP` com `benchEnvironment` `SYNTHETIC_TRACK` e `offAsphaltStepCount` igual a 0 para a volta
+  sintética do piloto de teste (AC-US-0005-02).
 - REQ-FEAT-0005-04: O sistema SHALL reportar, na saída de `npm run bench:handling`, `lapTimeMs` do piloto de
   teste de no máximo 25 000 ms de tempo simulado (AC-US-0005-03).
 - REQ-FEAT-0005-05: O sistema SHALL declarar, no dado publicado, uma `setupVersion` do acerto
@@ -115,7 +118,7 @@ de depuração. Nenhum preset experimental extra é exposto no painel do jogo du
 - `DETERMINISM` com `runCount` ≥ 2 e `identical` verdadeiro para cada ensaio e para a volta do piloto de
   teste; execuções diferentes dão `FAIL` com `NON_DETERMINISTIC` (satisfaz AC-US-0005-01 e o NFR-0001; cobre
   os requisitos 01, 02 e 12).
-- `TEST_PILOT_LAP` com `offAsphaltStepCount` 0 e `lapTimeMs` ≤ 25 000 na saída de `npm run bench:handling`;
+- `TEST_PILOT_LAP` com `benchEnvironment` `SYNTHETIC_TRACK`, `offAsphaltStepCount` 0 e `lapTimeMs` ≤ 25 000 na saída de `npm run bench:handling`;
   saída do asfalto ou tempo maior dão `FAIL` com passo e posição ou `THRESHOLD_EXCEEDED` (satisfaz
   AC-US-0005-02, AC-US-0005-03; cobre os requisitos 03, 04 e 11).
 - `SETUP_VERSION` com `declaredSetupVersion` diferente de `previousSetupVersion`, e dois replays de versões

@@ -4,7 +4,7 @@ title: Requisitos transversais — camada de simulação, contrato de passo, Rea
 feature: dirigibilidade
 stage: fspec
 status: validated
-version: 1.0.1
+version: 2.0.0
 sources: [NFR-0002, NFR-0003, NFR-0004, NFR-0005, NFR-0006, NFR-0007, NFR-0008]
 ---
 
@@ -49,9 +49,11 @@ objeto do requisito 05.
   no dado de pista, com 100 % das verificações de `npm test` da feature `race-lap-validation` aprovadas com
   o novo acerto, na mesma execução de `npm test` (NFR-0008).
 - REQ-FEAT-0006-08: O sistema SHALL registrar em `docs/physics.md`, a cada mudança de parâmetro do acerto
-  Arcade assistido, uma entrada datada com os parâmetros e os campos de `API-0003` de 100 % dos ensaios de
-  `RULE-0002`, com unidade, para a linha de base e para o novo acerto, incluindo os parâmetros de ensaio
-  (`settleWindowMs`, `throttleInputNorm`, `entrySpeedStepMps`) (NFR-0004).
+  Arcade assistido, uma entrada datada que diz a `setupVersion` a que se refere, com os parâmetros e os
+  campos de `API-0003` de 100 % dos ensaios de `RULE-0002`, com unidade, para a linha de base e para o novo
+  acerto, incluindo o ambiente de cada ensaio (`benchEnvironment`) e os parâmetros de ensaio
+  (`speedHoldMode`, `throttleInputNorm`, `speedHoldBandMps`, `speedMinMps` e `speedMaxMps` observadas,
+  `settleWindowMs`, `arcRadiusM`, `laneWidthM`, `entrySpeedStepMps`) (NFR-0004).
 - REQ-FEAT-0006-09: O sistema SHALL reportar `FAIL` com `BASELINE_MISSING` em `STEP_COST` quando a linha de
   base do custo por passo não está registrada para a mesma máquina e runtime, sem comparar com linha de
   base de outra máquina [DOMAIN] (I9; NFR-0002).
@@ -100,8 +102,8 @@ depuração; logging, verbosidade e caminhos de arquivo são configurados global
   (satisfaz o NFR-0002; cobre os requisitos 06 e 09).
 - Conjunto de `npm test` de `race-lap-validation` 100 % aprovado com o novo acerto (satisfaz o NFR-0008;
   cobre o requisito 07).
-- `docs/physics.md` com entrada datada, parâmetros e os campos de todos os ensaios para a linha de base e
-  para o novo acerto (satisfaz o NFR-0004; cobre o requisito 08).
+- `docs/physics.md` com entrada datada, `setupVersion`, ambiente de cada ensaio, parâmetros e os campos de
+  todos os ensaios para a linha de base e para o novo acerto (satisfaz o NFR-0004; cobre o requisito 08).
 
 ## Pontos em aberto
 
