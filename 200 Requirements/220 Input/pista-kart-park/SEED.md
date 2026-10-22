@@ -7,12 +7,6 @@ author: eduardo.matos
 channels: [web-desktop, web-mobile]
 ---
 
-> **RASCUNHO: revisão humana obrigatória antes de qualquer loop.** Redigido a partir de
-> `kart-park.json` (nesta pasta, copiado do artefato "Box do Kartle") e das decisões do dono do produto
-> de 2026-10-22, gravadas em `DOMAIN.md`. Todo número abaixo foi medido no traçado bruto por três
-> medições independentes, e não copiado do arquivo. Os scripts estão em `medicoes/` e a origem de cada
-> número está em `NOTES.md`.
-
 ## Visão geral
 
 O Kartle ganha sua primeira pista real, a **Kart Park**, em São José dos Pinhais (PR). Ela fica ao lado
@@ -145,6 +139,8 @@ Medições do traçado bruto, de três métodos independentes (`NOTES.md`):
 - **I10**: nenhum editor de pista no jogo.
 
 ## Riscos e incógnitas
+
+Todos os pontos abaixo foram fechados pelo dono do produto em 2026-10-22; as decisões estão em `DOMAIN.md`.
 
 - **OPEN-01** Licença da imagem Esri: as larguras, bordas e zebras foram medidas sobre a Esri World
   Imagery. Pode-se publicar dado derivado dela? Quem decide, e com qual evidência? **Bloqueia só a

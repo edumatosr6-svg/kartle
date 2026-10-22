@@ -7,11 +7,6 @@ author: eduardo.matos
 channels: [web-desktop, web-mobile]
 ---
 
-> **RASCUNHO — revisão humana obrigatória antes de qualquer loop.** Redigido a partir da ficha de design
-> "Kart 01 — Kartle" (https://claude.ai/artifact/TbeRnYeqGfw89rg3nLQYGX) e do código do modelo,
-> `docs/kart-01/kart.js`, trazido do chat do Cowork. Todas as medidas do modelo e do código atual foram
-> medidas em 2026-10-22 e estão em `NOTES.md`.
-
 ## Visão geral
 
 O kart que o jogador vê hoje é um volume provisório de caixas, maior que um kart real e visto de uma
@@ -103,6 +98,8 @@ modelo, e a ficha é a referência para conferir o resultado.
 - **I10**: um único kart, sem personalização.
 
 ## Riscos e incógnitas
+
+Todos os pontos abaixo foram fechados pelo dono do produto em 2026-10-22; as decisões estão em `DOMAIN.md`.
 
 - **OPEN-01** Orçamento de desenho do kart. Medido em `kart.js`: 124 malhas (124 chamadas de desenho),
   24 materiais e 5.128 triângulos. Qual é o máximo de chamadas de desenho do kart para caber em RNF03 no

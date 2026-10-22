@@ -20,3 +20,11 @@ Decisões fechadas pelo dono do produto. Prevalecem sobre os pontos em aberto co
 - 2026-10-22 — **Crédito (Eduardo Matos):** "© colaboradores do OpenStreetMap", menção à ODbL e link para
   `openstreetmap.org/copyright` numa linha discreta **no seletor de pista e na tela de resultado**
   sempre que a pista for a Kart Park. O crédito da Esri entra junto se a licença for liberada.
+- 2026-10-22 — **OPEN-01 (Esri):** o dono do produto decide **antes da promoção para produção**, com base
+  nos termos de uso da Esri. Até lá, a Kart Park fica **só em staging**.
+- 2026-10-22 — **OPEN-02 fechado:** a linha central suavizada fica a **até 0,30 m** da original em todo
+  ponto.
+- 2026-10-22 — **OPEN-03 fechado:** para os atalhos pela grama de 12 a 26 m, os **marcadores a cada 25 m
+  bastam**. Barreira só nos trechos com 6 m de grama ou menos (US-4).
+- 2026-10-22 — **OPEN-04 fechado:** som da zebra no teclado: um **ruído curto e grave que se repete**
+  enquanto houver roda na zebra, com o som ligado.
