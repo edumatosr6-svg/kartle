@@ -44,3 +44,9 @@ Decisões fechadas pelo dono do produto. Prevalecem sobre os pontos em aberto co
   reta com a **velocidade mantida em 50 km/h** pelo acelerador, e "regime" é o valor estabilizado
   nessa condição (janela curta e estacionária), não um valor que deriva com a desaceleração. O ensaio
   de volta do piloto de teste (OPEN-07) continua na pista sintética.
+- 2026-10-22 — **Fim da varredura de início do subesterço (Eduardo Matos), após a parada do D-Spec:**
+  no ensaio em que a velocidade sobe no arco de 18 m, **sair da faixa abaixo de 50 km/h reprova**
+  (`OFF_ASPHALT`). **Sair da faixa acima de 50 km/h é o fim natural da varredura**: não reprova, desde
+  que pelo menos **duas velocidades acima de 50 km/h** tenham sido medidas antes da saída. Assim o
+  critério de que o subesterço não diminui tem dados. Se a saída ocorrer antes da segunda medição acima
+  de 50 km/h, o ensaio reprova por falta de medida.
